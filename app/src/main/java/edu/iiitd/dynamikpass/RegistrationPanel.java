@@ -1,7 +1,7 @@
 /* ** displays selected images from grid view: change position and color of the image** */
 
 /**
- * 
+ *
  */
 package edu.iiitd.dynamikpass;
 
@@ -35,41 +35,41 @@ import android.view.View.OnTouchListener;
  * This is the main surface that handles the ontouch events and draws
  * the image to the screen.
  */
-public class RegistrationPanel extends SurfaceView implements 
+public class RegistrationPanel extends SurfaceView implements
 		SurfaceHolder.Callback {
 
-	
-	
+
+
 	private static final String TAG = RegistrationPanel.class.getSimpleName();
-	private GestureDetectorCompat mDetector; 
+	private GestureDetectorCompat mDetector;
 	static MainThread thread;
 	static Image image;
 	static ArrayList<Image> imglist = new ArrayList<Image>();
 	ArrayList<String> imageslp = new ArrayList<String>();
 	static Image droid2;
-	ActionMode mActionMode;
+	ActionMode mActionMode, submitActionMode;
 	static Image droid3;
 	private SurfaceView surfaceView;
 	static Image droid4;
 	static Image tri_b,tri_g,tri_y,tri_r;
 	private Bitmap mBackgroundImage;
 	static int wx,wy;
-	  private int mCanvasHeight = 1;
-	  private Context mContext;
-	  static Image sr;
-	  static Image sg;
-	  static Image sy;
-	  static Image sb;
-	  static boolean touch;
+	private int mCanvasHeight = 1;
+	private Context mContext;
+	static Image sr;
+	static Image sg;
+	static Image sy;
+	static Image sb;
+	static boolean touch;
 
-      /**
-       * Current width of the surface/canvas.
-       *
-       * @see #setSurfaceSize
-       */
-      private int mCanvasWidth = 1;
-      private Callback mActionModeCallback;
-      
+	/**
+	 * Current width of the surface/canvas.
+	 *
+	 * @see #setSurfaceSize
+	 */
+	private int mCanvasWidth = 1;
+	private Callback mActionModeCallback;
+
 
 	public RegistrationPanel(Context context, Callback mActionModeCallback, int backgroundImage, ArrayList<String> images) {
 		super(context);
@@ -79,11 +79,11 @@ public class RegistrationPanel extends SurfaceView implements
 		System.out.println("RP : "+images.get(0));
 		getHolder().addCallback(this);
 
-		
-		
+
+
 		DatabaseHelper db = new DatabaseHelper(mContext);
-		
-		
+
+
 		int image_id = 0;
 		for(String s: images){
 			Random ran = new Random();
@@ -103,15 +103,15 @@ public class RegistrationPanel extends SurfaceView implements
 			imglist.add(image);
 
 		}
-		
+
 		System.out.println("image list: "+imglist.size());
-				new BitmapFactory();
-		
-		
+		new BitmapFactory();
+
+
 
 		mBackgroundImage = BitmapFactory.decodeResource(getResources(), backgroundImage);
 
-        
+
 		// create the game loop thread
 		thread = new MainThread(getHolder(), this, mContext);
 		mContext=context;
@@ -119,74 +119,74 @@ public class RegistrationPanel extends SurfaceView implements
 		surfaceView = this;
 		mDetector.setIsLongpressEnabled(true);
 		// make the GamePanel focusable so it can handle events
-		
-		surfaceView.setOnTouchListener(new OnTouchListener() {
-	        @Override
-	        public boolean onTouch(View v, MotionEvent event) {
-	        	if (event.getAction() == MotionEvent.ACTION_DOWN) {
-	    			// delegating event handling to the droid
-	        		for(Image img: imglist){
-	        			img.handleActionDown((int)event.getX(), (int)event.getY());
-	        		}
-	    			
-//	    			
-	    			// check if in the lower part of the screen we exit
-	    			if (event.getY() > getHeight() - 50) {
-	    				thread.setRunning(false);
-	    				((Activity)getContext()).finish();
-	    			} else {
-	    				Log.d(TAG, "Coords: x=" + event.getX() + ",y=" + event.getY());
-	    			}
-	    		} if (event.getAction() == MotionEvent.ACTION_MOVE) {
-	    			// the gestures
-	    		for(Image img: imglist){
-	    			if (img.isTouched()) {
-	    				
-	    				
-	    					img.setX((int)event.getX());
-	    				
-	    					img.setY((int)event.getY());
-	    				}
-	    			
-	    		}
-	    			
-	    		} if (event.getAction() == MotionEvent.ACTION_UP) {
-	    			// touch was released
-	    			
-	    			for(Image img: imglist){
-	    				
-	    			
-		    			if (img.isTouched()) {
-		    				img.setTouched(false);
-		    			}
-	    			}
-	    			
-	    		}
-	    		
-	            mDetector.onTouchEvent(event);
-	            return true;
-	        }
 
-			
-	    });
+		surfaceView.setOnTouchListener(new OnTouchListener() {
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				if (event.getAction() == MotionEvent.ACTION_DOWN) {
+					// delegating event handling to the droid
+					for(Image img: imglist){
+						img.handleActionDown((int)event.getX(), (int)event.getY());
+					}
+
+//	    			
+					// check if in the lower part of the screen we exit
+					if (event.getY() > getHeight() - 50) {
+						thread.setRunning(false);
+						((Activity)getContext()).finish();
+					} else {
+						Log.d(TAG, "Coords: x=" + event.getX() + ",y=" + event.getY());
+					}
+				} if (event.getAction() == MotionEvent.ACTION_MOVE) {
+					// the gestures
+					for(Image img: imglist){
+						if (img.isTouched()) {
+
+
+							img.setX((int)event.getX());
+
+							img.setY((int)event.getY());
+						}
+
+					}
+
+				} if (event.getAction() == MotionEvent.ACTION_UP) {
+					// touch was released
+
+					for(Image img: imglist){
+
+
+						if (img.isTouched()) {
+							img.setTouched(false);
+						}
+					}
+
+				}
+
+				mDetector.onTouchEvent(event);
+				return true;
+			}
+
+
+		});
 		setFocusable(true);
 	}
 
 	@Override
 	public void surfaceChanged(SurfaceHolder holder, int format, int width,
-			int height) {
+							   int height) {
 	}
-	  public void setSurfaceSize() {
-          // synchronized to make sure these all change atomically
-          synchronized (getHolder()) {
-              mCanvasWidth = getWidth();
-              
-              mCanvasHeight = getHeight();
+	public void setSurfaceSize() {
+		// synchronized to make sure these all change atomically
+		synchronized (getHolder()) {
+			mCanvasWidth = getWidth();
 
-              mBackgroundImage = Bitmap.createScaledBitmap(
-              mBackgroundImage, getWidth(), getHeight(), true);
-          }
-      }
+			mCanvasHeight = getHeight();
+
+			mBackgroundImage = Bitmap.createScaledBitmap(
+					mBackgroundImage, getWidth(), getHeight(), true);
+		}
+	}
 
 	@Override
 	public void surfaceCreated(SurfaceHolder holder) {
@@ -205,7 +205,7 @@ public class RegistrationPanel extends SurfaceView implements
 		while (retry) {
 			try {
 				thread.join();
-				
+
 				retry = false;
 			} catch (InterruptedException e) {
 				// try again shutting down the thread
@@ -213,131 +213,147 @@ public class RegistrationPanel extends SurfaceView implements
 		}
 		Log.d(TAG, "Thread was shut down cleanly");
 	}
-	
-	
+
+
 
 
 	@Override
 	protected void onDraw(Canvas canvas) {
-		
+
 		mBackgroundImage = Bitmap.createScaledBitmap(
-                mBackgroundImage, getWidth(), getHeight(), true);
-		
-		canvas.drawBitmap(mBackgroundImage, 0,0, null);
-		
+				mBackgroundImage, getWidth(), getHeight(), true);
+
+		canvas.drawBitmap(mBackgroundImage, 0, 0, null);
+
 		for(Image img : imglist){
 			img.draw(canvas);
 		}
-		
+
+	}
+
+	private void showSystemUI() {
+		RegistrationActivity.mDecorView.setSystemUiVisibility(
+				View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+						| View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+						| View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
 	}
 
 
 	class MyGestureListener extends SimpleOnGestureListener {
-        private static final String DEBUG_TAG = "Gestures"; 
-        
-        public boolean onTouchEvent(MotionEvent event) { 
-            Log.d(DEBUG_TAG,"onTe: "); 
-            return true;
-        }
-        public void onLongPress(MotionEvent arg0) {
-    		// TODO Auto-generated method stub
-    		ArrayList<Image> imagelist = new ArrayList<Image>();
-    		for(Image img: imglist){
-    			imagelist.add(img);
-    		
-    	
-	    		Image droidz = null;
-	    		
-	    		Image droidz1 = img.getRange(arg0.getX(), arg0.getY());
-	    		
-	    		
-	    	
-	        	 System.out.println("on Long Press");
-	 			Log.d("hello","onLP: ");
-	        	
-	    		if (mActionMode != null) {
-	    			Log.v(TAG, "mActionMode is not null");
-	//                return;
-	            }
-	    		
-	          
-	    		if((droidz1 != null)){
-		            mActionMode = ((Activity)mContext).startActionMode(mActionModeCallback);
-		            surfaceView.setSelected(true);
-		            System.out.println("on Long Press");
-		            return;
-	    		}
-    		}
-    		
-    			
-    		
-    	}
-        
+		private static final String DEBUG_TAG = "Gestures";
+
+		public boolean onTouchEvent(MotionEvent event) {
+			Log.d(DEBUG_TAG,"onTe: ");
+			return true;
+		}
+
+		@Override
+		public boolean onSingleTapUp(MotionEvent m){
+			Log.d(DEBUG_TAG,"onTapup Event: ");
+			showSystemUI();
+			return true;
+		}
+
+
+		public void onLongPress(MotionEvent arg0) {
+			// TODO Auto-generated method stub
+			ArrayList<Image> imagelist = new ArrayList<Image>();
+			for(Image img: imglist){
+				imagelist.add(img);
+
+
+				Image droidz = null;
+
+				Image droidz1 = img.getRange(arg0.getX(), arg0.getY());
+
+
+
+				System.out.println("on Long Press");
+				Log.d("hello","onLP: ");
+
+				if (mActionMode != null) {
+					Log.v(TAG, "mActionMode is not null");
+					//                return;
+				}
+
+
+				if((droidz1 != null)){
+					mActionMode = ((Activity)mContext).startActionMode(mActionModeCallback);
+					surfaceView.setSelected(true);
+					System.out.println("on Long Press");
+					return;
+				}
+			}
+
+
+
+		}
+
 	}
 
-	
+
 
 	public static Image SelectRed() {
-		
-		
+
+
 		for(Image img: imglist){
-			
+
 			if(img.isLongTouched()){
-				
+
 				img.setColor("RED");
-				
+
 				img.setLongPressed(false);
 				sr= img;
 				return sr;
-				
+
 			}
 		}
-			
-			
-			return null;
+
+
+		return null;
 	}
 	public static Image SelectBlue() {
 
 		for(Image img: imglist){
-		if(img.isLongTouched()){
-			img.setColor("BLUE");
-			img.setLongPressed(false);
-			sb = img;
-			
-			return sb;
+			if(img.isLongTouched()){
+				img.setColor("BLUE");
+				img.setLongPressed(false);
+				sb = img;
+
+				return sb;
+			}
 		}
-	}	
-			
-		return sb;		
+
+		return sb;
 	}
 	public static Image SelectGreen() {
 		// TODO Auto-generated method stub
-		
+
 		for(Image img: imglist){
 			if(img.isLongTouched()){
 				img.setColor("GREEN");
 				img.setLongPressed(false);
 				sg = img;
-				
+
 				return sg;
 			}
-	}	
-			
-		return sg;		
+		}
+
+		return sg;
 	}
 	public static Image SelectYellow() {
 		// TODO Auto-generated method stub
 		for(Image img: imglist){
-		if(img.isLongTouched()){
-			img.setColor("YELLOW");
-			img.setLongPressed(false);
-			sy = img;
-			//droid.setTouched(true);
-			return sy;
+			if(img.isLongTouched()){
+				img.setColor("YELLOW");
+				img.setLongPressed(false);
+				sy = img;
+				//droid.setTouched(true);
+				return sy;
+			}
 		}
+		return sy;
 	}
-		return sy;		
-	}
-	
+
 }
 
