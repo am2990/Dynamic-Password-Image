@@ -97,14 +97,18 @@ OnDoubleTapListener, SurfaceHolder.Callback {
 		for(Image i :ls){
 			
 			int r = randomN(ls.size());
-		
+
+		// creating a hashmap to store all colors of the image
 			HashMap<String,Bitmap> bitmap1 = new HashMap<String, Bitmap>();
 			bitmap1.put("BLUE",BitmapFactory.decodeResource(getResources(),db.getBlueImage(i.getBitmapId())));
 			bitmap1.put("YELLOW",BitmapFactory.decodeResource(getResources(), db.getYellowImage(i.getBitmapId())));
 			bitmap1.put("GREEN",BitmapFactory.decodeResource(getResources(), db.getGreenImage(i.getBitmapId())));
 			bitmap1.put("RED",BitmapFactory.decodeResource(getResources(), db.getRedImage(i.getBitmapId())));
+
+			// creating a new image
 			i = new Image(bitmap1,i.getBitmapId(),i.getX(),i.getY(),i.getColor(),getResources());
-			
+
+			// giving random positions and color for correct recognition later
 			switch(r){
 				case 1:
 				{
@@ -149,7 +153,7 @@ OnDoubleTapListener, SurfaceHolder.Callback {
 				
 			 }
 		
-		
+		//retrieve integer(gesture) corresponding to the image
 		for(Image i: drawimg){
 		int j = hm.get(i);
 			Log.d(TAG, "hm value"+ j);
@@ -182,7 +186,7 @@ OnDoubleTapListener, SurfaceHolder.Callback {
 		
 		
 		
-		// make the GamePanel focusable so it can handle events
+		// make the GamePanel focusable so it can handle events .
 		thread = new MainThread1(getHolder(), this, context);
 		getHolder().addCallback(this);
 		surfaceView = this;
@@ -419,7 +423,7 @@ OnDoubleTapListener, SurfaceHolder.Callback {
 				SingleDroid = singletap;
 		//Image droidz = null;
 		
-		 for( Image f : SingleDroid){
+ 		 for( Image f : SingleDroid){
 			 Image droidz = f.getRange(arg0.getX(), arg0.getY());
 			 System.out.println("droidz ST: "+ droidz);
 			
