@@ -59,6 +59,8 @@ public class RegistrationPanel extends SurfaceView implements
 	private Callback mActionModeCallback;
 
 
+
+
 	public RegistrationPanel(Context context, Callback mActionModeCallback, int backgroundImage, ArrayList<String> images) {
 		super(context);
 		mContext = context;
@@ -232,8 +234,12 @@ public class RegistrationPanel extends SurfaceView implements
 
 		@Override
 		public boolean onSingleTapUp(MotionEvent m){
-			Log.d(DEBUG_TAG,"onTapup Event: ");
-			showSystemUI();
+			Log.d(DEBUG_TAG, "onTapup Event: ");
+			//showSystemUI();
+
+			mActionMode = ((Activity)mContext).startActionMode(mActionModeCallback);
+			//surfaceView.setSelected(true);
+
 			return true;
 		}
 

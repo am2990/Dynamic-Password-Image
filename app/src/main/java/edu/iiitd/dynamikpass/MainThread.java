@@ -101,7 +101,7 @@ public class MainThread extends Thread {
 
 	public void doSubmit() {
 		
-		synchronized (surfaceHolder) {
+		//synchronized (surfaceHolder) {
 
 			//TODO Store the images in db
 			
@@ -116,8 +116,9 @@ public class MainThread extends Thread {
 			intent.putExtra("ib", RegistrationActivity.imageBack);
 
 			mContext.startActivity(intent);
+
 			
-		}
+		//}
 	}
 
 	public void doVerify() {

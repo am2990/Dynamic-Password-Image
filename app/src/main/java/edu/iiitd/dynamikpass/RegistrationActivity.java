@@ -35,6 +35,7 @@ public class RegistrationActivity extends Activity {
 	static int imageBack;
 
 	public ActionMode mActionMode;
+	public ActionMode mActionMode1;
 	public static View mDecorView;
 
 	@Override
@@ -96,38 +97,6 @@ public class RegistrationActivity extends Activity {
 						| View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
 		Log.d(TAG, "stuff hidden");
 
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		super.onCreateOptionsMenu(menu);
-
-		menu.add(0, MENU_SUBMIT, 0, R.string.menu_submit);
-		menu.add(0, MENU_VERIFY, 0, R.string.menu_verify);
-		menu.add(0, MENU_CONFIRM, 0, R.string.menu_confirm);
-
-
-		return true;
-	}
-
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-			case MENU_SUBMIT:
-				MainThread.setRunning(false);
-				System.out.println("do submit");
-				RegistrationPanel.thread.doSubmit();
-				return true;
-			case MENU_VERIFY:
-				RegistrationPanel.thread.doVerify();
-				return true;
-			case MENU_CONFIRM:
-				RegistrationPanel.thread.doConfirm();
-				return true;
-		}
-
-		return false;
 	}
 
 
@@ -274,6 +243,7 @@ public class RegistrationActivity extends Activity {
 			mActionMode = null;
 		}
 	};
+
 
 	@Override
 	public void onBackPressed() {

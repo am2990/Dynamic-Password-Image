@@ -30,6 +30,7 @@ import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.SimpleAdapter;
+import android.widget.Toast;
 
 public class MainActivity extends Activity {
 	GridView gridView;
@@ -226,13 +227,19 @@ public class MainActivity extends Activity {
 		switch (item.getItemId()) {
 			case MENU_SELECTIMG:
 
+				//try{
+				if(images.size()>0) {
+					Intent intent = new Intent(getApplicationContext(), RegistrationActivity.class);
 
-				Intent intent = new Intent(getApplicationContext(), RegistrationActivity.class);
+					intent.putExtra("ib", imageBack);
+					intent.putExtra("imageobjs", images);
 
-				intent.putExtra("ib", imageBack);
-				intent.putExtra("imageobjs", images);
+					startActivity(intent);
+				}
+				else{
+					Toast.makeText(getBaseContext(), "Select an image ", Toast.LENGTH_LONG).show();
+				}
 
-				startActivity(intent);
 
 				return true;
 
