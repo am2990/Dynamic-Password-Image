@@ -50,21 +50,24 @@ public class RegistrationPanel extends SurfaceView implements
 	static Image sy;
 	static Image sb;
 
+    private int callBackCode = 0;
+
 	/**
 	 * Current width of the surface/canvas.
 	 *
 	 * @see #setSurfaceSize
 	 */
 	private int mCanvasWidth = 1;
-	private Callback mActionModeCallback;
+	private Callback mActionModeCallback, mSubmitCallBack;
 
 
 
 
-	public RegistrationPanel(Context context, Callback mActionModeCallback, int backgroundImage, ArrayList<String> images) {
+	public RegistrationPanel(Context context, Callback mActionModeCallback, Callback mSubmitCallBack, int backgroundImage, ArrayList<String> images) {
 		super(context);
 		mContext = context;
 		this.mActionModeCallback = mActionModeCallback;
+        this.mSubmitCallBack = mSubmitCallBack;
 		// adding the callback (this) to the surface holder to intercept events
 		System.out.println("RP : "+images.get(0));
 		getHolder().addCallback(this);
@@ -218,9 +221,9 @@ public class RegistrationPanel extends SurfaceView implements
 
 	private void showSystemUI() {
 		RegistrationActivity.mDecorView.setSystemUiVisibility(
-				View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-						| View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-						| View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
 	}
 
 
@@ -235,12 +238,9 @@ public class RegistrationPanel extends SurfaceView implements
 		@Override
 		public boolean onSingleTapUp(MotionEvent m){
 			Log.d(DEBUG_TAG, "onTapup Event: ");
-			//showSystemUI();
-
-			mActionMode = ((Activity)mContext).startActionMode(mActionModeCallback);
-			//surfaceView.setSelected(true);
-
-			return true;
+//			showSystemUI();
+            mActionMode = ((Activity)mContext).startActionMode(mSubmitCallBack);
+            return true;
 		}
 
 

@@ -35,7 +35,6 @@ public class RegistrationActivity extends Activity {
 	static int imageBack;
 
 	public ActionMode mActionMode;
-	public ActionMode mActionMode1;
 	public static View mDecorView;
 
 	@Override
@@ -53,8 +52,9 @@ public class RegistrationActivity extends Activity {
 		// making it full screen
 //		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		// set our MainGamePanel as the View
-		RegistrationPanel rp = new RegistrationPanel(mContext, mActionModeCallback, imageBack,images);
+		final RegistrationPanel rp = new RegistrationPanel(mContext, mActionModeCallback, mSubmitCallback,  imageBack,images);
 		setContentView(rp);
+
 		Log.d(TAG, "View added");
 
 		mDecorView = getWindow().getDecorView();
@@ -68,8 +68,6 @@ public class RegistrationActivity extends Activity {
 							// TODO: The system bars are visible. Make any desired
 							// adjustments to your UI, such as showing the action bar or
 							// other navigational controls.
-							mActionMode = ((Activity) mContext).startActionMode(mSubmitCallback);
-
 							Log.d(TAG, "s1");
 						} else {
 							// TODO: The system bars are NOT visible. Make any desired
@@ -187,8 +185,6 @@ public class RegistrationActivity extends Activity {
 			return true;
 		}
 
-
-
 		// Called each time the action mode is shown. Always called after onCreateActionMode, but
 		// may be called multiple times if the mode is invalidated.
 		@Override
@@ -209,22 +205,6 @@ public class RegistrationActivity extends Activity {
 					MainThread.setRunning(false);
 					System.out.println("do submit");
 					RegistrationPanel.thread.doSubmit();
-					return true;
-				case R.id.red:
-					Toast.makeText(getBaseContext(), "Selected Red ", Toast.LENGTH_LONG).show();
-					RegistrationPanel.SelectRed();
-					mode.finish();
-					return true;
-				case R.id.green:
-					Toast.makeText(getBaseContext(), "Selected Green ", Toast.LENGTH_LONG).show();
-					RegistrationPanel.SelectGreen();
-					mode.finish();
-					return true;
-
-				case R.id.yellow:
-					Toast.makeText(getBaseContext(), "Selected Yellow ", Toast.LENGTH_LONG).show();
-					RegistrationPanel.SelectYellow();
-					mode.finish();
 					return true;
 
 				default:
