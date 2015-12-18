@@ -53,7 +53,9 @@ OnDoubleTapListener, SurfaceHolder.Callback {
 	ArrayList<Image> drawimg = new ArrayList<Image>();
 	List<Image> ls = new ArrayList<Image>();
 	List<String> gestures = null;
-	
+	boolean rightpassst = false;
+	boolean rightpassdt = false;
+	boolean rightpassfling = false;
 	private Bitmap mBackgroundImage;
 	
 	ArrayList<Image> templist;
@@ -96,7 +98,7 @@ OnDoubleTapListener, SurfaceHolder.Callback {
 		
 		for(Image i :ls){
 			
-			int r = randomN(ls.size());
+			int r = randomN(ls.size()-1);
 
 		// creating a hashmap to store all colors of the image
 			HashMap<String,Bitmap> bitmap1 = new HashMap<String, Bitmap>();
@@ -132,7 +134,7 @@ OnDoubleTapListener, SurfaceHolder.Callback {
 					hm.put(i,3);
 					break;
 				}
-				case 4:
+				/*case 4:
 				{
 					System.out.println("case4:BOTH WRONG");
 					
@@ -140,7 +142,7 @@ OnDoubleTapListener, SurfaceHolder.Callback {
 					ChangePosition(i);
 					hm.put(i,4);
 					break;
-				}
+				}*/
 			
 			}
 		
@@ -240,32 +242,42 @@ OnDoubleTapListener, SurfaceHolder.Callback {
 	private void ChangeColor(Image img) {
 		// TODO Auto-generated method stub
 		Random rand= new Random();
-		
+		String color = img.getColor();
 		int col = (rand.nextInt((100-1)+1)%5+1);
+
 		
 		Log.d(TAG, "Color" + col);
 		switch(col){
 		case 1:
 		{
-			img.setColor("BLUE");
+			if(!(color.equalsIgnoreCase("BLUE"))) {
+				img.setColor("BLUE");
+			}
+
 			break;
 
 		}
 		case 2:
 		{
-			img.setColor("GREEN");
+			if(!(color.equalsIgnoreCase("GREEN"))) {
+				img.setColor("GREEN");
+			}
 			break;
 
 		}
 		case 3:
 		{
-			img.setColor("YELLOW");
+			if(!(color.equalsIgnoreCase("YELLOW"))) {
+				img.setColor("YELLOW");
+			}
 			break;
 
 		}
 		case 4:
 		{
-			img.setColor("RED");
+			if(!(color.equalsIgnoreCase("RED"))) {
+				img.setColor("RED");
+			}
 			break;
 
 		}
@@ -372,36 +384,34 @@ OnDoubleTapListener, SurfaceHolder.Callback {
         public boolean onFling(MotionEvent event1, MotionEvent event2, 
                 float velocityX, float velocityY) {
         	int one =0;
-        	ArrayList<Image> FlingDroid = new ArrayList<Image>();
-        			FlingDroid = fling;
+        	//ArrayList<Image> FlingDroid = new ArrayList<Image>();
+        			//FlingDroid = fling;
     		Image droidz = null;
-    		 for( Image f : fling){
-    			 droidz = f.getCircleLine((int)event1.getX(), (int)event1.getY(), (int)event2.getX(), (int)event2.getY());
-    			System.out.println("droidz: "+droidz);
-    			  System.out.println("droidz Fling: "+ droidz);	
-    		 }
-    			 FlingDroid.remove(droidz);
-    			 
-    			 if(FlingDroid.size()==0){
-    				 one++;
-    				 
-    			 }
-    		 
-    	
-    		 
-    		 if(one == 1){
-    			 Toast.makeText(mContext,"you are right Fling", 
-    		                Toast.LENGTH_SHORT).show();
-    			 System.out.println("yes");
-    		 }
-    		 
-    		 
-     
-        	
-        	
+    		 for( Image f : fling) {
+				 droidz = f.getCircleLine((int) event1.getX(), (int) event1.getY(), (int) event2.getX(), (int) event2.getY());
+				 System.out.println("droidz: " + droidz);
+				 System.out.println("droidz Fling: " + droidz);
+
+				 fling.remove(droidz);
+
+
+			 }
+
+
+			if((singletap.size() == 0)&& (doubletap.size() == 0) && (fling.size()==0)){
+				Toast.makeText(mContext,"Correct password",
+						Toast.LENGTH_SHORT).show();
+				System.out.println("yes");
+
+			}
+
+
+
+
+
         	
             Log.d(DEBUG_TAG, "onFling: ");
-            return true;
+            return false;
         }
     }
 
@@ -416,38 +426,37 @@ OnDoubleTapListener, SurfaceHolder.Callback {
 	public boolean onSingleTapConfirmed(MotionEvent arg0) {
 		System.out.println("single tap");
 		//droid.changeColor(canvas);
-		colflag = true;
+		//colflag = true;
 		int one = 0;
 		
-		ArrayList<Image> SingleDroid = new ArrayList<Image>();
-				SingleDroid = singletap;
+		//ArrayList<Image> SingleDroid = new ArrayList<Image>();
+				//SingleDroid = singletap;
 		//Image droidz = null;
 		
- 		 for( Image f : SingleDroid){
+ 		 for( Image f : singletap){
 			 Image droidz = f.getRange(arg0.getX(), arg0.getY());
 			 System.out.println("droidz ST: "+ droidz);
-			
-			 SingleDroid.remove(droidz);
-			 System.out.println("singleDroid size: "+ SingleDroid.size());
-			 if(SingleDroid.size()==0){
-				 one++;
-				 
-			 }
+
+			 singletap.remove(droidz);
+			 System.out.println("singleDroid size: "+ singletap.size());
+
 		
 		 }
 		
 		 
-		 if(one == 1){
-			 Toast.makeText(mContext,"you are right ST", 
+		 if((singletap.size() == 0)&& (doubletap.size() == 0) && (fling.size()==0)){
+			 Toast.makeText(mContext,"Correct password",
 		                Toast.LENGTH_SHORT).show();
 			 System.out.println("yes");
+
 		 }
-		 
+
 
 		System.out.println("on single");
 		Log.d("hello","onSTC: ");
+
 		return false;
-		
+
 	}
 
 	
@@ -485,8 +494,8 @@ OnDoubleTapListener, SurfaceHolder.Callback {
 	@Override
 	public boolean onDoubleTap(MotionEvent e) {
 		int one = 0;
-		ArrayList<Image> DoubleDroid = new ArrayList<Image>();
-				DoubleDroid = doubletap;
+	//	ArrayList<Image> DoubleDroid = new ArrayList<Image>();
+				//DoubleDroid = doubletap;
 		Image droidz = null;
 		// f = listdroid.get(l);
 		 for( Image f : doubletap){
@@ -494,20 +503,20 @@ OnDoubleTapListener, SurfaceHolder.Callback {
 			 System.out.println("droidz DT: "+ droidz);
 			 //templist.add(droidz);
 			// while(l<reach){
-			 DoubleDroid.remove(droidz);
-			 
-			 if(DoubleDroid.size()==0){
-				 one++;
-				 
+			 if(droidz != null) {
+				 doubletap.remove(droidz);
 			 }
+
 			 
 		 }
-		 if(one == 1){
-			 Toast.makeText(mContext,"you are right DT", 
-		                Toast.LENGTH_SHORT).show();
-			 System.out.println("yes");
-		 }
-	
+		if((singletap.size() == 0)&& (doubletap.size() == 0) && (fling.size()==0)){
+			Toast.makeText(mContext,"Correct password",
+					Toast.LENGTH_SHORT).show();
+			System.out.println("yes");
+
+		}
+
+
 		Log.d("hello","onDT: ");
 		return false;
 	}
