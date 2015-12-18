@@ -5,9 +5,13 @@
     <string name="button_text">Set as Background</string>
      <string name="menu_setBack">Set as Background</string>
      <string name="menu_selectimage">Select Images</string>
+
+
      <string name="menu_submit">Submit</string>
      <string name="menu_verify">Verify</string>
      <string name="menu_confirm">Confirm</string>
+
+
      <string name="str_red">Red</string>
     <string name="str_green">Green</string>
     <string name="str_yellow">Yellow</string>

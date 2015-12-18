@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -23,6 +24,7 @@ import android.widget.Toast;
 
 public class RegistrationActivity extends Activity {
 	/** Called when the activity is first created. */
+	private Context mContext;
 
 	private static final String TAG = RegistrationActivity.class.getSimpleName();
 	private static final int MENU_SUBMIT = 0;
@@ -39,7 +41,7 @@ public class RegistrationActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 
 		super.onCreate(savedInstanceState);
-
+		mContext = this;
 		i = getIntent();
 		imageBack = i.getIntExtra("ib",0);
 		System.out.println("ib: : "+ Integer.toString(imageBack));
@@ -50,7 +52,8 @@ public class RegistrationActivity extends Activity {
 		// making it full screen
 //		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		// set our MainGamePanel as the View
-		setContentView(new RegistrationPanel(this, mActionModeCallback, imageBack,images));
+		RegistrationPanel rp = new RegistrationPanel(mContext, mActionModeCallback, imageBack,images);
+		setContentView(rp);
 		Log.d(TAG, "View added");
 
 		mDecorView = getWindow().getDecorView();
@@ -64,6 +67,8 @@ public class RegistrationActivity extends Activity {
 							// TODO: The system bars are visible. Make any desired
 							// adjustments to your UI, such as showing the action bar or
 							// other navigational controls.
+							mActionMode = ((Activity) mContext).startActionMode(mSubmitCallback);
+
 							Log.d(TAG, "s1");
 						} else {
 							// TODO: The system bars are NOT visible. Make any desired
@@ -93,7 +98,6 @@ public class RegistrationActivity extends Activity {
 
 	}
 
-
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
@@ -109,24 +113,18 @@ public class RegistrationActivity extends Activity {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		MainThread.setRunning(false);
 		switch (item.getItemId()) {
 			case MENU_SUBMIT:
+				MainThread.setRunning(false);
 				System.out.println("do submit");
-				//doSubmit();
-
 				RegistrationPanel.thread.doSubmit();
 				return true;
-
 			case MENU_VERIFY:
 				RegistrationPanel.thread.doVerify();
 				return true;
 			case MENU_CONFIRM:
 				RegistrationPanel.thread.doConfirm();
 				return true;
-
-			//System.out.println("hello thread");
-
 		}
 
 		return false;
@@ -158,7 +156,6 @@ public class RegistrationActivity extends Activity {
 		}
 
 
-
 		// Called each time the action mode is shown. Always called after onCreateActionMode, but
 		// may be called multiple times if the mode is invalidated.
 		@Override
@@ -170,7 +167,7 @@ public class RegistrationActivity extends Activity {
 		@Override
 
 		public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-			System.out.println("get Item: "+item.getItemId());
+			System.out.println("get Item: " + item.getItemId());
 			//if((RegistrationPanel.image.isLongTouched() == true)||(RegistrationPanel.tri_b.isLongTouched() == true)){
 			switch (item.getItemId()) {
 
@@ -197,24 +194,87 @@ public class RegistrationActivity extends Activity {
 					return true;
 
 				default:
-
 					return false;
 			}
 
-			// }
-			//return false;
+		}
+
+		@Override
+		public void onDestroyActionMode(ActionMode actionMode) {
+
+		}
+	};
+
+
+	private ActionMode.Callback mSubmitCallback = new ActionMode.Callback() {
+
+		// Called when the action mode is created; startActionMode() was called
+		@Override
+		public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+			// Inflate a menu resource providing context menu items
+			MenuInflater inflater = mode.getMenuInflater();
+			inflater.inflate(R.menu.submit_menu, menu);
+
+			return true;
 		}
 
 
 
+		// Called each time the action mode is shown. Always called after onCreateActionMode, but
+		// may be called multiple times if the mode is invalidated.
+		@Override
+		public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+			return false; // Return false if nothing is done
+		}
+
+		// Called when the user selects a contextual menu item
+		@Override
+
+		public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+			System.out.println("get Item: "+item.getItemId());
+			//if((RegistrationPanel.image.isLongTouched() == true)||(RegistrationPanel.tri_b.isLongTouched() == true)){
+			switch (item.getItemId()) {
+
+				case R.id.submit:
+					Toast.makeText(getBaseContext(), "Submit Selected ", Toast.LENGTH_LONG).show();
+					MainThread.setRunning(false);
+					System.out.println("do submit");
+					RegistrationPanel.thread.doSubmit();
+					return true;
+				case R.id.red:
+					Toast.makeText(getBaseContext(), "Selected Red ", Toast.LENGTH_LONG).show();
+					RegistrationPanel.SelectRed();
+					mode.finish();
+					return true;
+				case R.id.green:
+					Toast.makeText(getBaseContext(), "Selected Green ", Toast.LENGTH_LONG).show();
+					RegistrationPanel.SelectGreen();
+					mode.finish();
+					return true;
+
+				case R.id.yellow:
+					Toast.makeText(getBaseContext(), "Selected Yellow ", Toast.LENGTH_LONG).show();
+					RegistrationPanel.SelectYellow();
+					mode.finish();
+					return true;
+
+				default:
+
+					return false;
+			}
+
+
+		}
 
 
 		// Called when the user exits the action mode
 		@Override
 		public void onDestroyActionMode(ActionMode mode) {
+			hideSystemUI();
 			mActionMode = null;
 		}
 	};
+
 	@Override
 	public void onBackPressed() {
 		System.out.println("back press");

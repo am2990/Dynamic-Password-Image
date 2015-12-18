@@ -155,7 +155,7 @@ public class Image implements Serializable{
 	}
 	
 	
-	public Image getRange(float f, float g){
+	public Image getRange(float x, float y){
 		
 		Image d = null;
 		int h= bitmap.getHeight();
@@ -164,9 +164,9 @@ public class Image implements Serializable{
 		
 		 rad = ((int) (Math.sqrt(((h/2)*(h/2))+((w/2)*(w/2))))+10);
 		
-		System.out.println("get xcoord: "+f);
-		System.out.println("get ycoord: "+g);
-		double eqn = (((f-getX())*(f-getX()))+((g-getY())*(g-getY()))-(rad*rad));
+		System.out.println("get xcoord: "+x);
+		System.out.println("get ycoord: "+y);
+		double eqn = (((x-getX())*(x-getX()))+((y-getY())*(y-getY()))-(rad*rad));
 		System.out.println("eqn droid : "+eqn);
 		
 		

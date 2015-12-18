@@ -121,10 +121,7 @@ public class MainThread extends Thread {
 	}
 
 	public void doVerify() {
-		
 			System.out.println("right!!");
-		
-		
 	}
 
 	public void doConfirm() {
