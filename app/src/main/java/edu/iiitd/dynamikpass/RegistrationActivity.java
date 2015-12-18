@@ -229,7 +229,7 @@ public class RegistrationActivity extends Activity {
 	public void onBackPressed() {
 		System.out.println("back press");
 		Log.d("CDA", "onBackPressed Called");
-		finish();
-
+		RegistrationPanel.thread.setRunning(false);
+		(this).finish();
 	}
 }
