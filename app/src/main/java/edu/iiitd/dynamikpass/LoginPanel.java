@@ -226,57 +226,31 @@ public class LoginPanel extends SurfaceView implements OnGestureListener,
 	private void ChangePosition(Image img) {
 		Random ran = new Random();
 		//ran.setSeed((long)i);
+        // get upper limits from canvas
 		int randomNumx = ran.nextInt((350 - 25) + 1) + 25;
 		int randomNumy = ran.nextInt((350 - 25) + 1) + 25;
+
+        //
+
 		img.setX(randomNumx);
 		img.setY(randomNumy);
 
 	}
-	private void ChangeColor(Image img) {
-		// TODO Auto-generated method stub
-		Random rand= new Random();
 
+	private void ChangeColor(Image img) {
+
+        String[] colors = {"BLUE", "GREEN", "YELLOW", "RED"};
 		String color = img.getColor();
-		int col = (rand.nextInt((100-1)+1)%5+1);
+
+        String setColor = color;
+        do{
+            Random r = new Random();
+            setColor = colors[r.nextInt(colors.length)];
+        }while(color.equalsIgnoreCase(setColor));
 
 		
-		Log.d(TAG, "Color" + col);
-		switch(col){
-		case 1:
-		{
-			if(!(color.equalsIgnoreCase("BLUE"))) {
-				img.setColor("BLUE");
-			}
-
-			break;
-
-		}
-		case 2:
-		{
-			if(!(color.equalsIgnoreCase("GREEN"))) {
-				img.setColor("GREEN");
-			}
-			break;
-
-		}
-		case 3:
-		{
-			if(!(color.equalsIgnoreCase("YELLOW"))) {
-				img.setColor("YELLOW");
-			}
-			break;
-
-		}
-		case 4:
-		{
-			if(!(color.equalsIgnoreCase("RED"))) {
-				img.setColor("RED");
-			}
-			break;
-
-			}
-
-		}
+		Log.d(TAG, "Color" + setColor);
+        img.setColor(setColor);
 
 	}
 
