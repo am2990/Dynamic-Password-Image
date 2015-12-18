@@ -387,17 +387,21 @@ OnDoubleTapListener, SurfaceHolder.Callback {
         	//ArrayList<Image> FlingDroid = new ArrayList<Image>();
         			//FlingDroid = fling;
     		Image droidz = null;
-    		 for( Image f : fling) {
-				 droidz = f.getCircleLine((int) event1.getX(), (int) event1.getY(), (int) event2.getX(), (int) event2.getY());
-				 System.out.println("droidz: " + droidz);
-				 System.out.println("droidz Fling: " + droidz);
+			try {
+				for (Image f : fling) {
+					droidz = f.getCircleLine((int) event1.getX(), (int) event1.getY(), (int) event2.getX(), (int) event2.getY());
+					System.out.println("droidz: " + droidz);
+					System.out.println("droidz Fling: " + droidz);
 
-				 fling.remove(droidz);
-
-
-			 }
+					fling.remove(droidz);
 
 
+				}
+
+			}
+			catch(Exception e){
+				System.out.println("runtime exception");
+			}
 			if((singletap.size() == 0)&& (doubletap.size() == 0) && (fling.size()==0)){
 				Toast.makeText(mContext,"Correct password",
 						Toast.LENGTH_SHORT).show();
@@ -495,20 +499,24 @@ OnDoubleTapListener, SurfaceHolder.Callback {
 	public boolean onDoubleTap(MotionEvent e) {
 		int one = 0;
 	//	ArrayList<Image> DoubleDroid = new ArrayList<Image>();
-				//DoubleDroid = doubletap;
-		Image droidz = null;
-		// f = listdroid.get(l);
-		 for( Image f : doubletap){
-			 droidz = f.getRange(e.getX(), e.getY());
-			 System.out.println("droidz DT: "+ droidz);
-			 //templist.add(droidz);
-			// while(l<reach){
-			 if(droidz != null) {
-				 doubletap.remove(droidz);
-			 }
+		try {        //DoubleDroid = doubletap;
+			Image droidz = null;
+			// f = listdroid.get(l);
+			for (Image f : doubletap) {
+				droidz = f.getRange(e.getX(), e.getY());
+				System.out.println("droidz DT: " + droidz);
+				//templist.add(droidz);
+				// while(l<reach){
+				if (droidz != null) {
+					doubletap.remove(droidz);
+				}
 
-			 
-		 }
+
+			}
+		}
+		catch(Exception e1){
+			System.out.println("Runtime exception");
+		}
 		if((singletap.size() == 0)&& (doubletap.size() == 0) && (fling.size()==0)){
 			Toast.makeText(mContext,"Correct password",
 					Toast.LENGTH_SHORT).show();
