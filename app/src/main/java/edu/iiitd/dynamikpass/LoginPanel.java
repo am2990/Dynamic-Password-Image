@@ -1,7 +1,7 @@
 /* ** displays images with random position and color, apply gesture (fling, single tap or double tap)
  to get the password right ** */
 /**
- * 
+ *
  */
 package edu.iiitd.dynamikpass;
 
@@ -16,6 +16,8 @@ import java.util.Random;
 
 import edu.iiitd.dynamikpass.model.Image;
 import edu.iiitd.dynamikpass.utils.DatabaseHelper;
+
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -23,7 +25,9 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.support.v4.view.GestureDetectorCompat;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Display;
 import android.view.GestureDetector.OnDoubleTapListener;
 import android.view.GestureDetector.OnGestureListener;
 import android.view.GestureDetector.SimpleOnGestureListener;
@@ -39,13 +43,13 @@ import android.widget.Toast;
  * the image to the screen.
  */
 public class LoginPanel extends SurfaceView implements OnGestureListener,
-OnDoubleTapListener, SurfaceHolder.Callback {
+		OnDoubleTapListener, SurfaceHolder.Callback {
 
-	
+
 	private static final String TAG = LoginPanel.class.getSimpleName();
-	
+
 	static MainThread1 thread;
-	
+
 	boolean flag;
 	boolean check;
 	String getgest=null;
@@ -53,53 +57,51 @@ OnDoubleTapListener, SurfaceHolder.Callback {
 	ArrayList<Image> drawimg = new ArrayList<Image>();
 	List<Image> ls = new ArrayList<Image>();
 	List<String> gestures = null;
-	boolean rightpassst = false;
-	boolean rightpassdt = false;
-	boolean rightpassfling = false;
+
 	private Bitmap mBackgroundImage;
-	
+
 	ArrayList<Image> templist;
 	ArrayList<Image> fling = new ArrayList<Image>();
 	ArrayList<Image> singletap = new ArrayList<Image>();
 	ArrayList<Image> doubletap = new ArrayList<Image>();
 	Map<Image, Integer> hm = new HashMap<Image, Integer>();
-	  private int mCanvasHeight = 1;
-	  private Context mContext;
-	  
-	  Image tri_b,tri_g,tri_y,tri_r;
-	
-		
-      /**
-       * Current width of the surface/canvas.
-       *
-       * @see #setSurfaceSize
-       */
-      private int mCanvasWidth = 1;
+	private int mCanvasHeight = 1;
+	private Context mContext;
 
-   	 private GestureDetectorCompat mDetector; 
-	 private SurfaceView surfaceView;
-	
+	Image tri_b,tri_g,tri_y,tri_r;
+
+
+	/**
+	 * Current width of the surface/canvas.
+	 *
+	 * @see #setSurfaceSize
+	 */
+	private int mCanvasWidth = 1;
+
+	private GestureDetectorCompat mDetector;
+	private SurfaceView surfaceView;
+
 	public LoginPanel(Context context, int backgroundImage) {
 		super(context);
 		mContext = context;
-		
-		
+
+
 
 		new BitmapFactory();
 		mBackgroundImage = BitmapFactory.decodeResource(getResources(), backgroundImage);
-		
-		 
+
+
 		DatabaseHelper db = new DatabaseHelper(mContext);
 		ls = db.getAllDroids();
-		
-		
-		gestures = db.getAllGestures();
-		
-		
-		for(Image i :ls){
-			
-			int r = randomN(ls.size()-1);
 
+
+		gestures = db.getAllGestures();
+
+
+		for(Image i :ls){
+
+			int r = randomN(ls.size());
+//int r =3;
 		// creating a hashmap to store all colors of the image
 			HashMap<String,Bitmap> bitmap1 = new HashMap<String, Bitmap>();
 			bitmap1.put("BLUE",BitmapFactory.decodeResource(getResources(),db.getBlueImage(i.getBitmapId())));
@@ -109,7 +111,6 @@ OnDoubleTapListener, SurfaceHolder.Callback {
 
 			// creating a new image
 			i = new Image(bitmap1,i.getBitmapId(),i.getX(),i.getY(),i.getColor(),getResources());
-
 			// giving random positions and color for correct recognition later
 			switch(r){
 				case 1:
@@ -121,7 +122,7 @@ OnDoubleTapListener, SurfaceHolder.Callback {
 				case 2:
 				{
 					System.out.println("case2:CHANGE COLOR");
-					
+
 					ChangeColor(i);
 					hm.put(i,2);
 					break;
@@ -129,37 +130,38 @@ OnDoubleTapListener, SurfaceHolder.Callback {
 				case 3:
 				{
 					System.out.println("case3:CHANGE POSITION");
-					
+
 					ChangePosition(i);
 					hm.put(i,3);
 					break;
 				}
-				/*case 4:
-				{
-					System.out.println("case4:BOTH WRONG");
-					
-					ChangeColor(i);
-					ChangePosition(i);
-					hm.put(i,4);
+				default:
 					break;
-				}*/
-			
+
 			}
-		
+
 		}
 		Iterator iter = hm.keySet().iterator();
-		 while (iter.hasNext()) {
-				
+		while (iter.hasNext()) {
+
+			Image image = (Image) iter.next();
+			drawimg.add(image);
+
+		}
+
+
+		/* while (iter.hasNext()) {
+
 				 Image image = (Image) iter.next();
 				 drawimg.add(image);
-				
-			 }
+
+			 }*/
 		
 		//retrieve integer(gesture) corresponding to the image
 		for(Image i: drawimg){
-		int j = hm.get(i);
+			int j = hm.get(i);
 			Log.d(TAG, "hm value"+ j);
-			
+
 			switch(j){
 				case 1:{
 					getgest = gestures.get(0);
@@ -180,40 +182,37 @@ OnDoubleTapListener, SurfaceHolder.Callback {
 					break;
 				}
 				case 4:{
-					
+
 					break;
 				}
 			}
 		}
-		
-		
-		
-		// make the GamePanel focusable so it can handle events .
+
 		thread = new MainThread1(getHolder(), this, context);
 		getHolder().addCallback(this);
 		surfaceView = this;
-		
+
 		mContext=context;
 		mDetector = new GestureDetectorCompat(mContext, new MyGestureListener());
 		mDetector.setIsLongpressEnabled(true);
 		mDetector.setOnDoubleTapListener(this);
-		
-		
-		//mDetector.setOnDoubleTapListener(listener)
-		
-		
-		surfaceView.setOnTouchListener(new OnTouchListener() {
-	        @Override
-	        public boolean onTouch(View v, MotionEvent event) {
-	            mDetector.onTouchEvent(event);
-	            return true;
-	        }
 
-			
-	    });
+
+		//mDetector.setOnDoubleTapListener(listener)
+
+
+		surfaceView.setOnTouchListener(new OnTouchListener() {
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				mDetector.onTouchEvent(event);
+				return true;
+			}
+
+
+		});
 		setFocusable(true);
-		
-		
+
+
 	}
 
 	private void substitutegesture(Image i) {
@@ -227,21 +226,64 @@ OnDoubleTapListener, SurfaceHolder.Callback {
 		if(getgest.equalsIgnoreCase("Fling")){
 			fling.add(i);
 		}
-		
+
 	}
 
 	private void ChangePosition(Image img) {
 		Random ran = new Random();
+
+		DisplayMetrics dm= new DisplayMetrics();
 		//ran.setSeed((long)i);
-		int randomNumx = ran.nextInt((350 - 25) + 1) + 25;
-		int randomNumy = ran.nextInt((350 - 25) + 1) + 25;
+	Image checkpos,checkposother;
+		Iterator iter = hm.keySet().iterator();
+		((Activity)mContext).getWindowManager().getDefaultDisplay().getMetrics(dm);
+		int width = dm.widthPixels;
+		int height =dm.heightPixels;
+	do{
+
+		//int randomNumx = ran.nextInt((height)-img.getBitmap().getHeight()) + 1;
+		//int randomNumy= ran.nextInt((width)-img.getBitmap().getWidth()) + 1;
+		int randomNumx = ran.nextInt(height) + 1;
+		int randomNumy= ran.nextInt(width) + 1;
+		System.out.println("height: "+ height);
+		System.out.println("width: "+ width);
+		//int randomNumx = ran.nextInt((400 - 25) + 1) + 25;
+		//int randomNumy = ran.nextInt((400 - 25) + 1) + 25;
+		checkpos = img.getRange(randomNumx,randomNumy);
+
 		img.setX(randomNumx);
 		img.setY(randomNumy);
-		
+
+	}while(checkpos != null);
+
+		while (iter.hasNext()) {
+
+			Image image = (Image) iter.next();
+
+			do{
+				checkposother = img.getRange(image.getX(),image.getY());
+				int randomNumx = ran.nextInt(height) + 1;
+				int randomNumy= ran.nextInt(width) + 1;
+
+				// randomNumx = ran.nextInt((getHeight() - getWidth()) + 1) + getWidth();
+				//int randomNumy = ran.nextInt((getHeight() - getWidth()) + 1) + getWidth();
+				checkpos = img.getRange(randomNumx,randomNumy);
+
+				img.setX(randomNumx);
+				img.setY(randomNumy);
+
+			}while(checkposother != null);
+
+		}
+
+		//img.setX(randomNumx);
+		//img.setY(randomNumy);
+
 	}
 	private void ChangeColor(Image img) {
 		// TODO Auto-generated method stub
 		Random rand= new Random();
+
 		String color = img.getColor();
 		int col = (rand.nextInt((100-1)+1)%5+1);
 
@@ -280,27 +322,27 @@ OnDoubleTapListener, SurfaceHolder.Callback {
 			}
 			break;
 
-		}
+			}
 
 		}
-		
+
 	}
 
 	public void surfaceChanged(SurfaceHolder holder, int format, int width,
-			int height) {
+							   int height) {
 	}
-	  public void setSurfaceSize() {
-          // synchronized to make sure these all change atomically
-          synchronized (getHolder()) {
-              mCanvasWidth = getWidth();
-              
-              mCanvasHeight = getHeight();
+	public void setSurfaceSize() {
+		// synchronized to make sure these all change atomically
+		synchronized (getHolder()) {
+			mCanvasWidth = getWidth();
 
-              // don't forget to resize the background image
-              mBackgroundImage = Bitmap.createScaledBitmap(
-                      mBackgroundImage, getWidth(), getHeight(), true);
-          }
-      }
+			mCanvasHeight = getHeight();
+
+			// don't forget to resize the background image
+			mBackgroundImage = Bitmap.createScaledBitmap(
+					mBackgroundImage, getWidth(), getHeight(), true);
+		}
+	}
 
 	@Override
 	public void surfaceCreated(SurfaceHolder holder) {
@@ -326,47 +368,48 @@ OnDoubleTapListener, SurfaceHolder.Callback {
 		}
 		Log.d(TAG, "Thread was shut down cleanly");
 	}
-	
 
-	
-	
-	
-		
+
+
+
+
+
 
 	private int randomN(int length) {
 		// TODO Auto-generated method stub
-		
+
 		Random rand = new Random();
 
-	  	int randomNum = rand.nextInt((length - 1) + 1) + 1;
-	    System.out.println("random no"+ randomNum);
-	    return randomNum;
+		int randomNum = rand.nextInt((length - 1) + 1) + 1;
+		System.out.println("random no"+ randomNum);
+		return randomNum;
 
-		
+
 	}
 
 	@Override
 	protected void onDraw(Canvas canvas) {
-		
+
 		mBackgroundImage = Bitmap.createScaledBitmap(
-                mBackgroundImage, getWidth(), getHeight(), true);
+				mBackgroundImage, getWidth(), getHeight(), true);
 		canvas.drawBitmap(mBackgroundImage, 0,0, null);
-		
-		
-		
-		 
-		 for(Image i: drawimg){
-			 i.draw(canvas);
-		 }
-		
-		
+
+
+
+
+		for(Image i: drawimg){
+			i.draw(canvas);
+
+		}
+
+
 	}
 
 	class MyGestureListener extends SimpleOnGestureListener {
-        private static final String DEBUG_TAG = "Gestures"; 
+        private static final String DEBUG_TAG = "Gestures";
         
         @Override
-        public boolean onDown(MotionEvent event) { 
+        public boolean onDown(MotionEvent event) {
             Log.d(DEBUG_TAG,"onDown: "); 
             return true;
         }
@@ -383,9 +426,12 @@ OnDoubleTapListener, SurfaceHolder.Callback {
         @Override
         public boolean onFling(MotionEvent event1, MotionEvent event2, 
                 float velocityX, float velocityY) {
-        	int one =0;
-        	//ArrayList<Image> FlingDroid = new ArrayList<Image>();
-        			//FlingDroid = fling;
+			ArrayList<Image> notF = new ArrayList<Image>(ls);
+			notF.remove(fling);
+			for(Image nf : notF){
+				Toast.makeText(mContext,"Wrong password",
+						Toast.LENGTH_SHORT).show();
+			}
     		Image droidz = null;
 			try {
 				for (Image f : fling) {
@@ -421,41 +467,76 @@ OnDoubleTapListener, SurfaceHolder.Callback {
 
 	@Override
 	public boolean onDoubleTapEvent(MotionEvent arg0) {
-			Log.d("hello","onDTE: ");
-		
+		Log.d("hello","onDTE: ");
+
 		return false;
 	}
-	
+
 	@Override
-	public boolean onSingleTapConfirmed(MotionEvent arg0) {
+	public boolean onSingleTapConfirmed(MotionEvent e) {
 		System.out.println("single tap");
-		//droid.changeColor(canvas);
-		//colflag = true;
-		int one = 0;
-		
-		//ArrayList<Image> SingleDroid = new ArrayList<Image>();
-				//SingleDroid = singletap;
-		//Image droidz = null;
-		
- 		 for( Image f : singletap){
-			 Image droidz = f.getRange(arg0.getX(), arg0.getY());
-			 System.out.println("droidz ST: "+ droidz);
+	/*	ArrayList<Image> notST = new ArrayList<Image>(ls);
+		notST.remove(singletap);
+		for(Image nst : notST){
+			Toast.makeText(mContext,"Wrong password",
+					Toast.LENGTH_SHORT).show();
+		}*/
 
-			 singletap.remove(droidz);
-			 System.out.println("singleDroid size: "+ singletap.size());
+		/*try {
+			for (Image f : singletap) {
+				Image droidz = f.getRange(arg0.getX(), arg0.getY());
+				System.out.println("droidz ST: " + droidz);
 
-		
-		 }
-		
+				singletap.remove(droidz);
+				System.out.println("singleDroid size: " + singletap.size());
+
+
+			}
+		}
+		catch(Exception e){
+			System.out.println("runtime exception");
+		}
 		 
 		 if((singletap.size() == 0)&& (doubletap.size() == 0) && (fling.size()==0)){
 			 Toast.makeText(mContext,"Correct password",
 		                Toast.LENGTH_SHORT).show();
 			 System.out.println("yes");
 
-		 }
+		 }*/
+
+		for(Image p : ls){
+			if(singletap.contains(p)){
+				try {        //DoubleDroid = doubletap;
+					Image droidz = null;
+					// f = listdroid.get(l);
+					for (Image f : singletap) {
+						droidz = f.getRange(e.getX(), e.getY());
+						System.out.println("droidz ST: " + droidz);
+						//templist.add(droidz);
+						// while(l<reach){
+						if (droidz != null) {
+							doubletap.remove(droidz);
+						}
 
 
+
+					}
+				}
+				catch(Exception e1){
+					System.out.println("Runtime exception");
+				}
+				if((singletap.size() == 0)&& (doubletap.size() == 0) && (fling.size()==0)){
+					Toast.makeText(mContext,"Correct password",
+							Toast.LENGTH_SHORT).show();
+					System.out.println("yes");
+
+				}
+			}
+			else{
+				Toast.makeText(mContext,"Wrong Password",
+						Toast.LENGTH_SHORT).show();
+			}
+		}
 		System.out.println("on single");
 		Log.d("hello","onSTC: ");
 
@@ -463,7 +544,7 @@ OnDoubleTapListener, SurfaceHolder.Callback {
 
 	}
 
-	
+
 
 	@Override
 	public boolean onDown(MotionEvent arg0) {
@@ -473,18 +554,18 @@ OnDoubleTapListener, SurfaceHolder.Callback {
 
 	@Override
 	public boolean onFling(MotionEvent arg0, MotionEvent arg1, float arg2,
-			float arg3) {
-		
+						   float arg3) {
+
 		// TODO Auto-generated method stub
-		
+
 		return false;
 	}
 
-	
+
 
 	@Override
 	public boolean onScroll(MotionEvent arg0, MotionEvent arg1, float arg2,
-			float arg3) {
+							float arg3) {
 		// TODO Auto-generated method stub
 		return false;
 	}
@@ -492,14 +573,21 @@ OnDoubleTapListener, SurfaceHolder.Callback {
 	@Override
 	public void onShowPress(MotionEvent arg0) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public boolean onDoubleTap(MotionEvent e) {
-		int one = 0;
+
+
 	//	ArrayList<Image> DoubleDroid = new ArrayList<Image>();
-		try {        //DoubleDroid = doubletap;
+		/*ArrayList<Image> notDT = new ArrayList<Image>(ls);
+		notDT.remove(doubletap);
+		for(Image ndt : notDT){
+			Toast.makeText(mContext,"Wrong password",
+					Toast.LENGTH_SHORT).show();
+		}*/
+		/*try {        //DoubleDroid = doubletap;
 			Image droidz = null;
 			// f = listdroid.get(l);
 			for (Image f : doubletap) {
@@ -510,6 +598,7 @@ OnDoubleTapListener, SurfaceHolder.Callback {
 				if (droidz != null) {
 					doubletap.remove(droidz);
 				}
+
 
 
 			}
@@ -523,13 +612,46 @@ OnDoubleTapListener, SurfaceHolder.Callback {
 			System.out.println("yes");
 
 		}
+*/
+
+		for(Image p : ls){
+			if(doubletap.contains(p)){
+				try {        //DoubleDroid = doubletap;
+					Image droidz = null;
+					// f = listdroid.get(l);
+					for (Image f : doubletap) {
+						droidz = f.getRange(e.getX(), e.getY());
+						System.out.println("droidz DT: " + droidz);
+						//templist.add(droidz);
+						// while(l<reach){
+						if (droidz != null) {
+							doubletap.remove(droidz);
+						}
 
 
+
+					}
+				}
+				catch(Exception e1){
+					System.out.println("Runtime exception");
+				}
+				if((singletap.size() == 0)&& (doubletap.size() == 0) && (fling.size()==0)){
+					Toast.makeText(mContext,"Correct password",
+							Toast.LENGTH_SHORT).show();
+					System.out.println("yes");
+
+				}
+			}
+			else{
+				Toast.makeText(mContext,"Wrong Password",
+						Toast.LENGTH_SHORT).show();
+			}
+		}
 		Log.d("hello","onDT: ");
 		return false;
 	}
 
-	
+
 
 	@Override
 	public boolean onSingleTapUp(MotionEvent e) {
@@ -540,13 +662,13 @@ OnDoubleTapListener, SurfaceHolder.Callback {
 	@Override
 	public void onLongPress(MotionEvent arg0) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
-	
 
 
-	
+
+
 
 }
 

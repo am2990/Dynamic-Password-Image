@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -23,6 +24,7 @@ import android.widget.Toast;
 
 public class RegistrationActivity extends Activity {
 	/** Called when the activity is first created. */
+	private Context mContext;
 
 	private static final String TAG = RegistrationActivity.class.getSimpleName();
 	private static final int MENU_SUBMIT = 0;
@@ -33,14 +35,13 @@ public class RegistrationActivity extends Activity {
 	static int imageBack;
 
 	public ActionMode mActionMode;
-	public ActionMode mActionMode1;
 	public static View mDecorView;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 
 		super.onCreate(savedInstanceState);
-
+		mContext = this;
 		i = getIntent();
 		imageBack = i.getIntExtra("ib",0);
 		System.out.println("ib: : "+ Integer.toString(imageBack));
@@ -51,7 +52,9 @@ public class RegistrationActivity extends Activity {
 		// making it full screen
 //		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		// set our MainGamePanel as the View
-		setContentView(new RegistrationPanel(this, mActionModeCallback, mActionModeCallback1,imageBack,images));
+		final RegistrationPanel rp = new RegistrationPanel(mContext, mActionModeCallback, mSubmitCallback,  imageBack,images);
+		setContentView(rp);
+
 		Log.d(TAG, "View added");
 
 		mDecorView = getWindow().getDecorView();
@@ -93,45 +96,6 @@ public class RegistrationActivity extends Activity {
 		Log.d(TAG, "stuff hidden");
 
 	}
-	//private ActionMode.Callback mActionModeCallback1 = new ActionMode.Callback() {
-
-		@Override
-		public boolean onCreateOptionsMenu(Menu menu) {
-			super.onCreateOptionsMenu(menu);
-
-			menu.add(0, MENU_SUBMIT, 0, R.string.menu_submit);
-			menu.add(0, MENU_VERIFY, 0, R.string.menu_verify);
-			menu.add(0, MENU_CONFIRM, 0, R.string.menu_confirm);
-
-
-			return true;
-		}
-
-
-		@Override
-		public boolean onOptionsItemSelected(MenuItem item) {
-			MainThread.setRunning(false);
-			switch (item.getItemId()) {
-				case MENU_SUBMIT:
-					System.out.println("do submit");
-					//doSubmit();
-
-					RegistrationPanel.thread.doSubmit();
-					return true;
-
-				case MENU_VERIFY:
-					RegistrationPanel.thread.doVerify();
-					return true;
-				case MENU_CONFIRM:
-					RegistrationPanel.thread.doConfirm();
-					return true;
-
-				//System.out.println("hello thread");
-
-			}
-
-			return false;
-		}
 
 
 	@Override
@@ -159,7 +123,6 @@ public class RegistrationActivity extends Activity {
 		}
 
 
-
 		// Called each time the action mode is shown. Always called after onCreateActionMode, but
 		// may be called multiple times if the mode is invalidated.
 		@Override
@@ -171,7 +134,7 @@ public class RegistrationActivity extends Activity {
 		@Override
 
 		public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-			System.out.println("get Item: "+item.getItemId());
+			System.out.println("get Item: " + item.getItemId());
 			//if((RegistrationPanel.image.isLongTouched() == true)||(RegistrationPanel.tri_b.isLongTouched() == true)){
 			switch (item.getItemId()) {
 
@@ -198,37 +161,29 @@ public class RegistrationActivity extends Activity {
 					return true;
 
 				default:
-
 					return false;
 			}
 
-			// }
-			//return false;
 		}
 
-
-
-
-
-		// Called when the user exits the action mode
 		@Override
-		public void onDestroyActionMode(ActionMode mode) {
-			mActionMode = null;
+		public void onDestroyActionMode(ActionMode actionMode) {
+
 		}
 	};
-	private ActionMode.Callback mActionModeCallback1 = new ActionMode.Callback() {
+
+
+	private ActionMode.Callback mSubmitCallback = new ActionMode.Callback() {
 
 		// Called when the action mode is created; startActionMode() was called
 		@Override
 		public boolean onCreateActionMode(ActionMode mode, Menu menu) {
 			// Inflate a menu resource providing context menu items
 			MenuInflater inflater = mode.getMenuInflater();
-			inflater.inflate(R.menu.main1, menu);
+			inflater.inflate(R.menu.submit_menu, menu);
 
 			return true;
 		}
-
-
 
 		// Called each time the action mode is shown. Always called after onCreateActionMode, but
 		// may be called multiple times if the mode is invalidated.
@@ -246,31 +201,30 @@ public class RegistrationActivity extends Activity {
 			switch (item.getItemId()) {
 
 				case R.id.submit:
-
+					Toast.makeText(getBaseContext(), "Submit Selected ", Toast.LENGTH_LONG).show();
+					MainThread.setRunning(false);
+					System.out.println("do submit");
 					RegistrationPanel.thread.doSubmit();
-					mode.finish();
 					return true;
-
 
 				default:
 
 					return false;
 			}
 
-			// }
-			//return false;
+
 		}
-
-
-
 
 
 		// Called when the user exits the action mode
 		@Override
 		public void onDestroyActionMode(ActionMode mode) {
-			mActionMode1 = null;
+			hideSystemUI();
+			mActionMode = null;
 		}
 	};
+
+
 	@Override
 	public void onBackPressed() {
 		System.out.println("back press");

@@ -52,7 +52,7 @@ public class TouchImageView extends ImageView {
 
                 // Handle touch events here...
                 switch (event.getAction() & MotionEvent.ACTION_MASK) {
-                case MotionEvent.ACTION_DOWN:
+                /*case MotionEvent.ACTION_DOWN:
                     savedMatrix.set(matrix);
                     start.set(event.getX(), event.getY());
                     Log.d(TAG, "mode=DRAG");
@@ -67,7 +67,7 @@ public class TouchImageView extends ImageView {
                         mode = ZOOM;
                         Log.d(TAG, "mode=ZOOM");
                     }
-                    break;
+                    break;*/
                 case MotionEvent.ACTION_UP:
                     int xDiff = (int) Math.abs(event.getX() - start.x);
                     int yDiff = (int) Math.abs(event.getY() - start.y);
