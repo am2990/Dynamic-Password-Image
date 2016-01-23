@@ -16,6 +16,8 @@ import java.util.Random;
 
 import edu.iiitd.dynamikpass.model.Image;
 import edu.iiitd.dynamikpass.utils.DatabaseHelper;
+
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -23,7 +25,9 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.support.v4.view.GestureDetectorCompat;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Display;
 import android.view.GestureDetector.OnDoubleTapListener;
 import android.view.GestureDetector.OnGestureListener;
 import android.view.GestureDetector.SimpleOnGestureListener;
@@ -96,8 +100,8 @@ public class LoginPanel extends SurfaceView implements OnGestureListener,
 
 		for(Image i :ls){
 
-			int r = randomN(ls.size()-1);
-
+			int r = randomN(ls.size());
+//int r =3;
 		// creating a hashmap to store all colors of the image
 			HashMap<String,Bitmap> bitmap1 = new HashMap<String, Bitmap>();
 			bitmap1.put("BLUE",BitmapFactory.decodeResource(getResources(),db.getBlueImage(i.getBitmapId())));
@@ -131,6 +135,8 @@ public class LoginPanel extends SurfaceView implements OnGestureListener,
 					hm.put(i,3);
 					break;
 				}
+				default:
+					break;
 
 			}
 
@@ -144,12 +150,12 @@ public class LoginPanel extends SurfaceView implements OnGestureListener,
 		}
 
 
-		 while (iter.hasNext()) {
-				
+		/* while (iter.hasNext()) {
+
 				 Image image = (Image) iter.next();
 				 drawimg.add(image);
-				
-			 }
+
+			 }*/
 		
 		//retrieve integer(gesture) corresponding to the image
 		for(Image i: drawimg){
@@ -225,15 +231,61 @@ public class LoginPanel extends SurfaceView implements OnGestureListener,
 
 	private void ChangePosition(Image img) {
 		Random ran = new Random();
+
+		DisplayMetrics dm= new DisplayMetrics();
 		//ran.setSeed((long)i);
+
+	Image checkpos,checkposother;
+		Iterator iter = hm.keySet().iterator();
+		((Activity)mContext).getWindowManager().getDefaultDisplay().getMetrics(dm);
+		int width = dm.widthPixels;
+		int height =dm.heightPixels;
+	do{
+
+		//int randomNumx = ran.nextInt((height)-img.getBitmap().getHeight()) + 1;
+		//int randomNumy= ran.nextInt((width)-img.getBitmap().getWidth()) + 1;
+		int randomNumx = ran.nextInt(height) + 1;
+		int randomNumy= ran.nextInt(width) + 1;
+		System.out.println("height: "+ height);
+		System.out.println("width: "+ width);
+		//int randomNumx = ran.nextInt((400 - 25) + 1) + 25;
+		//int randomNumy = ran.nextInt((400 - 25) + 1) + 25;
+		checkpos = img.getRange(randomNumx,randomNumy);
+
         // get upper limits from canvas
-		int randomNumx = ran.nextInt((350 - 25) + 1) + 25;
-		int randomNumy = ran.nextInt((350 - 25) + 1) + 25;
+		//int randomNumx = ran.nextInt((350 - 25) + 1) + 25;
+		//int randomNumy = ran.nextInt((350 - 25) + 1) + 25;
 
         //
 
+
 		img.setX(randomNumx);
 		img.setY(randomNumy);
+
+	}while(checkpos != null);
+
+		while (iter.hasNext()) {
+
+			Image image = (Image) iter.next();
+
+			do{
+				checkposother = img.getRange(image.getX(),image.getY());
+				int randomNumx = ran.nextInt(height) + 1;
+				int randomNumy= ran.nextInt(width) + 1;
+
+				// randomNumx = ran.nextInt((getHeight() - getWidth()) + 1) + getWidth();
+				//int randomNumy = ran.nextInt((getHeight() - getWidth()) + 1) + getWidth();
+				checkpos = img.getRange(randomNumx,randomNumy);
+
+				img.setX(randomNumx);
+				img.setY(randomNumy);
+
+			}while(checkposother != null);
+
+		}
+
+		//img.setX(randomNumx);
+		//img.setY(randomNumy);
 
 	}
 
@@ -325,6 +377,7 @@ public class LoginPanel extends SurfaceView implements OnGestureListener,
 
 		for(Image i: drawimg){
 			i.draw(canvas);
+
 		}
 
 
@@ -334,7 +387,7 @@ public class LoginPanel extends SurfaceView implements OnGestureListener,
         private static final String DEBUG_TAG = "Gestures";
         
         @Override
-        public boolean onDown(MotionEvent event) { 
+        public boolean onDown(MotionEvent event) {
             Log.d(DEBUG_TAG,"onDown: "); 
             return true;
         }
@@ -351,21 +404,28 @@ public class LoginPanel extends SurfaceView implements OnGestureListener,
         @Override
         public boolean onFling(MotionEvent event1, MotionEvent event2, 
                 float velocityX, float velocityY) {
-        	int one =0;
-        	//ArrayList<Image> FlingDroid = new ArrayList<Image>();
-        			//FlingDroid = fling;
+			ArrayList<Image> notF = new ArrayList<Image>(ls);
+			notF.remove(fling);
+			for(Image nf : notF){
+				Toast.makeText(mContext,"Wrong password",
+						Toast.LENGTH_SHORT).show();
+			}
     		Image droidz = null;
-    		 for( Image f : fling) {
-				 droidz = f.getCircleLine((int) event1.getX(), (int) event1.getY(), (int) event2.getX(), (int) event2.getY());
-				 System.out.println("droidz: " + droidz);
-				 System.out.println("droidz Fling: " + droidz);
+			try {
+				for (Image f : fling) {
+					droidz = f.getCircleLine((int) event1.getX(), (int) event1.getY(), (int) event2.getX(), (int) event2.getY());
+					System.out.println("droidz: " + droidz);
+					System.out.println("droidz Fling: " + droidz);
 
-				 fling.remove(droidz);
-
-
-			 }
+					fling.remove(droidz);
 
 
+				}
+
+			}
+			catch(Exception e){
+				System.out.println("runtime exception");
+			}
 			if((singletap.size() == 0)&& (doubletap.size() == 0) && (fling.size()==0)){
 				Toast.makeText(mContext,"Correct password",
 						Toast.LENGTH_SHORT).show();
@@ -391,36 +451,70 @@ public class LoginPanel extends SurfaceView implements OnGestureListener,
 	}
 
 	@Override
-	public boolean onSingleTapConfirmed(MotionEvent arg0) {
+	public boolean onSingleTapConfirmed(MotionEvent e) {
 		System.out.println("single tap");
-		//droid.changeColor(canvas);
+	/*	ArrayList<Image> notST = new ArrayList<Image>(ls);
+		notST.remove(singletap);
+		for(Image nst : notST){
+			Toast.makeText(mContext,"Wrong password",
+					Toast.LENGTH_SHORT).show();
+		}*/
 
-		//colflag = true;
-		int one = 0;
-		
-		//ArrayList<Image> SingleDroid = new ArrayList<Image>();
-				//SingleDroid = singletap;
-		//Image droidz = null;
-		
- 		 for( Image f : singletap){
-			 Image droidz = f.getRange(arg0.getX(), arg0.getY());
-			 System.out.println("droidz ST: "+ droidz);
+		/*try {
+			for (Image f : singletap) {
+				Image droidz = f.getRange(arg0.getX(), arg0.getY());
+				System.out.println("droidz ST: " + droidz);
 
-			 singletap.remove(droidz);
-			 System.out.println("singleDroid size: "+ singletap.size());
+				singletap.remove(droidz);
+				System.out.println("singleDroid size: " + singletap.size());
 
-		
-		 }
-		
+
+			}
+		}
+		catch(Exception e){
+			System.out.println("runtime exception");
+		}
 		 
 		 if((singletap.size() == 0)&& (doubletap.size() == 0) && (fling.size()==0)){
 			 Toast.makeText(mContext,"Correct password",
 		                Toast.LENGTH_SHORT).show();
 			 System.out.println("yes");
 
-		 }
+		 }*/
+
+		for(Image p : ls){
+			if(singletap.contains(p)){
+				try {        //DoubleDroid = doubletap;
+					Image droidz = null;
+					// f = listdroid.get(l);
+					for (Image f : singletap) {
+						droidz = f.getRange(e.getX(), e.getY());
+						System.out.println("droidz ST: " + droidz);
+						//templist.add(droidz);
+						// while(l<reach){
+						if (droidz != null) {
+							doubletap.remove(droidz);
+						}
 
 
+
+					}
+				}
+				catch(Exception e1){
+					System.out.println("Runtime exception");
+				}
+				if((singletap.size() == 0)&& (doubletap.size() == 0) && (fling.size()==0)){
+					Toast.makeText(mContext,"Correct password",
+							Toast.LENGTH_SHORT).show();
+					System.out.println("yes");
+
+				}
+			}
+			else{
+				Toast.makeText(mContext,"Wrong Password",
+						Toast.LENGTH_SHORT).show();
+			}
+		}
 		System.out.println("on single");
 		Log.d("hello","onSTC: ");
 
@@ -462,32 +556,75 @@ public class LoginPanel extends SurfaceView implements OnGestureListener,
 
 	@Override
 	public boolean onDoubleTap(MotionEvent e) {
-		int one = 0;
+
 
 	//	ArrayList<Image> DoubleDroid = new ArrayList<Image>();
-				//DoubleDroid = doubletap;
-		Image droidz = null;
-		// f = listdroid.get(l);
-		for( Image f : doubletap){
-			droidz = f.getRange(e.getX(), e.getY());
-			System.out.println("droidz DT: "+ droidz);
-			//templist.add(droidz);
-			// while(l<reach){
+		/*ArrayList<Image> notDT = new ArrayList<Image>(ls);
+		notDT.remove(doubletap);
+		for(Image ndt : notDT){
+			Toast.makeText(mContext,"Wrong password",
+					Toast.LENGTH_SHORT).show();
+		}*/
+		/*try {        //DoubleDroid = doubletap;
+			Image droidz = null;
+			// f = listdroid.get(l);
+			for (Image f : doubletap) {
+				droidz = f.getRange(e.getX(), e.getY());
+				System.out.println("droidz DT: " + droidz);
+				//templist.add(droidz);
+				// while(l<reach){
+				if (droidz != null) {
+					doubletap.remove(droidz);
+				}
 
-			 if(droidz != null) {
-				 doubletap.remove(droidz);
-			 }
 
-			 
-		 }
+
+			}
+		}
+		catch(Exception e1){
+			System.out.println("Runtime exception");
+		}
 		if((singletap.size() == 0)&& (doubletap.size() == 0) && (fling.size()==0)){
 			Toast.makeText(mContext,"Correct password",
 					Toast.LENGTH_SHORT).show();
 			System.out.println("yes");
 
 		}
+*/
+
+		for(Image p : ls){
+			if(doubletap.contains(p)){
+				try {        //DoubleDroid = doubletap;
+					Image droidz = null;
+					// f = listdroid.get(l);
+					for (Image f : doubletap) {
+						droidz = f.getRange(e.getX(), e.getY());
+						System.out.println("droidz DT: " + droidz);
+						//templist.add(droidz);
+						// while(l<reach){
+						if (droidz != null) {
+							doubletap.remove(droidz);
+						}
 
 
+
+					}
+				}
+				catch(Exception e1){
+					System.out.println("Runtime exception");
+				}
+				if((singletap.size() == 0)&& (doubletap.size() == 0) && (fling.size()==0)){
+					Toast.makeText(mContext,"Correct password",
+							Toast.LENGTH_SHORT).show();
+					System.out.println("yes");
+
+				}
+			}
+			else{
+				Toast.makeText(mContext,"Wrong Password",
+						Toast.LENGTH_SHORT).show();
+			}
+		}
 		Log.d("hello","onDT: ");
 		return false;
 	}
