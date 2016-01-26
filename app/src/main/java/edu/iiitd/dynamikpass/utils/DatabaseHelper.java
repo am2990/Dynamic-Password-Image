@@ -190,8 +190,8 @@ public class DatabaseHelper extends SQLiteOpenHelper{
     /**
      * getting all droids under single tag
      * */
-    public List<Image> getAllDroids() {
-        List<Image> droids = new ArrayList<Image>();
+    public ArrayList<Image> getAllDroids() {
+        ArrayList<Image> droids = new ArrayList<Image>();
  
         String selectQuery = "SELECT  * FROM " + TABLE_DROID;
         

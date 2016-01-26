@@ -36,7 +36,7 @@ public class Image implements Serializable{
 	private boolean touched, longPressed;	// if droid is touched/picked up
 	private String col;
 	private static Resources res;
-	private static final String TAG = "DroidObject";
+	private static final String TAG = Image.class.getSimpleName();
 
 	public static int rad;
 	public static boolean host=false;
@@ -257,5 +257,17 @@ public class Image implements Serializable{
 			setLongPressed(false);
 		}
 
+	}
+
+	@Override
+	public boolean equals(Object v) {
+		boolean retVal = false;
+
+		if (v instanceof Image){
+			Image img = (Image) v;
+			retVal = img.bitmap_id == this.bitmap_id;
+		}
+
+		return retVal;
 	}
 }

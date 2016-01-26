@@ -50,7 +50,7 @@ public class RegistrationPanel extends SurfaceView implements
 	static Image sy;
 	static Image sb;
 
-    private int callBackCode = 0;
+	private int callBackCode = 0;
 
 	/**
 	 * Current width of the surface/canvas.
@@ -68,13 +68,12 @@ public class RegistrationPanel extends SurfaceView implements
 		mContext = context;
 		surfaceView = this;
 		this.mActionModeCallback = mActionModeCallback;
-        this.mSubmitCallBack = mSubmitCallBack;
+		this.mSubmitCallBack = mSubmitCallBack;
 		// adding the callback (this) to the surface holder to intercept events
 		System.out.println("RP : "+images.get(0));
 		getHolder().addCallback(this);
 
 		DatabaseHelper db = new DatabaseHelper(mContext);
-
 
 		int image_id = 0;
 		for(String s: images){
@@ -105,49 +104,44 @@ public class RegistrationPanel extends SurfaceView implements
 
 		// create the game loop thread
 		thread = new MainThread(getHolder(), this, mContext);
+
 		mDetector = new GestureDetectorCompat(mContext, new MyGestureListener());
 		mDetector.setIsLongpressEnabled(true);
 		// make the GamePanel focusable so it can handle events
+		setFocusable(true);
 
 		surfaceView.setOnTouchListener(new OnTouchListener() {
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
 				if (event.getAction() == MotionEvent.ACTION_DOWN) {
 					// delegating event handling to the droid
-					for(Image img: imglist){
-						img.handleActionDown((int)event.getX(), (int)event.getY());
+					for (Image img : imglist) {
+						img.handleActionDown((int) event.getX(), (int) event.getY());
 					}
 					// check if in the lower part of the screen we exit
 					if (event.getY() > getHeight() - 50) {
 						thread.setRunning(false);
-						((Activity)getContext()).finish();
+						((Activity) getContext()).finish();
 					} else {
 						Log.d(TAG, "Coords: x=" + event.getX() + ",y=" + event.getY());
 					}
-				} if (event.getAction() == MotionEvent.ACTION_MOVE) {
+				}
+				if (event.getAction() == MotionEvent.ACTION_MOVE) {
 					// the gestures
-					for(Image img: imglist){
+					for (Image img : imglist) {
 						if (img.isTouched()) {
-
-
-							img.setX((int)event.getX());
-
-							img.setY((int)event.getY());
+							img.setX((int) event.getX());
+							img.setY((int) event.getY());
 						}
-
 					}
-
-				} if (event.getAction() == MotionEvent.ACTION_UP) {
+				}
+				if (event.getAction() == MotionEvent.ACTION_UP) {
 					// touch was released
-
-					for(Image img: imglist){
-
-
+					for (Image img : imglist) {
 						if (img.isTouched()) {
 							img.setTouched(false);
 						}
 					}
-
 				}
 
 				mDetector.onTouchEvent(event);
@@ -156,7 +150,7 @@ public class RegistrationPanel extends SurfaceView implements
 
 
 		});
-		setFocusable(true);
+
 	}
 
 	@Override
@@ -176,7 +170,7 @@ public class RegistrationPanel extends SurfaceView implements
 	@Override
 	public void surfaceCreated(SurfaceHolder holder) {
 		// at this point the surface is created and
-		// we can safely start the game loop
+		// we can safely start the registration loop
 		thread.setRunning(true);
 		thread.start();
 	}
@@ -217,9 +211,9 @@ public class RegistrationPanel extends SurfaceView implements
 
 	private void showSystemUI() {
 		RegistrationActivity.mDecorView.setSystemUiVisibility(
-                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+				View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+						| View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+						| View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
 	}
 
 
@@ -235,8 +229,8 @@ public class RegistrationPanel extends SurfaceView implements
 		public boolean onSingleTapUp(MotionEvent m){
 			Log.d(DEBUG_TAG, "onTapup Event: ");
 //			showSystemUI();
-            mActionMode = ((Activity)mContext).startActionMode(mSubmitCallBack);
-            return true;
+			mActionMode = ((Activity)mContext).startActionMode(mSubmitCallBack);
+			return true;
 		}
 
 

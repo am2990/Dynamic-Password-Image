@@ -46,7 +46,7 @@ public class RegistrationActivity extends Activity {
 		images = i.getStringArrayListExtra("imageobjs");
 		System.out.println("images size: "+images.size());
 		// requesting to turn the title OFF
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
+//		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		// making it full screen
 //		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		// set our MainGamePanel as the View
@@ -116,7 +116,6 @@ public class RegistrationActivity extends Activity {
 			// Inflate a menu resource providing context menu items
 			MenuInflater inflater = mode.getMenuInflater();
 			inflater.inflate(R.menu.main, menu);
-
 			return true;
 		}
 

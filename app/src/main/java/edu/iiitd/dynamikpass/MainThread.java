@@ -44,12 +44,9 @@ public class MainThread extends Thread {
 	private RegistrationPanel gamePanel;
 	static MainThread thread;
 	// Context context=MainGamePanel.getContext();
-	double x1,x2,x3,x4,y1,y2,y3,y4;
-	Bitmap bit1,bit2,bit3;
-	//private Droid droid;
-	
+
 	private Context mContext;
-		// flag to hold game state 
+
 	private static  AtomicBoolean running;
 
 	//private Droid mdroid;
@@ -71,7 +68,7 @@ public class MainThread extends Thread {
 	@Override
 	public void run() {
 		Canvas canvas;
-		Log.d(TAG, "Starting game loop");
+		Log.d(TAG, "Starting registration loop");
 		while (running.get()) {
 			
 			if(!(running.get())){
@@ -100,11 +97,8 @@ public class MainThread extends Thread {
 	}
 
 	public void doSubmit() {
-		
-		//synchronized (surfaceHolder) {
 
-			//TODO Store the images in db
-			
+
 			DatabaseHelper db = new DatabaseHelper(mContext);
 			db.clearTableDroid();
 			for(Image img: RegistrationPanel.imglist){
