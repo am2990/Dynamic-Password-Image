@@ -27,9 +27,7 @@ public class RegistrationActivity extends Activity {
 	private Context mContext;
 
 	private static final String TAG = RegistrationActivity.class.getSimpleName();
-	private static final int MENU_SUBMIT = 0;
-	private static final int MENU_VERIFY = 1;
-	private static final int MENU_CONFIRM = 2;
+
 	static ArrayList<String> images = new ArrayList<String>();
 	Intent i;
 	static int imageBack;

@@ -36,21 +36,22 @@ public class GalleryView extends Activity {
 			R.drawable.antartica3, R.drawable.antartica4,
 			R.drawable.antartica5, R.drawable.antartica6,
 			R.drawable.antartica7, R.drawable.antartica8,
-			R.drawable.antartica9, R.drawable.antartica10 };
+			R.drawable.antartica9, R.drawable.antartica10,
+			R.drawable.bkgsea};
 	LinearLayout imageView;
 
 	private Context ctx;
 	int imageBackground;
 	int selectedImage = 0;
 	private static final int MENU_SETBACK = 0;
-	
+
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main_gal);
 		try {
-			
+
 		} catch (Exception e) {
 			e.getMessage();
 		}
@@ -62,17 +63,17 @@ public class GalleryView extends Activity {
 		ga.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
-					long arg3) {
+									long arg3) {
 				Toast.makeText(
 						getBaseContext(),
 						"You have selected picture " + (arg2 + 1)
 								+ " of Antartica", Toast.LENGTH_SHORT).show();
 				try {
-				imageView.removeAllViews();
+					imageView.removeAllViews();
 				} catch (Exception e) {
 					e.getMessage();
 				}
-				
+
 				TouchImageView touchImageView = new TouchImageView(
 						GalleryView.this);
 				touchImageView.setImageResource(pics[arg2]);
@@ -84,14 +85,14 @@ public class GalleryView extends Activity {
 			}
 
 		});
-		
+
 
 	}
 
 	public class ImageAdapter extends BaseAdapter {
 
 
-		
+
 
 
 		public ImageAdapter(Context c) {
@@ -120,47 +121,45 @@ public class GalleryView extends Activity {
 			return arg0;
 		}
 
-		
+
 		public View getView(int arg0, View arg1, ViewGroup arg2) {
 			System.out.println("get View");
 			ImageView iv = new ImageView(ctx);
 			iv.setImageResource(pics[arg0]);
-			iv.setScaleType(ImageView.ScaleType.FIT_XY);
+			iv.setScaleType(ImageView.ScaleType.FIT_CENTER);
 			iv.setLayoutParams(new Gallery.LayoutParams(150, 120));
 			iv.setBackgroundResource(imageBackground);
-			
+
 			System.out.println("iv: "+ iv);
 			return iv;
-			
+
 		}
 	}
 	@Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        super.onCreateOptionsMenu(menu);
+	public boolean onCreateOptionsMenu(Menu menu) {
+		super.onCreateOptionsMenu(menu);
 
-        menu.add(0, MENU_SETBACK, 0, R.string.menu_setBack);
-       
-       
+		menu.add(0, MENU_SETBACK, 0, R.string.menu_setBack);
 
-        return true;
-    }
 
-	
+
+		return true;
+	}
+
+
 	@Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-		
-        switch (item.getItemId()) {
-            case MENU_SETBACK:
-		
-            	System.out.println("ib: "+selectedImage);
-         	Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-    			intent.putExtra("ib", selectedImage);
-    	
-    		startActivity(intent);
-    		
-                return true;
-         }
+	public boolean onOptionsItemSelected(MenuItem item) {
 
-        return false;
-    }
+		switch (item.getItemId()) {
+			case MENU_SETBACK:
+
+				System.out.println("ib: "+selectedImage);
+				Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+				intent.putExtra("ib", selectedImage);
+				startActivity(intent);
+				return true;
+		}
+
+		return false;
+	}
 }

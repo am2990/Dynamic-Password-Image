@@ -41,7 +41,7 @@ public class MainActivity extends Activity {
 
 	private static final int MENU_SELECTIMG = 0;
 
-	String[] countries = new String[] {
+	String[] objects = new String[] {
 			"Droid",
 			"Square",
 			"Smiley",
@@ -50,7 +50,7 @@ public class MainActivity extends Activity {
 	};
 
 	// Array of integers points to images stored in /res/drawable-ldpi/
-	int[] flags = new int[]{
+	int[] android_resid = new int[]{
 			R.drawable.droid_1,
 			R.drawable.triangle_blue,
 			R.drawable.smiley_b,
@@ -74,13 +74,12 @@ public class MainActivity extends Activity {
 		db.createImage("smiley", R.drawable.smiley_b, R.drawable.smiley_g, R.drawable.smiley_r, R.drawable.smiley_y);
 		db.createImage("football", R.drawable.football_b, R.drawable.football_g, R.drawable.football_r, R.drawable.football_y);
 
-		// Each row in the list stores country name, currency and flag
-		List<HashMap<String,String>> aList = new ArrayList<HashMap<String,String>>();
 
+		List<HashMap<String,String>> aList = new ArrayList<HashMap<String,String>>();
 		for(int i=0;i<4;i++){
 			HashMap<String, String> hm = new HashMap<String,String>();
-			hm.put("txt", countries[i]);
-			hm.put("flag", Integer.toString(flags[i]) );
+			hm.put("txt", objects[i]);
+			hm.put("flag", Integer.toString(android_resid[i]) );
 			aList.add(hm);
 
 		}
@@ -88,17 +87,13 @@ public class MainActivity extends Activity {
 
 		// Keys used in Hashmap
 		String[] from = { "flag","txt"};
-
 		int[] to = { R.id.flag,R.id.txt};
 
 		// Instantiating an adapter to store each items
 		// R.layout.listview_layout defines the layout of each item
 		SimpleAdapter adapter = new SimpleAdapter(getBaseContext(), aList, R.layout.gridview_layout, from, to);
-
 		// Getting a reference to gridview of MainActivity
 		gridView = (GridView) findViewById(R.id.gridview);
-
-
 		// Setting an adapter containing images to the gridview
 		gridView.setAdapter(adapter);
 		gridView.setChoiceMode(GridView.CHOICE_MODE_MULTIPLE_MODAL);
@@ -195,7 +190,6 @@ public class MainActivity extends Activity {
 			int selectCount = gridView.getCheckedItemCount();
 			if(checked){
 				System.out.println("in mChecked");
-
 				images.add(obj.get("flag"));
 			}
 			else if(!checked){

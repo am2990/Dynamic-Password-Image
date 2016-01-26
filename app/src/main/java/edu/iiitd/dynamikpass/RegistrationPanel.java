@@ -66,13 +66,12 @@ public class RegistrationPanel extends SurfaceView implements
 	public RegistrationPanel(Context context, Callback mActionModeCallback, Callback mSubmitCallBack, int backgroundImage, ArrayList<String> images) {
 		super(context);
 		mContext = context;
+		surfaceView = this;
 		this.mActionModeCallback = mActionModeCallback;
         this.mSubmitCallBack = mSubmitCallBack;
 		// adding the callback (this) to the surface holder to intercept events
 		System.out.println("RP : "+images.get(0));
 		getHolder().addCallback(this);
-
-
 
 		DatabaseHelper db = new DatabaseHelper(mContext);
 
@@ -85,7 +84,6 @@ public class RegistrationPanel extends SurfaceView implements
 
 			image_id = Integer.parseInt(s);
 			System.out.println("image_id: "+image_id);
-			String w = "droid_1";
 			HashMap<String,Bitmap> bitmap1 = new HashMap<String, Bitmap>();
 			bitmap1.put("BLUE",BitmapFactory.decodeResource(getResources(),db.getBlueImage(image_id)));
 			bitmap1.put("YELLOW",BitmapFactory.decodeResource(getResources(), db.getYellowImage(image_id)));
@@ -107,9 +105,7 @@ public class RegistrationPanel extends SurfaceView implements
 
 		// create the game loop thread
 		thread = new MainThread(getHolder(), this, mContext);
-		mContext=context;
 		mDetector = new GestureDetectorCompat(mContext, new MyGestureListener());
-		surfaceView = this;
 		mDetector.setIsLongpressEnabled(true);
 		// make the GamePanel focusable so it can handle events
 
