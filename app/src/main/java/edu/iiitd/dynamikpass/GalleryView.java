@@ -37,7 +37,7 @@ public class GalleryView extends Activity {
 			R.drawable.antartica5, R.drawable.antartica6,
 			R.drawable.antartica7, R.drawable.antartica8,
 			R.drawable.antartica9, R.drawable.antartica10,
-			R.drawable.bkgsea, R.drawable.nemo3, R.drawable.nemo1};
+			R.drawable.bkgsea};
 	LinearLayout imageView;
 
 	private Context ctx;
