@@ -10,6 +10,8 @@ import java.util.List;
 import edu.iiitd.dynamikpass.RegistrationActivity;
 import edu.iiitd.dynamikpass.RegistrationPanel;
 import edu.iiitd.dynamikpass.model.Image;
+import edu.iiitd.dynamikpass.model.User;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.res.Resources;
@@ -40,6 +42,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 	    private static final String TABLE_MAP = "table_map";
 	    private static final String TABLE_GESTURE = "t_gesture";
 	    private static final String TABLE_IMGCOLOR ="t_imgcolor";
+        private static final String TABLE_IMGPIN ="t_imgpin";
 	    
 	    private static final String KEY_ID = "_id"; //primary key
 	    private static final String KEY_CREATED_AT = "created_at";
@@ -51,7 +54,10 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 	    private static final String KEY_BITMAP_ID = "bitmap_id";
 	    private static final String KEY_COLOR = "color";
 	    private static final String KEY_RES = "resources";
-	    
+        private static final String KEY_USERNAME = "username";
+        private static final String KEY_IMGPASSWORD = "imgpassword";
+        private static final String KEY_GESTURE_ARR = "gesturearr";
+        private static final String KEY_IMGBACK = "imgback";
 	    // Map Table - column names
 	    private static final String KEY_POSITION_M = "position_m";
 	    private static final String KEY_COLOR_M = "color_m";
@@ -69,11 +75,15 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 		private static final String KEY_IMG_G = "img_green";
 		private static final String KEY_IMG_R = "img_red";
 		private static final String KEY_IMG_Y = "img_yellow";
+
 	   	
 	   	
 	    
 	    
 	 // Table Create Statements
+
+    private static final String CREATE_TABLE_IMGPIN = "CREATE TABLE "
+            + TABLE_IMGPIN + "(" + KEY_ID + " INTEGER PRIMARY KEY," + KEY_USERNAME + " VARCHAR," + KEY_IMGPASSWORD + " VARCHAR," + KEY_GESTURE_ARR + " VARCHAR " + " )";
 	    // DROID table create statement
 	    private static final String CREATE_TABLE_DROID = "CREATE TABLE "
 	    		+ TABLE_DROID + "(" + KEY_ID + " INTEGER PRIMARY KEY," + KEY_X + " INTEGER," + KEY_BITMAP_ID + " INTEGER," + KEY_Y + " INTEGER," 
@@ -92,10 +102,10 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 	    private static final String CREATE_TABLE_IMGCOLOR = "CREATE TABLE " + TABLE_IMGCOLOR
 	    		+ "(" + KEY_ID + " INTEGER PRIMARY KEY," + KEY_IMG_TEXT + " TEXT,"
 	    		+ KEY_IMG_B + " INTEGER," + KEY_IMG_G + " INTEGER," + KEY_IMG_Y + " INTEGER," + KEY_IMG_R + " INTEGER" + " )";
-	    
-	    
-	    
-	    
+
+
+
+
 	    public DatabaseHelper(Context context) {
 	    	super(context, DATABASE_NAME, null, DATABASE_VERSION);
 
@@ -113,6 +123,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
     	db.execSQL(CREATE_TABLE_MAP);
     	db.execSQL(CREATE_TABLE_GESTURE);
     	db.execSQL(CREATE_TABLE_IMGCOLOR);
+        db.execSQL(CREATE_TABLE_IMGPIN);
     	
     	Log.d(TAG, "creating tables");
     	
@@ -124,11 +135,51 @@ public class DatabaseHelper extends SQLiteOpenHelper{
     	db.execSQL("DROP TABLE IF EXISTS " + TABLE_MAP);
     	db.execSQL("DROP TABLE IF EXISTS " + TABLE_GESTURE);
     	db.execSQL("DROP TABLE IF EXISTS " + TABLE_IMGCOLOR);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_IMGPIN);
 
     	// create new tables
     	onCreate(db);
     }
-    
+
+
+    public void addUser(User user) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        System.out.println("username1: " + user.getUsername());
+        boolean exists = getUserByName(user.getUsername());
+        if(exists == false) {
+            values.put(KEY_USERNAME, user.getUsername());
+            values.put(KEY_IMGPASSWORD, user.getImgPassword());
+            values.put(KEY_GESTURE_ARR, user.getGestarr());
+            // Inserting Row
+            db.insert(TABLE_IMGPIN, null, values);
+            System.out.println("inserted successfully");
+        }
+        db.close(); // Closing database connection
+    }
+
+    public boolean getUserByName(String username) {
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        System.out.println("username: "+ username);
+        String selectString = "SELECT * FROM " + TABLE_IMGPIN + " WHERE " + KEY_USERNAME + " =?";
+       /* Cursor cursor = db.query(TABLE_WORDPIN,
+                new String[]{KEY_USERNAME},
+                KEY_USERNAME + " = ? ",
+                new String[]{username},
+                null, null, null, null);
+*/
+        Cursor cursor = db.rawQuery(selectString, new String[]{username});
+        if(cursor.getCount()>0) {
+            System.out.println("cursor: "+ cursor);
+            return true; //row exists
+        }
+        else
+            return false;
+
+
+    }
     /* Inserting values in gesture table : hardcoded */
 
     public void clearTableDroid(){

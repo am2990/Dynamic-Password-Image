@@ -5,6 +5,7 @@
  */
 package edu.iiitd.dynamikpass;
 
+import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import android.annotation.SuppressLint;
@@ -12,6 +13,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import edu.iiitd.dynamikpass.model.Image;
@@ -106,10 +109,18 @@ public class MainThread extends Thread {
 			}
 		
 			Intent intent = new Intent(mContext, TableLayoutExampleActivity.class);
-			System.out.println("r p: "+RegistrationActivity.imageBack);
+			System.out.println("r p: " + RegistrationActivity.imageBack);
 			intent.putExtra("ib", RegistrationActivity.imageBack);
+			intent.putExtra("checkuser", RegistrationActivity.checkuser);
+			intent.putExtra("usern", RegistrationActivity.str_usern);
+			//intent.putExtra("imglist", (RegistrationPanel.imglist));
+			//intent.putParcelableArrayListExtra("imglist", (ArrayList<? extends Parcelable>) RegistrationPanel.imglist);
+		Bundle bundleObject = new Bundle();
+		bundleObject.putSerializable("imglist", RegistrationPanel.imglist);
 
-			mContext.startActivity(intent);
+// Put Bundle in to Intent and call start Activity
+		intent.putExtras(bundleObject);
+		mContext.startActivity(intent);
 
 			
 		//}

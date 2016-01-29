@@ -70,6 +70,7 @@ public class RegistrationPanel extends SurfaceView implements
 		this.mActionModeCallback = mActionModeCallback;
 		this.mSubmitCallBack = mSubmitCallBack;
 		// adding the callback (this) to the surface holder to intercept events
+		//System.out.println("chcekuser: "+ checkuser);
 		System.out.println("RP : "+images.get(0));
 		getHolder().addCallback(this);
 

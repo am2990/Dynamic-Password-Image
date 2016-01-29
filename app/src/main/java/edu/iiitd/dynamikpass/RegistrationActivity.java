@@ -34,12 +34,20 @@ public class RegistrationActivity extends Activity {
 
 	public ActionMode mActionMode;
 	public static View mDecorView;
+	static Intent iuser,icheckuser;
+	static String str_usern,checkuser;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 
 		super.onCreate(savedInstanceState);
 		mContext = this;
+		iuser=getIntent();
+		icheckuser = getIntent();
+
+
+		checkuser = icheckuser.getStringExtra("checkuser");
+		str_usern = iuser.getStringExtra("usern");
 		i = getIntent();
 		imageBack = i.getIntExtra("ib",0);
 		System.out.println("ib: : "+ Integer.toString(imageBack));
@@ -50,7 +58,7 @@ public class RegistrationActivity extends Activity {
 		// making it full screen
 //		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		// set our MainGamePanel as the View
-		final RegistrationPanel rp = new RegistrationPanel(mContext, mActionModeCallback, mSubmitCallback,  imageBack,images);
+		final RegistrationPanel rp = new RegistrationPanel(mContext, mActionModeCallback, mSubmitCallback, imageBack, images);
 		setContentView(rp);
 
 		Log.d(TAG, "View added");

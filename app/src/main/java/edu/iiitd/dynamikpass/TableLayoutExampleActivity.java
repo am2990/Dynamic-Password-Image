@@ -2,12 +2,15 @@
 package edu.iiitd.dynamikpass;
 
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
+import edu.iiitd.dynamikpass.model.User;
 import edu.iiitd.dynamikpass.utils.DatabaseHelper;
 import android.app.Activity;
 import android.content.Intent;
 import android.media.Image;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore.Images;
 import android.util.Log;
@@ -20,23 +23,56 @@ import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-public class TableLayoutExampleActivity extends Activity implements OnItemSelectedListener, OnClickListener {
-	/** Called when the activity is first created. */
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.gson.Gson;
 
-	private Spinner spinner1, spinner2,spinner3;
-	private String item1,item2,item3;
-	String g1,g2,g3;
+public class TableLayoutExampleActivity extends Activity implements OnItemSelectedListener, OnClickListener {
+	/**
+	 * Called when the activity is first created.
+	 */
+
+	private Spinner spinner1, spinner2, spinner3;
+	private String item1, item2, item3;
+	String g1, g2, g3;
 	Button submit;
 	int imageBack;
+	Intent i;
+	User user = new User();
+	Intent iuser, icheckuser, iimagelist;
+	String str_usern, checkuser;
+	ArrayList<Image> imagelist = new ArrayList<Image>();
 	ArrayList<Image> images = new ArrayList<Image>();
 	DatabaseHelper db = new DatabaseHelper(this);
+	String[] gestures;
+	/**
+	 * ATTENTION: This was auto-generated to implement the App Indexing API.
+	 * See https://g.co/AppIndexing/AndroidStudio for more information.
+	 */
+	private GoogleApiClient client;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main_1);
-		Intent i = getIntent();
-		imageBack = i.getIntExtra("ib",0);
+		i = getIntent();
+		imageBack = i.getIntExtra("ib", 0);
 
+		iuser = getIntent();
+		icheckuser = getIntent();
+		//iimagelist = getIntent();
+
+		//imagelist = (ArrayList<Image>) iimagelist.getSerializableExtra("imglist");
+
+		/*iimagelist = getIntent();
+		imagelist = iimagelist.getParcelableArrayListExtra("imglist");*/
+		Bundle bundleObject = getIntent().getExtras();
+
+		// Get ArrayList Bundle
+		imagelist = (ArrayList<Image>) bundleObject.getSerializable("imglist");
+		checkuser = icheckuser.getStringExtra("checkuser");
+		str_usern = iuser.getStringExtra("usern");
 
 		spinner1 = (Spinner) findViewById(R.id.spinner1);
 		spinner2 = (Spinner) findViewById(R.id.spinner2);
@@ -57,39 +93,47 @@ public class TableLayoutExampleActivity extends Activity implements OnItemSelect
 		spinner1.setOnItemSelectedListener(this);
 		spinner2.setOnItemSelectedListener(this);
 		spinner3.setOnItemSelectedListener(this);
-		submit.setOnClickListener((OnClickListener) this);
+		submit.setOnClickListener(this);
 
-		spinner1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+		spinner1.setOnItemSelectedListener(new OnItemSelectedListener() {
 			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 				item1 = parent.getItemAtPosition(position).toString();
-				System.out.println("object1: "+item1);
+				System.out.println("object1: " + item1);
 
-				db.saveMap(1,1,item1);
+				db.saveMap(1, 1, item1);
+				gestures[0] = item1;
 			}
+
 			public void onNothingSelected(AdapterView<?> parent) {
 			}
 		});
-		spinner2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+		spinner2.setOnItemSelectedListener(new OnItemSelectedListener() {
 			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 				item2 = parent.getItemAtPosition(position).toString();
-				System.out.println("object2: "+item2);
-				db.saveMap(1,0,item2);
+				System.out.println("object2: " + item2);
+				db.saveMap(1, 0, item2);
 				//g2=item2;
+				gestures[1] = item2;
 			}
+
 			public void onNothingSelected(AdapterView<?> parent) {
 			}
 		});
-		spinner3.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+		spinner3.setOnItemSelectedListener(new OnItemSelectedListener() {
 			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 				item3 = parent.getItemAtPosition(position).toString();
-				System.out.println("object3: "+item3);
-				db.saveMap(0,1,item3);
-
+				System.out.println("object3: " + item3);
+				db.saveMap(0, 1, item3);
+				gestures[2] = item3;
 			}
+
 			public void onNothingSelected(AdapterView<?> parent) {
 			}
 		});
 
+		// ATTENTION: This was auto-generated to implement the App Indexing API.
+		// See https://g.co/AppIndexing/AndroidStudio for more information.
+		client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
 	}
 
 
@@ -98,6 +142,7 @@ public class TableLayoutExampleActivity extends Activity implements OnItemSelect
 
 
 	}
+
 	public void onNothingSelected(AdapterView<?> arg0) {
 		// TODO Auto-generated method stub
 
@@ -107,10 +152,64 @@ public class TableLayoutExampleActivity extends Activity implements OnItemSelect
 	@Override
 	public void onClick(View arg0) {
 		// TODO Auto-generated method stub
-		Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-		intent.putExtra("ib", imageBack);
+		//Gson gson = new Gson();
+
+		//String list = gson.toJson(imagelist);
+
+		//System.out.println("list= " + list);
+		if (checkuser.equalsIgnoreCase("false")) {
+
+			user.setUsername(str_usern);
+			user.setImageback(imageBack);
+			//user.setImgPassword(list);
+			user.setGestarr(gestures.toString());
+			//System.out.println("selected tagcloudview 1: " + selected.toString());
+			//System.out.println("not selected tagcloudview 1: " + notSelected.toString());
+			db.addUser(user);
+		}
+		Intent intent = new Intent(getApplicationContext(), UsernameActivity.class);
+
 		startActivity(intent);
 	}
 
 
+	@Override
+	public void onStart() {
+		super.onStart();
+
+		// ATTENTION: This was auto-generated to implement the App Indexing API.
+		// See https://g.co/AppIndexing/AndroidStudio for more information.
+		client.connect();
+		Action viewAction = Action.newAction(
+				Action.TYPE_VIEW, // TODO: choose an action type.
+				"TableLayoutExample Page", // TODO: Define a title for the content shown.
+				// TODO: If you have web page content that matches this app activity's content,
+				// make sure this auto-generated web page URL is correct.
+				// Otherwise, set the URL to null.
+				Uri.parse("http://host/path"),
+				// TODO: Make sure this auto-generated app deep link URI is correct.
+				Uri.parse("android-app://edu.iiitd.dynamikpass/http/host/path")
+		);
+		AppIndex.AppIndexApi.start(client, viewAction);
+	}
+
+	@Override
+	public void onStop() {
+		super.onStop();
+
+		// ATTENTION: This was auto-generated to implement the App Indexing API.
+		// See https://g.co/AppIndexing/AndroidStudio for more information.
+		Action viewAction = Action.newAction(
+				Action.TYPE_VIEW, // TODO: choose an action type.
+				"TableLayoutExample Page", // TODO: Define a title for the content shown.
+				// TODO: If you have web page content that matches this app activity's content,
+				// make sure this auto-generated web page URL is correct.
+				// Otherwise, set the URL to null.
+				Uri.parse("http://host/path"),
+				// TODO: Make sure this auto-generated app deep link URI is correct.
+				Uri.parse("android-app://edu.iiitd.dynamikpass/http/host/path")
+		);
+		AppIndex.AppIndexApi.end(client, viewAction);
+		client.disconnect();
+	}
 }

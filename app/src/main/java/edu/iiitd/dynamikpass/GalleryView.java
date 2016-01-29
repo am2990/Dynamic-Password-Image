@@ -44,12 +44,20 @@ public class GalleryView extends Activity {
 	int imageBackground;
 	int selectedImage = 0;
 	private static final int MENU_SETBACK = 0;
-
+	Intent iuser,icheckuser;
+	String str_usern,checkuser;
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main_gal);
+
+		iuser=getIntent();
+		icheckuser = getIntent();
+
+
+		checkuser = icheckuser.getStringExtra("checkuser");
+		str_usern = iuser.getStringExtra("usern");
 		try {
 
 		} catch (Exception e) {
@@ -156,6 +164,8 @@ public class GalleryView extends Activity {
 				System.out.println("ib: "+selectedImage);
 				Intent intent = new Intent(getApplicationContext(), MainActivity.class);
 				intent.putExtra("ib", selectedImage);
+				intent.putExtra("usern",str_usern);
+				intent.putExtra("checkuser", checkuser);
 				startActivity(intent);
 				return true;
 		}

@@ -38,6 +38,8 @@ public class MainActivity extends Activity {
 	int imageBack;
 	private boolean mChecked;
 	ArrayList<String> images = new ArrayList();
+	Intent iuser,icheckuser;
+	String str_usern,checkuser;
 
 	private static final int MENU_SELECTIMG = 0;
 
@@ -66,7 +68,12 @@ public class MainActivity extends Activity {
 		Intent ii = getIntent();
 		imageBack = ii.getIntExtra("ib",0);
 		System.out.println("image: "+ imageBack);
+		iuser=getIntent();
+		icheckuser = getIntent();
 
+
+		checkuser = icheckuser.getStringExtra("checkuser");
+		str_usern = iuser.getStringExtra("usern");
 
 		DatabaseHelper db = new DatabaseHelper(this);
 		db.createImage("droid", R.drawable.droid_1, R.drawable.droid_4, R.drawable.droid_3, R.drawable.droid_2);
@@ -174,6 +181,7 @@ public class MainActivity extends Activity {
 		}
 
 		public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+			System.out.println("tick");
 			return true;
 		}
 
@@ -188,9 +196,14 @@ public class MainActivity extends Activity {
 
 
 			int selectCount = gridView.getCheckedItemCount();
-			if(checked){
+			if(checked ){
+				if(!(images.contains(obj.get("flag")))){
 				System.out.println("in mChecked");
 				images.add(obj.get("flag"));
+				}
+				else{
+					Toast.makeText(getBaseContext(), "Already selected ", Toast.LENGTH_LONG).show();
+				}
 			}
 			else if(!checked){
 				images.remove(obj.get("flag"));
@@ -227,6 +240,8 @@ public class MainActivity extends Activity {
 
 					intent.putExtra("ib", imageBack);
 					intent.putExtra("imageobjs", images);
+					intent.putExtra("usern",str_usern);
+					intent.putExtra("checkuser", checkuser);
 
 					startActivity(intent);
 				}

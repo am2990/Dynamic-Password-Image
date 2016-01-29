@@ -19,6 +19,7 @@ import edu.iiitd.dynamikpass.utils.DatabaseHelper;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -565,10 +566,15 @@ public class LoginPanel extends SurfaceView implements OnGestureListener,
 				Toast.makeText(mContext, "Correct password",
 						Toast.LENGTH_SHORT).show();
 				System.out.println("yes");
+				Intent intent = new Intent(mContext, UsernameActivity.class);
+
+				mContext.startActivity(intent);
 			}
 			else {
 				Toast.makeText(mContext,"Wrong Password",
 						Toast.LENGTH_SHORT).show();
+				//this.recreate;
+
 			}
 		}
 
@@ -581,6 +587,7 @@ public class LoginPanel extends SurfaceView implements OnGestureListener,
 		if(gestcounter > ls.size()){
 			Toast.makeText(mContext,"Wrong Password",
 					Toast.LENGTH_SHORT).show();
+			////this.recreate;
 		}
 	}
 
