@@ -45,7 +45,9 @@ public class MainActivity extends Activity {
 			"Droid",
 			"Square",
 			"Smiley",
-			"Football"
+			"Football",
+			"Fish",
+			"Crab"
 
 	};
 
@@ -54,8 +56,9 @@ public class MainActivity extends Activity {
 			R.drawable.droid_1,
 			R.drawable.triangle_blue,
 			R.drawable.smiley_b,
-			R.drawable.football_b
-
+			R.drawable.football_b,
+			R.drawable.fishb,
+			R.drawable.crabb
 	};
 
 	@Override
@@ -73,10 +76,12 @@ public class MainActivity extends Activity {
 		db.createImage("triangle", R.drawable.triangle_blue,R.drawable.triangle_green,R.drawable.triangle_red, R.drawable.triangle_yellow);
 		db.createImage("smiley", R.drawable.smiley_b, R.drawable.smiley_g, R.drawable.smiley_r, R.drawable.smiley_y);
 		db.createImage("football", R.drawable.football_b, R.drawable.football_g, R.drawable.football_r, R.drawable.football_y);
+		db.createImage("fish", R.drawable.fishb, R.drawable.fishg, R.drawable.fishr, R.drawable.fishy);
+		db.createImage("crab", R.drawable.crabb, R.drawable.crabg, R.drawable.crabr, R.drawable.craby);
 
 
 		List<HashMap<String,String>> aList = new ArrayList<HashMap<String,String>>();
-		for(int i=0;i<4;i++){
+		for(int i=0;i<6;i++){
 			HashMap<String, String> hm = new HashMap<String,String>();
 			hm.put("txt", objects[i]);
 			hm.put("flag", Integer.toString(android_resid[i]) );
