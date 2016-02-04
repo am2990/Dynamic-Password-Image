@@ -95,8 +95,8 @@ public class LoginPanel extends SurfaceView implements OnGestureListener,
 
 
 		for(Image i :ls){
-			int r = randomN(ls.size());
-//int r =3;
+			//int r = randomN(ls.size());
+int r =3;
 			// creating a hashmap to store all colors of the image
 			HashMap<String,Bitmap> bitmap1 = new HashMap<String, Bitmap>();
 			bitmap1.put("BLUE",BitmapFactory.decodeResource(getResources(),db.getBlueImage(i.getBitmapId())));
