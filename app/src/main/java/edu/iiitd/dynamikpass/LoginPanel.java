@@ -95,8 +95,8 @@ public class LoginPanel extends SurfaceView implements OnGestureListener,
 
 
 		for(Image i :ls){
-			//int r = randomN(ls.size());
-int r =3;
+			int r = randomN(ls.size());
+//int r =3;
 			// creating a hashmap to store all colors of the image
 			HashMap<String,Bitmap> bitmap1 = new HashMap<String, Bitmap>();
 			bitmap1.put("BLUE",BitmapFactory.decodeResource(getResources(),db.getBlueImage(i.getBitmapId())));
@@ -226,14 +226,13 @@ int r =3;
 		int height =dm.heightPixels;
 		do{
 
-			//int randomNumx = ran.nextInt((height)-img.getBitmap().getHeight()) + 1;
-			//int randomNumy= ran.nextInt((width)-img.getBitmap().getWidth()) + 1;
+
 			int randomNumx = ran.nextInt(height) + 1;
 			int randomNumy= ran.nextInt(width) + 1;
 			System.out.println("height: "+ height);
 			System.out.println("width: "+ width);
 			//int randomNumx = ran.nextInt((400 - 25) + 1) + 25;
-			//int randomNumy = ran.nextInt((400 - 25) + 1) + 25;
+			//int randomNumy = ran.nextInt((400 - 25) + 1) +
 			checkpos = img.getRange(randomNumx,randomNumy);
 
 			// get upper limits from canvas
