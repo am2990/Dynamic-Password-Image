@@ -1,9 +1,13 @@
 /**
- * 
+ *
  */
 package edu.iiitd.dynamikpass.model;
 
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
@@ -25,24 +29,26 @@ import android.view.MotionEvent;
 public class Image implements Serializable{
 
 	/**
-	 * 
+	 *
 	 */
-	//String str;
+	private static final String TAG = Image.class.getSimpleName();
 	private static final long serialVersionUID = 8438662189730257314L;
-	private Bitmap bitmap;
+
+
 	private int bitmap_id;// the actual bitmap
 	private int x;			// the X coordinate
 	private int y;			// the Y coordinate
-	private boolean touched, longPressed;	// if droid is touched/picked up
 	private String col;
-	private static Resources res;
-	private static final String TAG = Image.class.getSimpleName();
 
-	public static int rad;
-	public static boolean host=false;
+	transient private Bitmap bitmap;
+	transient private boolean touched, longPressed;	// if droid is touched/picked uptransient private boolean touched, longPressed;	// if droid is touched/picked up
+	transient private static Resources res;
+	transient public static int rad;
+	transient public static boolean host=false;
+	transient HashMap<String,Bitmap> color_to_bitmap = new HashMap<String, Bitmap>();
 
 	public Image(){
-		
+
 	}
 	public Image(Bitmap bitmap, int bitmap_id, int x, int y, String col, Resources res){
 		this.bitmap = bitmap;
@@ -53,12 +59,8 @@ public class Image implements Serializable{
 		Image.res=res;
 
 	}
-	HashMap<String,Bitmap> color_to_bitmap = new HashMap<String, Bitmap>();
+
 	public Image(HashMap<String, Bitmap> bitmap, int bitmap_id, int x, int y, String col, Resources res){
-		
-		
-		
-		
 		this.bitmap_id = bitmap_id;
 		this.x = x;
 		this.y = y;
@@ -66,11 +68,7 @@ public class Image implements Serializable{
 		this.bitmap = bitmap.get(col);
 		this.color_to_bitmap = bitmap;
 		Image.res=res;
-
 	}
-	
-	
-	
 	public Bitmap getBitmap() {
 		return bitmap;
 	}
@@ -87,14 +85,13 @@ public class Image implements Serializable{
 	public int getX() {
 		return x;
 	}
-	
 	public void setX(int x) {
 		this.x = x;
 	}
 	public int getY() {
 		return y;
 	}
-	
+
 	public void setY(int y) {
 		this.y = y;
 	}
@@ -103,49 +100,49 @@ public class Image implements Serializable{
 		return touched;
 	}
 
-	
+
 
 	public String getColor(){
-		
+
 		System.out.println("getColor: "+getBitmapId());
 		switch(getBitmapId()){
 
 		}
 		return col;
 	}
-	
-	
+
+
 	public void setColor(String col){
-		
+
 		switch(col){
-		
-		case "YELLOW":
-			setBitmap( color_to_bitmap.get("YELLOW"));
-			this.col = "YELLOW";
-			break;
 
-		case "RED":	
-			setBitmap( color_to_bitmap.get("RED"));
-			this.col = "RED";
-			break;
+			case "YELLOW":
+				setBitmap( color_to_bitmap.get("YELLOW"));
+				this.col = "YELLOW";
+				break;
 
-		case "GREEN":
+			case "RED":
+				setBitmap( color_to_bitmap.get("RED"));
+				this.col = "RED";
+				break;
 
-			setBitmap( color_to_bitmap.get("GREEN"));
-			this.col = "GREEN";
-			break;
+			case "GREEN":
 
-		case "BLUE":
-			setBitmap( color_to_bitmap.get("BLUE"));
-			this.col = "BLUE";
-			break;
+				setBitmap( color_to_bitmap.get("GREEN"));
+				this.col = "GREEN";
+				break;
+
+			case "BLUE":
+				setBitmap( color_to_bitmap.get("BLUE"));
+				this.col = "BLUE";
+				break;
 		}
-		
+
 	}
 	public void setTouched(boolean touched) {
 		this.touched = touched;
 	}
-	
+
 	public boolean isLongTouched() {
 		return longPressed;
 	}
@@ -153,58 +150,58 @@ public class Image implements Serializable{
 	public void setLongPressed(boolean lPressed) {
 		this.longPressed = lPressed;
 	}
-	
-	
+
+
 	public Image getRange(float x, float y){
-		
+
 		Image d = null;
 		int h= bitmap.getHeight();
 		int w = bitmap.getWidth();
-		
-		
-		 rad = ((int) (Math.sqrt(((h/2)*(h/2))+((w/2)*(w/2))))+10);
-		
+
+
+		rad = ((int) (Math.sqrt(((h/2)*(h/2))+((w/2)*(w/2))))+10);
+
 		System.out.println("get xcoord: "+x);
 		System.out.println("get ycoord: "+y);
 		double eqn = (((x-getX())*(x-getX()))+((y-getY())*(y-getY()))-(rad*rad));
-		System.out.println("eqn droid : "+eqn);
-		
-		
+		System.out.println("eqn droid : " + eqn);
 
-		
+
+
+
 		if(eqn <= 0){
 			System.out.println("inside circle");
 			d =  this;
-		
+
 		}
 		else{
 			System.out.println("outside circle");
 		}
-			
+
 		return d;
-		
-		
-		
+
+
+
 	}
-	
+
 	public Image getCircleLine(int event1x, int event1y, int event2x, int event2y){
-		
+
 		CircleLine.Point center = new CircleLine.Point(getX(), getY());
 		int h= bitmap.getHeight();
 		int w = bitmap.getWidth();
-		
+
 		CircleLine.Point pointA = new CircleLine.Point(event1x,event1y);
 		CircleLine.Point pointB = new CircleLine.Point(event2x,event2y);
 		CircleLine.Point p = null;
-		 int radius = ((int) (Math.sqrt(((h/2)*(h/2))+((w/2)*(w/2))))+10);
+		int radius = ((int) (Math.sqrt(((h/2)*(h/2))+((w/2)*(w/2))))+10);
 		List<CircleLine.Point> lp = CircleLine.getCircleLineIntersectionPoint(pointA, pointB, center, radius);
-		
+
 		Log.d(TAG, "LP Size " + lp.size());
 		try{
 			Image sp = null ;
 			for(int i =0;i<lp.size();i++){
-		sp = getRange((float)lp.get(0).x, (float)lp.get(0).y);
-		
+				sp = getRange((float)lp.get(0).x, (float)lp.get(0).y);
+
 			}
 			return sp;
 		}
@@ -212,27 +209,27 @@ public class Image implements Serializable{
 			Log.d(TAG, "nullll");
 			return null;
 		}
-	
-		
+
+
 	}
-	
-   
+
+
 	public void draw(Canvas canvas) {
-		
-		
-		
+
+
+
 		canvas.drawBitmap(bitmap, x - (bitmap.getWidth() / 2), y - (bitmap.getHeight() / 2), null);
 		if(host = true){
 			Paint paint = new Paint();
 			paint.setStyle(Paint.Style.STROKE);
 			canvas.drawCircle(getX(), getY(), rad, paint);
-        
-        
+
+
 		}
-		
-		
+
+
 	}
-	
+
 
 
 	/**
@@ -269,5 +266,37 @@ public class Image implements Serializable{
 		}
 
 		return retVal;
+	}
+
+
+	private void writeObject(ObjectOutputStream oos) throws IOException{
+		// This will serialize all fields that you did not mark with 'transient'
+		// (Java's default behaviour)
+		oos.defaultWriteObject();
+		// Now, manually serialize all transient fields that you want to be serialized
+		oos.write(x);
+		oos.write(y);
+		oos.write(bitmap_id);
+		if(bitmap!=null){
+			ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
+			boolean success = bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteStream);
+			if(success){
+				oos.writeObject(byteStream.toByteArray());
+			}
+		}
+	}
+
+	private void readObject(ObjectInputStream ois) throws IOException, ClassNotFoundException{
+		// Now, all again, deserializing - in the SAME ORDER!
+		// All non-transient fields
+		ois.defaultReadObject();
+		// All other fields that you serialized
+		x = ois.read();
+		y = ois.read();
+		bitmap_id = ois.read();
+		byte[] image = (byte[]) ois.readObject();
+		if(image != null && image.length > 0){
+			bitmap = BitmapFactory.decodeByteArray(image, 0, image.length);
+		}
 	}
 }

@@ -44,11 +44,13 @@ public class UsernameActivity extends Activity {
                     // db.addUsername(user);
 
                     // DatabaseHelper db = new DatabaseHelper(Context);
-                    if (!(db.getUserByName(u))) {
+                    //db.getUserByName(u)
+                    if (true) {
                         checkuser = "false";
                         Intent intent = new Intent();
                         intent.setClass(UsernameActivity.this, GalleryView.class);
-                        intent.putExtra("usern", u);
+                        user.setUsername(u);
+                        intent.putExtra("usern", user);
                         intent.putExtra("checkuser", checkuser);
                         startActivity(intent);
                     } else {

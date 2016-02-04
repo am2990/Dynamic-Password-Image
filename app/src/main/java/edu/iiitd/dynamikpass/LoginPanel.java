@@ -49,7 +49,7 @@ public class LoginPanel extends SurfaceView implements OnGestureListener,
 
 	private static final String TAG = LoginPanel.class.getSimpleName();
 
-	static MainThread1 thread;
+	static LoginThread thread;
 
 	boolean flag;
 	boolean check;
@@ -86,22 +86,15 @@ public class LoginPanel extends SurfaceView implements OnGestureListener,
 	public LoginPanel(Context context, int backgroundImage) {
 		super(context);
 		mContext = context;
-
-
-
 		new BitmapFactory();
 		mBackgroundImage = BitmapFactory.decodeResource(getResources(), backgroundImage);
 
-
 		DatabaseHelper db = new DatabaseHelper(mContext);
 		ls = db.getAllDroids();
-
-
 		gestures = db.getAllGestures();
 
 
 		for(Image i :ls){
-
 			int r = randomN(ls.size());
 //int r =3;
 			// creating a hashmap to store all colors of the image
@@ -149,14 +142,6 @@ public class LoginPanel extends SurfaceView implements OnGestureListener,
 
 		}
 
-
-		/* while (iter.hasNext()) {
-
-				 Image image = (Image) iter.next();
-				 drawimg.add(image);
-
-			 }*/
-
 		//retrieve integer(gesture) corresponding to the image
 		for(Image i: drawimg){
 			int j = hm.get(i);
@@ -188,7 +173,7 @@ public class LoginPanel extends SurfaceView implements OnGestureListener,
 			}
 		}
 
-		thread = new MainThread1(getHolder(), this, context);
+		thread = new LoginThread(getHolder(), this, context);
 		getHolder().addCallback(this);
 		surfaceView = this;
 
@@ -389,7 +374,6 @@ public class LoginPanel extends SurfaceView implements OnGestureListener,
 
 		@Override
 		public void onLongPress(MotionEvent arg0) {
-			// TODO Auto-generated method stub
 
 			System.out.println("on Long Press");
 			Log.d("hello","onLP: ");
@@ -466,12 +450,6 @@ public class LoginPanel extends SurfaceView implements OnGestureListener,
 				System.out.println("yes");
 
 			}*/
-
-
-
-
-
-
 			Log.d(TAG, "onFling: ");
 			return false;
 		}
@@ -566,9 +544,13 @@ public class LoginPanel extends SurfaceView implements OnGestureListener,
 				Toast.makeText(mContext, "Correct password",
 						Toast.LENGTH_SHORT).show();
 				System.out.println("yes");
-				Intent intent = new Intent(mContext, UsernameActivity.class);
 
+				// adding user to db
+				DatabaseHelper db = new DatabaseHelper(mContext);
+				db.addUser(LoginActivity.user);
+				Intent intent = new Intent(mContext, UsernameActivity.class);
 				mContext.startActivity(intent);
+				thread.setRunning(false);
 			}
 			else {
 				Toast.makeText(mContext,"Wrong Password",
@@ -625,7 +607,7 @@ public class LoginPanel extends SurfaceView implements OnGestureListener,
 	@Override
 	public boolean onDoubleTap(MotionEvent e) {
 
-	gestcounter++;
+		gestcounter++;
 		//	ArrayList<Image> DoubleDroid = new ArrayList<Image>();
 		/*ArrayList<Image> notDT = new ArrayList<Image>(ls);
 		notDT.remove(doubletap);

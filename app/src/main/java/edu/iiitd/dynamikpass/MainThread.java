@@ -1,7 +1,7 @@
 /* ** Thread for Registration Activity** */
 
 /**
- * 
+ *
  */
 package edu.iiitd.dynamikpass;
 
@@ -28,7 +28,7 @@ import edu.iiitd.dynamikpass.utils.DatabaseHelper;
  * the surface view and holder to trigger events every game tick.
  */
 public class MainThread extends Thread {
-	
+
 	private static final String TAG = MainThread.class.getSimpleName();
 
 //	private static final String MyPREFERENCES = null;
@@ -40,7 +40,7 @@ public class MainThread extends Thread {
 	Image droidy;
 	int bitmap_id1,bitmap_id2,bitmap_id3;
 	//Context context = getActivity();
-	
+
 	//SharedPreferences sharedpreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
 	// The actual view that handles inputs
 	// and draws to the surface
@@ -64,16 +64,16 @@ public class MainThread extends Thread {
 		this.gamePanel = gamePanel;
 		this.mContext = mContext;
 		this.running = new AtomicBoolean(true);
-		
+
 	}
 
-	@SuppressLint("WrongCall") 
+	@SuppressLint("WrongCall")
 	@Override
 	public void run() {
 		Canvas canvas;
 		Log.d(TAG, "Starting registration loop");
 		while (running.get()) {
-			
+
 			if(!(running.get())){
 				Log.d(TAG, "Exiting the thread");
 				return;
@@ -87,7 +87,7 @@ public class MainThread extends Thread {
 					// update game state 
 					// render state to the screen
 					// draws the canvas on the panel
-					this.gamePanel.onDraw(canvas);				
+					this.gamePanel.onDraw(canvas);
 				}
 			} finally {
 				// in case of an exception the surface is not left in 
@@ -102,40 +102,36 @@ public class MainThread extends Thread {
 	public void doSubmit() {
 
 
-			DatabaseHelper db = new DatabaseHelper(mContext);
-			db.clearTableDroid();
-			for(Image img: RegistrationPanel.imglist){
-				db.saveOrUpdateImage(img);
-			}
-		
-			Intent intent = new Intent(mContext, TableLayoutExampleActivity.class);
-			System.out.println("r p: " + RegistrationActivity.imageBack);
-			intent.putExtra("ib", RegistrationActivity.imageBack);
-			intent.putExtra("checkuser", RegistrationActivity.checkuser);
-			intent.putExtra("usern", RegistrationActivity.str_usern);
-			//intent.putExtra("imglist", (RegistrationPanel.imglist));
-			//intent.putParcelableArrayListExtra("imglist", (ArrayList<? extends Parcelable>) RegistrationPanel.imglist);
+		DatabaseHelper db = new DatabaseHelper(mContext);
+		db.clearTableDroid();
+		for(Image img: RegistrationPanel.imglist){
+			db.saveOrUpdateImage(img);
+		}
+		RegistrationActivity.user.setImgPassword(RegistrationPanel.imglist);
+		Intent intent = new Intent(mContext, TableLayoutExampleActivity.class);
+		System.out.println("r p: " + RegistrationActivity.imageBack);
+		intent.putExtra("ib", RegistrationActivity.imageBack);
+		intent.putExtra("checkuser", RegistrationActivity.checkuser);
+		intent.putExtra("usern", RegistrationActivity.user);
 		Bundle bundleObject = new Bundle();
 		bundleObject.putSerializable("imglist", RegistrationPanel.imglist);
-
-// Put Bundle in to Intent and call start Activity
 		intent.putExtras(bundleObject);
 		mContext.startActivity(intent);
 
-			
+
 		//}
 	}
 
 	public void doVerify() {
-			System.out.println("right!!");
+		System.out.println("right!!");
 	}
 
 	public void doConfirm() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
-	
-	
+
+
 }
 

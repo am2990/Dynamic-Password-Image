@@ -8,7 +8,6 @@
         android:id="@+id/username"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/username"
         android:layout_gravity="center_vertical|center_horizontal|center"
         android:hint="Enter username"
         android:layout_marginTop="30dp"
@@ -20,7 +19,7 @@
         android:layout_alignLeft="@+id/username"
         android:layout_below="@+id/username"
         android:layout_marginTop="300dp"
-        android:layout_weight="1"
+        android:layout_weight="0.07"
         android:onClick="onClick"
         android:text="Continue" />
 

@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import edu.iiitd.dynamikpass.model.User;
 import edu.iiitd.dynamikpass.utils.DatabaseHelper;
 
 
@@ -40,6 +41,7 @@ public class MainActivity extends Activity {
 	ArrayList<String> images = new ArrayList();
 	Intent iuser,icheckuser;
 	String str_usern,checkuser;
+	User user;
 
 	private static final int MENU_SELECTIMG = 0;
 
@@ -73,7 +75,9 @@ public class MainActivity extends Activity {
 
 
 		checkuser = icheckuser.getStringExtra("checkuser");
-		str_usern = iuser.getStringExtra("usern");
+//		user = ii.getParcelableExtra("usern");
+		user = (User) ii.getSerializableExtra("usern");
+
 
 		DatabaseHelper db = new DatabaseHelper(this);
 		db.createImage("droid", R.drawable.droid_1, R.drawable.droid_4, R.drawable.droid_3, R.drawable.droid_2);
@@ -240,7 +244,7 @@ public class MainActivity extends Activity {
 
 					intent.putExtra("ib", imageBack);
 					intent.putExtra("imageobjs", images);
-					intent.putExtra("usern",str_usern);
+					intent.putExtra("usern",user);
 					intent.putExtra("checkuser", checkuser);
 
 					startActivity(intent);

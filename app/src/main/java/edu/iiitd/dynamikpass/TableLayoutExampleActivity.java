@@ -39,13 +39,13 @@ public class TableLayoutExampleActivity extends Activity implements OnItemSelect
 	Button submit;
 	int imageBack;
 	Intent i;
-	User user = new User();
-	Intent iuser, icheckuser, iimagelist;
-	String str_usern, checkuser;
+	User user;
+	Intent iuser, icheckuser;
+	String checkuser;
 	ArrayList<Image> imagelist = new ArrayList<Image>();
 	ArrayList<Image> images = new ArrayList<Image>();
 	DatabaseHelper db = new DatabaseHelper(this);
-	String[] gestures;
+	ArrayList<String> gestures;
 	/**
 	 * ATTENTION: This was auto-generated to implement the App Indexing API.
 	 * See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -59,6 +59,7 @@ public class TableLayoutExampleActivity extends Activity implements OnItemSelect
 		i = getIntent();
 		imageBack = i.getIntExtra("ib", 0);
 
+		gestures = new ArrayList<>();
 		iuser = getIntent();
 		icheckuser = getIntent();
 		//iimagelist = getIntent();
@@ -72,7 +73,9 @@ public class TableLayoutExampleActivity extends Activity implements OnItemSelect
 		// Get ArrayList Bundle
 		imagelist = (ArrayList<Image>) bundleObject.getSerializable("imglist");
 		checkuser = icheckuser.getStringExtra("checkuser");
-		str_usern = iuser.getStringExtra("usern");
+//		user = iuser.getParcelableExtra("usern");
+		user = (User) iuser.getSerializableExtra("usern");
+
 
 		spinner1 = (Spinner) findViewById(R.id.spinner1);
 		spinner2 = (Spinner) findViewById(R.id.spinner2);
@@ -101,7 +104,7 @@ public class TableLayoutExampleActivity extends Activity implements OnItemSelect
 				System.out.println("object1: " + item1);
 
 				db.saveMap(1, 1, item1);
-				gestures[0] = item1;
+				gestures.add(0,item1);
 			}
 
 			public void onNothingSelected(AdapterView<?> parent) {
@@ -113,7 +116,7 @@ public class TableLayoutExampleActivity extends Activity implements OnItemSelect
 				System.out.println("object2: " + item2);
 				db.saveMap(1, 0, item2);
 				//g2=item2;
-				gestures[1] = item2;
+				gestures.add(1, item2);
 			}
 
 			public void onNothingSelected(AdapterView<?> parent) {
@@ -124,7 +127,7 @@ public class TableLayoutExampleActivity extends Activity implements OnItemSelect
 				item3 = parent.getItemAtPosition(position).toString();
 				System.out.println("object3: " + item3);
 				db.saveMap(0, 1, item3);
-				gestures[2] = item3;
+				gestures.add(2, item3);
 			}
 
 			public void onNothingSelected(AdapterView<?> parent) {
@@ -155,20 +158,22 @@ public class TableLayoutExampleActivity extends Activity implements OnItemSelect
 		//Gson gson = new Gson();
 
 		//String list = gson.toJson(imagelist);
-
+		Intent intent = null;
 		//System.out.println("list= " + list);
 		if (checkuser.equalsIgnoreCase("false")) {
 
-			user.setUsername(str_usern);
-			user.setImageback(imageBack);
+			user.setGestarr(gestures);
+//			user.setUsername(str_usern);
+//			user.setImageback(imageBack);
 			//user.setImgPassword(list);
-			user.setGestarr(gestures.toString());
+//			user.setGestarr(gestures.toString());
 			//System.out.println("selected tagcloudview 1: " + selected.toString());
 			//System.out.println("not selected tagcloudview 1: " + notSelected.toString());
-			db.addUser(user);
+			intent = new Intent(getApplicationContext(), LoginActivity.class);
+		}else {
+			intent = new Intent(getApplicationContext(), UsernameActivity.class);
 		}
-		Intent intent = new Intent(getApplicationContext(), UsernameActivity.class);
-
+		intent.putExtra("usern", user);
 		startActivity(intent);
 	}
 
