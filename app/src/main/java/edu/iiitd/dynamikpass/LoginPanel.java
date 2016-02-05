@@ -229,14 +229,13 @@ public class LoginPanel extends SurfaceView implements OnGestureListener,
 		int height =dm.heightPixels;
 		do{
 
-			//int randomNumx = ran.nextInt((height)-img.getBitmap().getHeight()) + 1;
-			//int randomNumy= ran.nextInt((width)-img.getBitmap().getWidth()) + 1;
+
 			int randomNumx = ran.nextInt(height) + 1;
 			int randomNumy= ran.nextInt(width) + 1;
 			System.out.println("height: "+ height);
 			System.out.println("width: "+ width);
 			//int randomNumx = ran.nextInt((400 - 25) + 1) + 25;
-			//int randomNumy = ran.nextInt((400 - 25) + 1) + 25;
+			//int randomNumy = ran.nextInt((400 - 25) + 1) +
 			checkpos = img.getRange(randomNumx,randomNumy);
 
 			// get upper limits from canvas

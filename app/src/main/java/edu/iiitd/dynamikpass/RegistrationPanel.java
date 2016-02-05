@@ -7,6 +7,7 @@ package edu.iiitd.dynamikpass;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Random;
 import edu.iiitd.dynamikpass.model.Image;
 import edu.iiitd.dynamikpass.utils.DatabaseHelper;
@@ -18,6 +19,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.support.v4.view.GestureDetectorCompat;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.ActionMode;
 import android.view.ActionMode.Callback;
@@ -78,9 +80,11 @@ public class RegistrationPanel extends SurfaceView implements
 
 		int image_id = 0;
 		for(String s: images){
-			Random ran = new Random();
-			int ranx = ran.nextInt((300 - 25) + 1) + 25;
-			int rany = ran.nextInt((300 - 25) + 1) + 25;
+
+
+			//int ranx = ran.nextInt(height) + 1;
+			//int rany= ran.nextInt(width) + 1;
+
 
 			String image_name = s;
 			Log.d(TAG, "image: "+image_name);
@@ -90,12 +94,72 @@ public class RegistrationPanel extends SurfaceView implements
 			bitmap1.put("GREEN",new Pair(BitmapFactory.decodeResource(getResources(), db.getGreenImage(image_name)), db.getGreenImage(image_name)));
 			bitmap1.put("RED",new Pair(BitmapFactory.decodeResource(getResources(), db.getRedImage(image_name)), db.getRedImage(image_name)));
 
-			image = new Image(bitmap1,db.getBlueImage(image_name), image_name, ranx,rany,"BLUE",getResources());
+			image = new Image(bitmap1,db.getBlueImage(image_name), image_name, 150 ,150 ,"BLUE",getResources());
+
 			imglist.add(image);
 
 		}
 
+		Random ran = new Random();
+		DisplayMetrics dm= new DisplayMetrics();
+		//ran.setSeed((long)i);
+		Image image1 = imglist.get(0);
+		Image checkpos,checkposother;
+		Iterator iter = imglist.iterator();
+		((Activity)mContext).getWindowManager().getDefaultDisplay().getMetrics(dm);
+		int width = dm.widthPixels;
+		int height =dm.heightPixels;
+		for(Image img: imglist){
+
+			//int randomNumx = ran.nextInt((height)-img.getBitmap().getHeight()) + 1;
+			//int randomNumy= ran.nextInt((width)-img.getBitmap().getWidth()) + 1;
+			int randomNumx = ran.nextInt(height) + 1;
+			int randomNumy = ran.nextInt(width) + 1;
+			boolean overlapp = true;
+			Image pos = null;
+			// till the flag is true
+			// generate random x and y
+			while(overlapp) {
+				randomNumx += 20;
+				randomNumy += 20;
+				System.out.println("height: " + height + "randomNumx" + randomNumx);
+				System.out.println("width: " + width + "randomNumy" + randomNumy);
+				//int randomNumx = ran.nextInt((400 - 25) + 1) + 25;
+				//int randomNumy = ran.nextInt((400 - 25) + 1) + 25;
+
+
+				//check if the x and y lie inside any other image
+				for(Image i: imglist) {
+					pos = i.getRange(randomNumx, randomNumy);
+					if(pos != null) {
+						continue;
+					}
+				}
+				if(pos == null){
+					img.setX(randomNumx);
+					img.setY(randomNumy);
+					overlapp = false;
+				}
+				// if it lies inside any image set flag to true
+
+				// else set the image with the new x and y
+				// get upper limits from canvas
+				//int randomNumx = ran.nextInt((350 - 25) + 1) + 25;
+				//int randomNumy = ran.nextInt((350 - 25) + 1) + 25;
+
+			}
+
+
+		}
+
+
+		//}
+
 		System.out.println("image list: "+imglist.size());
+		for(Image ii: imglist){
+			System.out.println("xxx" + ii.getX());
+			System.out.println("yyy" + ii.getY());
+		}
 		new BitmapFactory();
 
 
