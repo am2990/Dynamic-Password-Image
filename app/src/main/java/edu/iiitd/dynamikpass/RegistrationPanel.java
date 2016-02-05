@@ -113,15 +113,15 @@ public class RegistrationPanel extends SurfaceView implements
 
 			//int randomNumx = ran.nextInt((height)-img.getBitmap().getHeight()) + 1;
 			//int randomNumy= ran.nextInt((width)-img.getBitmap().getWidth()) + 1;
-			int randomNumx = ran.nextInt(height) + 1;
-			int randomNumy = ran.nextInt(width) + 1;
+			int randomNumx = ran.nextInt(width) + 1;
+			int randomNumy = ran.nextInt(height) + 1;
 			boolean overlapp = true;
 			Image pos = null;
 			// till the flag is true
 			// generate random x and y
 			while(overlapp) {
-				randomNumx += 20;
-				randomNumy += 20;
+				randomNumx = (randomNumx + 20) % height ;
+				randomNumy = (randomNumy + 20) % width;
 				System.out.println("height: " + height + "randomNumx" + randomNumx);
 				System.out.println("width: " + width + "randomNumy" + randomNumy);
 				//int randomNumx = ran.nextInt((400 - 25) + 1) + 25;

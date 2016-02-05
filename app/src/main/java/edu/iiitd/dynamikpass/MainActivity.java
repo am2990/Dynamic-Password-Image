@@ -51,8 +51,10 @@ public class MainActivity extends Activity {
 			"Smiley",
 			"Football",
 			"Fish",
-			"Crab"
-
+			"Crab",
+			"Jelly-Fish",
+			"Sea-Horse",
+			"Star-Fish"
 	};
 
 	// Array of integers points to images stored in /res/drawable-ldpi/
@@ -62,7 +64,10 @@ public class MainActivity extends Activity {
 			R.drawable.smiley_b,
 			R.drawable.football_b,
 			R.drawable.fishb,
-			R.drawable.crabb
+			R.drawable.crabb,
+			R.drawable.jellyb,
+			R.drawable.seahorseb,
+			R.drawable.starb
 	};
 
 	@Override
@@ -75,8 +80,6 @@ public class MainActivity extends Activity {
 		System.out.println("image: "+ imageBack);
 		iuser=getIntent();
 		icheckuser = getIntent();
-
-
 		checkuser = icheckuser.getStringExtra("checkuser");
 //		user = ii.getParcelableExtra("usern");
 		user = (User) ii.getSerializableExtra("usern");
@@ -89,11 +92,14 @@ public class MainActivity extends Activity {
 		db.createImage("Football", R.drawable.football_b, R.drawable.football_g, R.drawable.football_r, R.drawable.football_y);
 		db.createImage("Fish", R.drawable.fishb, R.drawable.fishg, R.drawable.fishr, R.drawable.fishy);
 		db.createImage("Crab", R.drawable.crabb, R.drawable.crabg, R.drawable.crabr, R.drawable.craby);
+		db.createImage("Jelly-Fish", R.drawable.jellyb, R.drawable.jellyg, R.drawable.jellyr, R.drawable.jellyy);
+		db.createImage("Sea-Horse", R.drawable.seahorseb, R.drawable.seahorseg, R.drawable.seahorser, R.drawable.seahorsey);
+		db.createImage("Star-Fish", R.drawable.starb, R.drawable.starg, R.drawable.starr, R.drawable.stary);
 		db.closeDb();
 
 
 		List<HashMap<String,String>> aList = new ArrayList<HashMap<String,String>>();
-		for(int i=0;i<6;i++){
+		for(int i=0;i<objects.length;i++){
 			HashMap<String, String> hm = new HashMap<String,String>();
 			hm.put("txt", objects[i]);
 			hm.put("flag", Integer.toString(android_resid[i]) );
