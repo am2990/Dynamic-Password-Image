@@ -10,6 +10,8 @@ import java.util.HashMap;
 import java.util.Random;
 import edu.iiitd.dynamikpass.model.Image;
 import edu.iiitd.dynamikpass.utils.DatabaseHelper;
+import edu.iiitd.dynamikpass.utils.Pair;
+
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -40,7 +42,6 @@ public class RegistrationPanel extends SurfaceView implements
 	static MainThread thread;
 	static Image image;
 	static ArrayList<Image> imglist = new ArrayList<Image>();
-	ArrayList<String> imageslp = new ArrayList<String>();
 	ActionMode mActionMode;
 	private SurfaceView surfaceView;
 	private Bitmap mBackgroundImage;
@@ -57,7 +58,6 @@ public class RegistrationPanel extends SurfaceView implements
 	 *
 	 * @see #setSurfaceSize
 	 */
-	private int mCanvasWidth = 1;
 	private Callback mActionModeCallback, mSubmitCallBack;
 
 
@@ -82,15 +82,15 @@ public class RegistrationPanel extends SurfaceView implements
 			int ranx = ran.nextInt((300 - 25) + 1) + 25;
 			int rany = ran.nextInt((300 - 25) + 1) + 25;
 
-			image_id = Integer.parseInt(s);
-			System.out.println("image_id: "+image_id);
-			HashMap<String,Bitmap> bitmap1 = new HashMap<String, Bitmap>();
-			bitmap1.put("BLUE",BitmapFactory.decodeResource(getResources(),db.getBlueImage(image_id)));
-			bitmap1.put("YELLOW",BitmapFactory.decodeResource(getResources(), db.getYellowImage(image_id)));
-			bitmap1.put("GREEN",BitmapFactory.decodeResource(getResources(), db.getGreenImage(image_id)));
-			bitmap1.put("RED",BitmapFactory.decodeResource(getResources(), db.getRedImage(image_id)));
+			String image_name = s;
+			Log.d(TAG, "image: "+image_name);
+			HashMap<String,Pair<Bitmap, Integer>> bitmap1 = new HashMap<>();
+			bitmap1.put("BLUE",new Pair(BitmapFactory.decodeResource(getResources(), db.getBlueImage(image_name)), db.getBlueImage(image_name)));
+			bitmap1.put("YELLOW",new Pair(BitmapFactory.decodeResource(getResources(), db.getYellowImage(image_name)), db.getYellowImage(image_name)));
+			bitmap1.put("GREEN",new Pair(BitmapFactory.decodeResource(getResources(), db.getGreenImage(image_name)), db.getGreenImage(image_name)));
+			bitmap1.put("RED",new Pair(BitmapFactory.decodeResource(getResources(), db.getRedImage(image_name)), db.getRedImage(image_name)));
 
-			image = new Image(bitmap1,image_id,ranx,rany,"BLUE",getResources());
+			image = new Image(bitmap1,db.getBlueImage(image_name), image_name, ranx,rany,"BLUE",getResources());
 			imglist.add(image);
 
 		}
@@ -162,7 +162,7 @@ public class RegistrationPanel extends SurfaceView implements
 	public void setSurfaceSize() {
 		// synchronized to make sure these all change atomically
 		synchronized (getHolder()) {
-			mCanvasWidth = getWidth();
+			int mCanvasWidth = getWidth();
 			mBackgroundImage = Bitmap.createScaledBitmap(
 					mBackgroundImage, getWidth(), getHeight(), true);
 		}
@@ -283,7 +283,7 @@ public class RegistrationPanel extends SurfaceView implements
 				img.setColor("RED");
 
 				img.setLongPressed(false);
-				sr= img;
+				sr = img;
 				return sr;
 
 			}

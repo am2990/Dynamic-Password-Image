@@ -16,6 +16,7 @@ import java.util.Random;
 
 import edu.iiitd.dynamikpass.model.Image;
 import edu.iiitd.dynamikpass.utils.DatabaseHelper;
+import edu.iiitd.dynamikpass.utils.Pair;
 
 import android.app.Activity;
 import android.content.Context;
@@ -90,22 +91,24 @@ public class LoginPanel extends SurfaceView implements OnGestureListener,
 		mBackgroundImage = BitmapFactory.decodeResource(getResources(), backgroundImage);
 
 		DatabaseHelper db = new DatabaseHelper(mContext);
-		ls = db.getAllDroids();
-		gestures = db.getAllGestures();
+//		ls = db.getAllDroids();
+//		gestures = db.getAllGestures();
 
+		gestures = LoginActivity.user.getGestarr();
+		ls = LoginActivity.user.getImgPassword();
 
 		for(Image i :ls){
 			int r = randomN(ls.size());
 //int r =3;
 			// creating a hashmap to store all colors of the image
-			HashMap<String,Bitmap> bitmap1 = new HashMap<String, Bitmap>();
-			bitmap1.put("BLUE",BitmapFactory.decodeResource(getResources(),db.getBlueImage(i.getBitmapId())));
-			bitmap1.put("YELLOW",BitmapFactory.decodeResource(getResources(), db.getYellowImage(i.getBitmapId())));
-			bitmap1.put("GREEN",BitmapFactory.decodeResource(getResources(), db.getGreenImage(i.getBitmapId())));
-			bitmap1.put("RED",BitmapFactory.decodeResource(getResources(), db.getRedImage(i.getBitmapId())));
+			HashMap<String,Pair<Bitmap, Integer>> bitmap1 = new HashMap<>();
+			bitmap1.put("BLUE",new Pair(BitmapFactory.decodeResource(getResources(), db.getBlueImage(i.getName())), db.getBlueImage(i.getName())));
+			bitmap1.put("YELLOW", new Pair(BitmapFactory.decodeResource(getResources(), db.getYellowImage(i.getName())), db.getYellowImage(i.getName())));
+			bitmap1.put("GREEN",new Pair(BitmapFactory.decodeResource(getResources(), db.getGreenImage(i.getName())), db.getGreenImage(i.getName())));
+			bitmap1.put("RED",new Pair(BitmapFactory.decodeResource(getResources(), db.getRedImage(i.getName())), db.getRedImage(i.getName())));
 
 			// creating a new image
-			i = new Image(bitmap1,i.getBitmapId(),i.getX(),i.getY(),i.getColor(),getResources());
+			i = new Image(bitmap1,i.getBitmapId(),i.getName(), i.getX(),i.getY(),i.getColor(),getResources());
 			// giving random positions and color for correct recognition later
 			switch(r){
 				case 1:

@@ -13,7 +13,12 @@ import java.util.HashMap;
 import java.util.List;
 
 import edu.iiitd.dynamikpass.R;
+import edu.iiitd.dynamikpass.UsernameActivity;
 import edu.iiitd.dynamikpass.utils.CircleLine;
+import edu.iiitd.dynamikpass.utils.Constants;
+import edu.iiitd.dynamikpass.utils.DatabaseHelper;
+import edu.iiitd.dynamikpass.utils.Pair;
+
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -35,17 +40,18 @@ public class Image implements Serializable{
 	private static final long serialVersionUID = 8438662189730257314L;
 
 
-	private int bitmap_id;// the actual bitmap
+	private int bitmap_id;  // the selected bitmap_id
 	private int x;			// the X coordinate
 	private int y;			// the Y coordinate
-	private String col;
+	private String col;     // color of selected bitmap
+	private String name;
 
+	transient private HashMap<String,Pair<Bitmap,Integer>> color_to_bitmap = new HashMap<>();
 	transient private Bitmap bitmap;
 	transient private boolean touched, longPressed;	// if droid is touched/picked uptransient private boolean touched, longPressed;	// if droid is touched/picked up
 	transient private static Resources res;
 	transient public static int rad;
-	transient public static boolean host=false;
-	transient HashMap<String,Bitmap> color_to_bitmap = new HashMap<String, Bitmap>();
+
 
 	public Image(){
 
@@ -56,28 +62,48 @@ public class Image implements Serializable{
 		this.x = x;
 		this.y = y;
 		this.col = col;
-		Image.res=res;
-
+		Image.res = UsernameActivity.res;
 	}
 
-	public Image(HashMap<String, Bitmap> bitmap, int bitmap_id, int x, int y, String col, Resources res){
+	public Image(HashMap<String, Pair<Bitmap, Integer>> bitmap, int bitmap_id, String name, int x, int y, String col, Resources res){
 		this.bitmap_id = bitmap_id;
 		this.x = x;
 		this.y = y;
 		this.col = col;
-		this.bitmap = bitmap.get(col);
+		this.name = name;
+		this.bitmap = bitmap.get(col).getLeft();
 		this.color_to_bitmap = bitmap;
-		Image.res=res;
+		this.res = UsernameActivity.res;
 	}
-	public Bitmap getBitmap() {
-		return bitmap;
+
+	public Image(String name, int red_bitmap, int blue_bitmap, int green_bitmap, int yellow_bitmap){
+		this.name = name;
+		this.res = UsernameActivity.res;
+
+		color_to_bitmap.put(Constants.RED, new Pair(BitmapFactory.decodeResource(res,red_bitmap), red_bitmap));
+		color_to_bitmap.put(Constants.BLUE, new Pair(BitmapFactory.decodeResource(res,red_bitmap), red_bitmap));
+		color_to_bitmap.put(Constants.GREEN, new Pair(BitmapFactory.decodeResource(res,red_bitmap), red_bitmap));
+		color_to_bitmap.put(Constants.YELLOW, new Pair(BitmapFactory.decodeResource(res,red_bitmap), red_bitmap));
+
+		this.col = Constants.BLUE;
+		this.bitmap_id = blue_bitmap;
 	}
+
+	public Bitmap getBitmap(Resources res) {
+
+		if(this.bitmap == null && this.bitmap_id != 0){
+			bitmap = BitmapFactory.decodeResource(res,bitmap_id);
+		}
+		return this.bitmap;
+	}
+
 	public void setBitmap(Bitmap bitmap) {
 		this.bitmap = bitmap;
 	}
 	public int getBitmapId(){
 		return bitmap_id;
 	}
+
 	public void setBitmapId(int bitmap_id){
 		this.bitmap_id = bitmap_id;
 		setBitmap(BitmapFactory.decodeResource(res, bitmap_id));
@@ -100,15 +126,8 @@ public class Image implements Serializable{
 		return touched;
 	}
 
-
-
 	public String getColor(){
-
-		System.out.println("getColor: "+getBitmapId());
-		switch(getBitmapId()){
-
-		}
-		return col;
+		return this.col;
 	}
 
 
@@ -117,24 +136,27 @@ public class Image implements Serializable{
 		switch(col){
 
 			case "YELLOW":
-				setBitmap( color_to_bitmap.get("YELLOW"));
+				setBitmap( color_to_bitmap.get("YELLOW").getLeft());
 				this.col = "YELLOW";
+				this.bitmap_id = color_to_bitmap.get("YELLOW").getRight();
 				break;
 
 			case "RED":
-				setBitmap( color_to_bitmap.get("RED"));
+				setBitmap( color_to_bitmap.get("RED").getLeft());
 				this.col = "RED";
+				this.bitmap_id = color_to_bitmap.get("RED").getRight();
 				break;
 
 			case "GREEN":
-
-				setBitmap( color_to_bitmap.get("GREEN"));
+				setBitmap( color_to_bitmap.get("GREEN").getLeft());
 				this.col = "GREEN";
+				this.bitmap_id = color_to_bitmap.get("GREEN").getRight();
 				break;
 
 			case "BLUE":
-				setBitmap( color_to_bitmap.get("BLUE"));
+				setBitmap( color_to_bitmap.get("BLUE").getLeft());
 				this.col = "BLUE";
+				this.bitmap_id = color_to_bitmap.get("BLUE").getRight();
 				break;
 		}
 
@@ -159,7 +181,7 @@ public class Image implements Serializable{
 		int w = bitmap.getWidth();
 
 
-		rad = ((int) (Math.sqrt(((h/2)*(h/2))+((w/2)*(w/2))))+10);
+		int rad = ((int) (Math.sqrt(((h/2)*(h/2))+((w/2)*(w/2))))+10);
 
 		System.out.println("get xcoord: "+x);
 		System.out.println("get ycoord: "+y);
@@ -216,17 +238,11 @@ public class Image implements Serializable{
 
 	public void draw(Canvas canvas) {
 
-
-
 		canvas.drawBitmap(bitmap, x - (bitmap.getWidth() / 2), y - (bitmap.getHeight() / 2), null);
-		if(host = true){
-			Paint paint = new Paint();
-			paint.setStyle(Paint.Style.STROKE);
-			canvas.drawCircle(getX(), getY(), rad, paint);
 
-
-		}
-
+		Paint paint = new Paint();
+		paint.setStyle(Paint.Style.STROKE);
+		canvas.drawCircle(getX(), getY(), rad, paint);
 
 	}
 
@@ -274,9 +290,10 @@ public class Image implements Serializable{
 		// (Java's default behaviour)
 		oos.defaultWriteObject();
 		// Now, manually serialize all transient fields that you want to be serialized
-		oos.write(x);
-		oos.write(y);
-		oos.write(bitmap_id);
+//		oos.write(x);
+//		oos.write(y);
+//		oos.write(bitmap_id);
+//		oos.writeUTF(name);
 		if(bitmap!=null){
 			ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
 			boolean success = bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteStream);
@@ -291,12 +308,21 @@ public class Image implements Serializable{
 		// All non-transient fields
 		ois.defaultReadObject();
 		// All other fields that you serialized
-		x = ois.read();
-		y = ois.read();
-		bitmap_id = ois.read();
+//		x = ois.read();
+//		y = ois.read();
+//		bitmap_id = ois.read();
+//		name = ois.readUTF();
 		byte[] image = (byte[]) ois.readObject();
 		if(image != null && image.length > 0){
 			bitmap = BitmapFactory.decodeByteArray(image, 0, image.length);
 		}
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 }

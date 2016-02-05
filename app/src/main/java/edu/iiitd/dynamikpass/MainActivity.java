@@ -80,10 +80,10 @@ public class MainActivity extends Activity {
 
 
 		DatabaseHelper db = new DatabaseHelper(this);
-		db.createImage("droid", R.drawable.droid_1, R.drawable.droid_4, R.drawable.droid_3, R.drawable.droid_2);
-		db.createImage("triangle", R.drawable.triangle_blue,R.drawable.triangle_green,R.drawable.triangle_red, R.drawable.triangle_yellow);
-		db.createImage("smiley", R.drawable.smiley_b, R.drawable.smiley_g, R.drawable.smiley_r, R.drawable.smiley_y);
-		db.createImage("football", R.drawable.football_b, R.drawable.football_g, R.drawable.football_r, R.drawable.football_y);
+		db.createImage("Droid", R.drawable.droid_1, R.drawable.droid_4, R.drawable.droid_3, R.drawable.droid_2);
+		db.createImage("Square", R.drawable.triangle_blue,R.drawable.triangle_green,R.drawable.triangle_red, R.drawable.triangle_yellow);
+		db.createImage("Smiley", R.drawable.smiley_b, R.drawable.smiley_g, R.drawable.smiley_r, R.drawable.smiley_y);
+		db.createImage("Football", R.drawable.football_b, R.drawable.football_g, R.drawable.football_r, R.drawable.football_y);
 
 
 		List<HashMap<String,String>> aList = new ArrayList<HashMap<String,String>>();
@@ -196,21 +196,21 @@ public class MainActivity extends Activity {
 											  long id, boolean checked){
 
 			HashMap<String,String> obj = (HashMap<String,String>)gridView.getItemAtPosition(position);
-			System.out.println("obj: "+ obj.get("flag"));
+			System.out.println("obj: "+ obj.get("txt"));
 
 
 			int selectCount = gridView.getCheckedItemCount();
 			if(checked ){
-				if(!(images.contains(obj.get("flag")))){
-				System.out.println("in mChecked");
-				images.add(obj.get("flag"));
+				if(!(images.contains(obj.get("txt")))){
+					System.out.println("in mChecked");
+					images.add(obj.get("txt"));
 				}
 				else{
 					Toast.makeText(getBaseContext(), "Already selected ", Toast.LENGTH_LONG).show();
 				}
 			}
 			else if(!checked){
-				images.remove(obj.get("flag"));
+				images.remove(obj.get("txt"));
 			}
 
 			switch (selectCount) {

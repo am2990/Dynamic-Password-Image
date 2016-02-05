@@ -1,6 +1,7 @@
 package edu.iiitd.dynamikpass;
 
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.app.Activity;
 import android.view.View;
@@ -16,10 +17,11 @@ public class UsernameActivity extends Activity {
     EditText username;
     Button bcontinue;
 
-   User user = new User();
+    User user;
     DatabaseHelper db;
 
     String checkuser;
+    public static Resources res = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +31,7 @@ public class UsernameActivity extends Activity {
         username = (EditText) findViewById(R.id.username);
         bcontinue = (Button) findViewById(R.id.bcontinue);
 
+        res = getResources();
 
         db = new DatabaseHelper(this);
 
@@ -39,14 +42,11 @@ public class UsernameActivity extends Activity {
                 final String u = username.getText().toString();
                 System.out.println("u: " + u);
                 if (!(u.equals(""))){
-                    user.setUsername(u);
-                    //TODO the function name should be addUser
-                    // db.addUsername(user);
 
-                    // DatabaseHelper db = new DatabaseHelper(Context);
-                    //db.getUserByName(u)
-                    if (true) {
+                    User user = db.getUserByName(u);
+                    if (user == null) {
                         checkuser = "false";
+                        user = new User();
                         Intent intent = new Intent();
                         intent.setClass(UsernameActivity.this, GalleryView.class);
                         user.setUsername(u);
@@ -56,13 +56,10 @@ public class UsernameActivity extends Activity {
                     } else {
                         Toast.makeText(getApplicationContext(), "Login!", Toast.LENGTH_SHORT).show();
                         checkuser = "true";
-                        //String str_selected = db.getSelectedByName(u);
-                        //String str_notSelected = db.getNselectedByName(u);
-
 
                         Intent intent = new Intent();
                         intent.setClass(UsernameActivity.this, LoginActivity.class);
-                        intent.putExtra("usern", u);
+                        intent.putExtra("usern", user);
                         intent.putExtra("checkuser", checkuser);
                         //intent.putStringArrayListExtra("selected", selected);
                         //intent.putStringArrayListExtra("notSelected", notSelected);

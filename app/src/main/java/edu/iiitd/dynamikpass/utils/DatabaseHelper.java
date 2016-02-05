@@ -2,6 +2,7 @@ package edu.iiitd.dynamikpass.utils;
 
 
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +25,8 @@ import android.net.nsd.NsdManager.RegistrationListener;
 import android.provider.ContactsContract.CommonDataKinds.Im;
 import android.util.Log;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 
 public class DatabaseHelper extends SQLiteOpenHelper{
@@ -42,8 +45,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
     private static final String TABLE_MAP = "table_map";
     private static final String TABLE_GESTURE = "t_gesture";
     private static final String TABLE_IMGCOLOR ="t_imgcolor";
-
-    private static final String TABLE_IMGPIN ="t_imgpin";
+    private static final String TABLE_USER ="t_user";
 
     private static final String KEY_ID = "_id"; //primary key
     private static final String KEY_CREATED_AT = "created_at";
@@ -83,8 +85,10 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 
     // Table Create Statements
 
-    private static final String CREATE_TABLE_IMGPIN = "CREATE TABLE "
-            + TABLE_IMGPIN + "(" + KEY_ID + " INTEGER PRIMARY KEY," + KEY_USERNAME + " VARCHAR," + KEY_IMGPASSWORD + " VARCHAR," + KEY_GESTURE_ARR + " VARCHAR " + " )";
+    //User table create statement
+    private static final String CREATE_TABLE_USER = "CREATE TABLE "
+            + TABLE_USER + "(" + KEY_ID + " INTEGER PRIMARY KEY," + KEY_USERNAME + " VARCHAR," + KEY_IMGPASSWORD + " TEXT," + KEY_IMGBACK + " INTEGER, "
+            + KEY_GESTURE_ARR + " VARCHAR " + " )";
 
 
     // DROID table create statement
@@ -126,7 +130,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         db.execSQL(CREATE_TABLE_MAP);
         db.execSQL(CREATE_TABLE_GESTURE);
         db.execSQL(CREATE_TABLE_IMGCOLOR);
-        db.execSQL(CREATE_TABLE_IMGPIN);
+        db.execSQL(CREATE_TABLE_USER);
 
         Log.d(TAG, "creating tables");
 
@@ -138,7 +142,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_MAP);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_GESTURE);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_IMGCOLOR);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_IMGPIN);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_USER);
 
         // create new tables
         onCreate(db);
@@ -148,32 +152,72 @@ public class DatabaseHelper extends SQLiteOpenHelper{
     public void addUser(User user) {
         SQLiteDatabase db = this.getWritableDatabase();
 
+        Gson gson = new Gson();
+
         ContentValues values = new ContentValues();
-        System.out.println("username1: " + user.getUsername());
-        boolean exists = getUserByName(user.getUsername());
+        boolean exists = isUser(user.getUsername());
         if(exists == false) {
             values.put(KEY_USERNAME, user.getUsername());
+            values.put(KEY_IMGPASSWORD, gson.toJson(user.getImgPassword()));
+            values.put(KEY_IMGBACK, user.getImageback());
+            values.put(KEY_GESTURE_ARR, gson.toJson(user.getGestarr()));
             // Inserting Row
-            db.insert(TABLE_IMGPIN, null, values);
-            System.out.println("inserted successfully");
+            long user_id = db.insert(TABLE_USER, null, values);
+            Log.d(TAG,"user " + user.getUsername() + " inserted successfully id =" + user_id);
         }
         db.close(); // Closing database connection
     }
 
-    public boolean getUserByName(String username) {
+    public User getUserByName(String username) {
 
         SQLiteDatabase db = this.getReadableDatabase();
         System.out.println("username: "+ username);
-        String selectString = "SELECT * FROM " + TABLE_IMGPIN + " WHERE " + KEY_USERNAME + " =?";
-       /* Cursor cursor = db.query(TABLE_WORDPIN,
-                new String[]{KEY_USERNAME},
-                KEY_USERNAME + " = ? ",
-                new String[]{username},
-                null, null, null, null);
-*/
+        String selectString = "SELECT * FROM " + TABLE_USER + " WHERE " + KEY_USERNAME + " =?";
+        Gson gson = new Gson();
+
         Cursor cursor = db.rawQuery(selectString, new String[]{username});
         if(cursor.getCount()>0) {
-            System.out.println("cursor: "+ cursor);
+
+            cursor.moveToFirst();
+            int _id = cursor.getInt((cursor.getColumnIndex(KEY_ID)));
+            String user_name = cursor.getString((cursor.getColumnIndex(KEY_USERNAME)));
+            String img_password = cursor.getString((cursor.getColumnIndex(KEY_IMGPASSWORD)));
+            int background = cursor.getInt((cursor.getColumnIndex(KEY_IMGBACK)));
+            String gesture_arr = cursor.getString((cursor.getColumnIndex(KEY_GESTURE_ARR)));
+
+            User user = new User();
+            user.setId(_id);
+            user.setUsername(user_name);
+
+            Type listType = new TypeToken<ArrayList<Image>>(){}.getType();
+            ArrayList<Image> img_password_list = (ArrayList<Image>) gson.fromJson(img_password, listType);
+            user.setImgPassword(img_password_list);
+
+            user.setImageback(background);
+
+            Type strlistType = new TypeToken<ArrayList<String>>(){}.getType();
+            ArrayList<String> gesture_arr_list = (ArrayList<String>) gson.fromJson(gesture_arr, strlistType);
+            user.setGestarr(gesture_arr_list);
+
+            return user; //row exists
+        }
+        else
+            return null;
+
+
+    }
+
+
+    public boolean isUser(String username) {
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        System.out.println("username: "+ username);
+        String selectString = "SELECT * FROM " + TABLE_USER + " WHERE " + KEY_USERNAME + " =?";
+        Gson gson = new Gson();
+
+        Cursor cursor = db.rawQuery(selectString, new String[]{username});
+        if(cursor.getCount()>0) {
+
             return true; //row exists
         }
         else
@@ -186,6 +230,22 @@ public class DatabaseHelper extends SQLiteOpenHelper{
     public void clearTableDroid(){
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLE_DROID, null, null);
+    }
+
+    public long addImage(Image img) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        long img_id = 0;
+
+        ContentValues values = new ContentValues();
+        values.put(KEY_BITMAP_ID, img.getBitmapId());
+        values.put(KEY_X, img.getX());
+        values.put(KEY_Y,img.getY());
+        values.put(KEY_COLOR, img.getColor());
+        // insert row
+        img_id = db.insert(TABLE_DROID, null, values);
+
+        Log.d(TAG, "image saved"+ img_id);
+        return img_id;
     }
 
     /*
@@ -259,7 +319,6 @@ public class DatabaseHelper extends SQLiteOpenHelper{
                 image.setBitmapId(c.getInt(c.getColumnIndex(KEY_BITMAP_ID)));
                 image.setX((c.getInt(c.getColumnIndex(KEY_X))));
                 image.setY((c.getInt(c.getColumnIndex(KEY_Y))));
-
                 image.setColor((c.getString(c.getColumnIndex(KEY_COLOR))));
 
                 droids.add(image);
@@ -389,11 +448,11 @@ public class DatabaseHelper extends SQLiteOpenHelper{
     //getting all images of a corresponding color
 
 
-    public Integer getRedImage(Integer blue){
+    public Integer getRedImage(String name){
 
         int redimg = 0;
 
-        String selectQuery = "SELECT * FROM " + TABLE_IMGCOLOR + " WHERE " + KEY_IMG_B + " = " + blue;
+        String selectQuery = "SELECT * FROM " + TABLE_IMGCOLOR + " WHERE " + KEY_IMG_TEXT + "='"+name+"'";;
         Log.e(TAG, selectQuery);
 
         SQLiteDatabase db = this.getReadableDatabase();
@@ -410,11 +469,11 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 
 
     }
-    public Integer getYellowImage(Integer blue){
+    public Integer getYellowImage(String name){
 
         int yellowimg = 0;
 
-        String selectQuery = "SELECT * FROM " + TABLE_IMGCOLOR + " WHERE " + KEY_IMG_B + " = " + blue;
+        String selectQuery = "SELECT * FROM " + TABLE_IMGCOLOR + " WHERE " + KEY_IMG_TEXT + "='"+name+"'";;
         Log.e(TAG, selectQuery);
 
         SQLiteDatabase db = this.getReadableDatabase();
@@ -431,11 +490,11 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 
 
     }
-    public Integer getGreenImage(Integer blue){
+    public Integer getGreenImage(String name){
 
         int greenimg = 0;
 
-        String selectQuery = "SELECT * FROM " + TABLE_IMGCOLOR + " WHERE " + KEY_IMG_B + " = " + blue;
+        String selectQuery = "SELECT * FROM " + TABLE_IMGCOLOR + " WHERE " + KEY_IMG_TEXT + "='"+name+"'";;
         Log.e(TAG, selectQuery);
 
         SQLiteDatabase db = this.getReadableDatabase();
@@ -452,24 +511,24 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 
 
     }
-    public Integer getBlueImage(Integer blue){
-		
-    	/*int redimg = 0;
-    	
-    	String selectQuery = "SELECT * FROM" + TABLE_IMGCOLOR;
-    	 Log.e(LOG, selectQuery);
-    	 
-         SQLiteDatabase db = this.getReadableDatabase();
-         Cursor c = db.rawQuery(selectQuery, null);
-         
-         if (c.moveToFirst()) {
-             do {
-            	
-            	 redimg = c.getInt(c.getColumnIndex(KEY_IMG_R));
-             } while (c.moveToNext());
-         }*/
+    public Integer getBlueImage(String name){
 
-        return blue;
+        int blue_img = 0;
+
+        String selectQuery = "SELECT * FROM " + TABLE_IMGCOLOR + " WHERE " + KEY_IMG_TEXT + "='"+name+"'";;
+        Log.e(TAG, selectQuery);
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery(selectQuery, null);
+
+        if (c.moveToFirst()) {
+            do {
+
+                blue_img = c.getInt(c.getColumnIndex(KEY_IMG_B));
+            } while (c.moveToNext());
+        }
+
+        return blue_img;
 
 
     }
@@ -506,11 +565,6 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         if (db != null && db.isOpen())
             db.close();
     }
-
-
-
-
-
 
 
 }

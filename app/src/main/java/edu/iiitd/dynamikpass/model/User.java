@@ -6,6 +6,8 @@ import android.os.Parcelable;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import edu.iiitd.dynamikpass.UsernameActivity;
+
 /**
  * Created by Shreya Mehrishi on 12/13/2015.
  */
@@ -55,6 +57,14 @@ public class User implements Serializable {
     }
     public void setImgPassword(ArrayList<Image> imgpassword){
         this.objects = imgpassword;
+        buildImages();
+    }
+
+    private void buildImages() {
+
+        for(Image img: objects) {
+            img.getBitmap(UsernameActivity.res);
+        }
     }
 
 
@@ -64,6 +74,7 @@ public class User implements Serializable {
     public void setGestarr(ArrayList<String> gesturearr){
         this.gesturearr = gesturearr;
     }
+
 
 
 //    @Override

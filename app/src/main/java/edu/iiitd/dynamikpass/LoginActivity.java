@@ -43,11 +43,11 @@ public class LoginActivity extends Activity {
         super.onCreate(savedInstanceState);
         
         i = getIntent();
-        int imageBack = i.getIntExtra("ib",0);
+
 //		user = i.getParcelableExtra("usern");
 
 		user = (User) i.getSerializableExtra("usern");
-		imageBack = user.getImageback();
+		int imageBack = user.getImageback();
         System.out.println("ib lp: "+imageBack);
        
         // requesting to turn the title OFF
