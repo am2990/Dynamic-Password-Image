@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import edu.iiitd.dynamikpass.model.Image;
+import edu.iiitd.dynamikpass.model.User;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -29,11 +31,11 @@ import android.widget.AdapterView;
 public class LoginActivity extends Activity {
     /** Called when the activity is first created. */
 	
-	private static final String TAG = RegistrationActivity.class.getSimpleName();
+	private static final String TAG = LoginActivity.class.getSimpleName();
 	public static Object ax;
 	public static Object ay;
 	Intent i;
-	
+	static User user;
 	ArrayList<String> images = new ArrayList<String>();
 	
 	    @Override
@@ -41,7 +43,11 @@ public class LoginActivity extends Activity {
         super.onCreate(savedInstanceState);
         
         i = getIntent();
-        int imageBack = i.getIntExtra("ib",0);
+
+//		user = i.getParcelableExtra("usern");
+
+		user = (User) i.getSerializableExtra("usern");
+		int imageBack = user.getImageback();
         System.out.println("ib lp: "+imageBack);
        
         // requesting to turn the title OFF

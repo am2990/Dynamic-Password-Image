@@ -22,6 +22,8 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import edu.iiitd.dynamikpass.model.User;
+
 public class RegistrationActivity extends Activity {
 	/** Called when the activity is first created. */
 	private Context mContext;
@@ -29,17 +31,29 @@ public class RegistrationActivity extends Activity {
 	private static final String TAG = RegistrationActivity.class.getSimpleName();
 
 	static ArrayList<String> images = new ArrayList<String>();
-	Intent i;
+
 	static int imageBack;
 
 	public ActionMode mActionMode;
 	public static View mDecorView;
+	static Intent i;
+	static String checkuser;
+	static User user;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 
 		super.onCreate(savedInstanceState);
 		mContext = this;
+		i = getIntent();
+
+
+
+		checkuser = i.getStringExtra("checkuser");
+//		user = (User) i.getParcelableExtra("usern");
+		user = (User) i.getSerializableExtra("usern");
+
+
 		i = getIntent();
 		imageBack = i.getIntExtra("ib",0);
 		System.out.println("ib: : "+ Integer.toString(imageBack));
@@ -50,7 +64,7 @@ public class RegistrationActivity extends Activity {
 		// making it full screen
 //		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		// set our MainGamePanel as the View
-		final RegistrationPanel rp = new RegistrationPanel(mContext, mActionModeCallback, mSubmitCallback,  imageBack,images);
+		final RegistrationPanel rp = new RegistrationPanel(mContext, mActionModeCallback, mSubmitCallback, imageBack, images);
 		setContentView(rp);
 
 		Log.d(TAG, "View added");

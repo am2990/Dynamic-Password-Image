@@ -16,9 +16,11 @@ import java.util.Random;
 
 import edu.iiitd.dynamikpass.model.Image;
 import edu.iiitd.dynamikpass.utils.DatabaseHelper;
+import edu.iiitd.dynamikpass.utils.Pair;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -48,7 +50,7 @@ public class LoginPanel extends SurfaceView implements OnGestureListener,
 
 	private static final String TAG = LoginPanel.class.getSimpleName();
 
-	static MainThread1 thread;
+	static LoginThread thread;
 
 	boolean flag;
 	boolean check;
@@ -85,33 +87,28 @@ public class LoginPanel extends SurfaceView implements OnGestureListener,
 	public LoginPanel(Context context, int backgroundImage) {
 		super(context);
 		mContext = context;
-
-
-
 		new BitmapFactory();
 		mBackgroundImage = BitmapFactory.decodeResource(getResources(), backgroundImage);
 
-
 		DatabaseHelper db = new DatabaseHelper(mContext);
-		ls = db.getAllDroids();
+//		ls = db.getAllDroids();
+//		gestures = db.getAllGestures();
 
-
-		gestures = db.getAllGestures();
-
+		gestures = LoginActivity.user.getGestarr();
+		ls = LoginActivity.user.getImgPassword();
 
 		for(Image i :ls){
-
 			int r = randomN(ls.size());
 //int r =3;
 			// creating a hashmap to store all colors of the image
-			HashMap<String,Bitmap> bitmap1 = new HashMap<String, Bitmap>();
-			bitmap1.put("BLUE",BitmapFactory.decodeResource(getResources(),db.getBlueImage(i.getBitmapId())));
-			bitmap1.put("YELLOW",BitmapFactory.decodeResource(getResources(), db.getYellowImage(i.getBitmapId())));
-			bitmap1.put("GREEN",BitmapFactory.decodeResource(getResources(), db.getGreenImage(i.getBitmapId())));
-			bitmap1.put("RED",BitmapFactory.decodeResource(getResources(), db.getRedImage(i.getBitmapId())));
+			HashMap<String,Pair<Bitmap, Integer>> bitmap1 = new HashMap<>();
+			bitmap1.put("BLUE",new Pair(BitmapFactory.decodeResource(getResources(), db.getBlueImage(i.getName())), db.getBlueImage(i.getName())));
+			bitmap1.put("YELLOW", new Pair(BitmapFactory.decodeResource(getResources(), db.getYellowImage(i.getName())), db.getYellowImage(i.getName())));
+			bitmap1.put("GREEN",new Pair(BitmapFactory.decodeResource(getResources(), db.getGreenImage(i.getName())), db.getGreenImage(i.getName())));
+			bitmap1.put("RED",new Pair(BitmapFactory.decodeResource(getResources(), db.getRedImage(i.getName())), db.getRedImage(i.getName())));
 
 			// creating a new image
-			i = new Image(bitmap1,i.getBitmapId(),i.getX(),i.getY(),i.getColor(),getResources());
+			i = new Image(bitmap1,i.getBitmapId(),i.getName(), i.getX(),i.getY(),i.getColor(),getResources());
 			// giving random positions and color for correct recognition later
 			switch(r){
 				case 1:
@@ -148,14 +145,6 @@ public class LoginPanel extends SurfaceView implements OnGestureListener,
 
 		}
 
-
-		/* while (iter.hasNext()) {
-
-				 Image image = (Image) iter.next();
-				 drawimg.add(image);
-
-			 }*/
-
 		//retrieve integer(gesture) corresponding to the image
 		for(Image i: drawimg){
 			int j = hm.get(i);
@@ -187,7 +176,7 @@ public class LoginPanel extends SurfaceView implements OnGestureListener,
 			}
 		}
 
-		thread = new MainThread1(getHolder(), this, context);
+		thread = new LoginThread(getHolder(), this, context);
 		getHolder().addCallback(this);
 		surfaceView = this;
 
@@ -240,14 +229,13 @@ public class LoginPanel extends SurfaceView implements OnGestureListener,
 		int height =dm.heightPixels;
 		do{
 
-			//int randomNumx = ran.nextInt((height)-img.getBitmap().getHeight()) + 1;
-			//int randomNumy= ran.nextInt((width)-img.getBitmap().getWidth()) + 1;
+
 			int randomNumx = ran.nextInt(height) + 1;
 			int randomNumy= ran.nextInt(width) + 1;
 			System.out.println("height: "+ height);
 			System.out.println("width: "+ width);
 			//int randomNumx = ran.nextInt((400 - 25) + 1) + 25;
-			//int randomNumy = ran.nextInt((400 - 25) + 1) + 25;
+			//int randomNumy = ran.nextInt((400 - 25) + 1) +
 			checkpos = img.getRange(randomNumx,randomNumy);
 
 			// get upper limits from canvas
@@ -388,7 +376,6 @@ public class LoginPanel extends SurfaceView implements OnGestureListener,
 
 		@Override
 		public void onLongPress(MotionEvent arg0) {
-			// TODO Auto-generated method stub
 
 			System.out.println("on Long Press");
 			Log.d("hello","onLP: ");
@@ -465,12 +452,6 @@ public class LoginPanel extends SurfaceView implements OnGestureListener,
 				System.out.println("yes");
 
 			}*/
-
-
-
-
-
-
 			Log.d(TAG, "onFling: ");
 			return false;
 		}
@@ -565,10 +546,19 @@ public class LoginPanel extends SurfaceView implements OnGestureListener,
 				Toast.makeText(mContext, "Correct password",
 						Toast.LENGTH_SHORT).show();
 				System.out.println("yes");
+
+				// adding user to db
+				DatabaseHelper db = new DatabaseHelper(mContext);
+				db.addUser(LoginActivity.user);
+				Intent intent = new Intent(mContext, UsernameActivity.class);
+				mContext.startActivity(intent);
+				thread.setRunning(false);
 			}
 			else {
 				Toast.makeText(mContext,"Wrong Password",
 						Toast.LENGTH_SHORT).show();
+				//this.recreate;
+
 			}
 		}
 
@@ -581,6 +571,7 @@ public class LoginPanel extends SurfaceView implements OnGestureListener,
 		if(gestcounter > ls.size()){
 			Toast.makeText(mContext,"Wrong Password",
 					Toast.LENGTH_SHORT).show();
+			////this.recreate;
 		}
 	}
 
@@ -618,7 +609,7 @@ public class LoginPanel extends SurfaceView implements OnGestureListener,
 	@Override
 	public boolean onDoubleTap(MotionEvent e) {
 
-	gestcounter++;
+		gestcounter++;
 		//	ArrayList<Image> DoubleDroid = new ArrayList<Image>();
 		/*ArrayList<Image> notDT = new ArrayList<Image>(ls);
 		notDT.remove(doubletap);

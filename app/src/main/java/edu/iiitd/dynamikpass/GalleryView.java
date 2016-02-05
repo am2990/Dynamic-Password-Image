@@ -4,6 +4,8 @@ package edu.iiitd.dynamikpass;
 
 
 import edu.iiitd.dynamikpass.R;
+import edu.iiitd.dynamikpass.model.User;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -44,12 +46,23 @@ public class GalleryView extends Activity {
 	int imageBackground;
 	int selectedImage = 0;
 	private static final int MENU_SETBACK = 0;
-
+	Intent iuser,icheckuser;
+	User user;
+	String str_usern,checkuser;
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main_gal);
+
+		Intent i = getIntent();
+		icheckuser = getIntent();
+
+
+		checkuser = icheckuser.getStringExtra("checkuser");
+//		user = i.getParcelableExtra("usern");
+		user = (User) i.getSerializableExtra("usern");
+
 		try {
 
 		} catch (Exception e) {
@@ -153,9 +166,12 @@ public class GalleryView extends Activity {
 		switch (item.getItemId()) {
 			case MENU_SETBACK:
 
+				user.setImageback(selectedImage);
 				System.out.println("ib: "+selectedImage);
 				Intent intent = new Intent(getApplicationContext(), MainActivity.class);
 				intent.putExtra("ib", selectedImage);
+				intent.putExtra("usern",user);
+				intent.putExtra("checkuser", checkuser);
 				startActivity(intent);
 				return true;
 		}

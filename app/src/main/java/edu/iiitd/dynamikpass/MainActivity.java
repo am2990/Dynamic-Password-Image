@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import edu.iiitd.dynamikpass.model.User;
 import edu.iiitd.dynamikpass.utils.DatabaseHelper;
 
 
@@ -38,6 +39,9 @@ public class MainActivity extends Activity {
 	int imageBack;
 	private boolean mChecked;
 	ArrayList<String> images = new ArrayList();
+	Intent iuser,icheckuser;
+	String str_usern,checkuser;
+	User user;
 
 	private static final int MENU_SELECTIMG = 0;
 
@@ -69,15 +73,23 @@ public class MainActivity extends Activity {
 		Intent ii = getIntent();
 		imageBack = ii.getIntExtra("ib",0);
 		System.out.println("image: "+ imageBack);
+		iuser=getIntent();
+		icheckuser = getIntent();
+
+
+		checkuser = icheckuser.getStringExtra("checkuser");
+//		user = ii.getParcelableExtra("usern");
+		user = (User) ii.getSerializableExtra("usern");
 
 
 		DatabaseHelper db = new DatabaseHelper(this);
-		db.createImage("droid", R.drawable.droid_1, R.drawable.droid_4, R.drawable.droid_3, R.drawable.droid_2);
-		db.createImage("triangle", R.drawable.triangle_blue,R.drawable.triangle_green,R.drawable.triangle_red, R.drawable.triangle_yellow);
-		db.createImage("smiley", R.drawable.smiley_b, R.drawable.smiley_g, R.drawable.smiley_r, R.drawable.smiley_y);
-		db.createImage("football", R.drawable.football_b, R.drawable.football_g, R.drawable.football_r, R.drawable.football_y);
-		db.createImage("fish", R.drawable.fishb, R.drawable.fishg, R.drawable.fishr, R.drawable.fishy);
-		db.createImage("crab", R.drawable.crabb, R.drawable.crabg, R.drawable.crabr, R.drawable.craby);
+		db.createImage("Droid", R.drawable.droid_1, R.drawable.droid_4, R.drawable.droid_3, R.drawable.droid_2);
+		db.createImage("Square", R.drawable.triangle_blue,R.drawable.triangle_green,R.drawable.triangle_red, R.drawable.triangle_yellow);
+		db.createImage("Smiley", R.drawable.smiley_b, R.drawable.smiley_g, R.drawable.smiley_r, R.drawable.smiley_y);
+		db.createImage("Football", R.drawable.football_b, R.drawable.football_g, R.drawable.football_r, R.drawable.football_y);
+		db.createImage("Fish", R.drawable.fishb, R.drawable.fishg, R.drawable.fishr, R.drawable.fishy);
+		db.createImage("Crab", R.drawable.crabb, R.drawable.crabg, R.drawable.crabr, R.drawable.craby);
+		db.closeDb();
 
 
 		List<HashMap<String,String>> aList = new ArrayList<HashMap<String,String>>();
@@ -179,6 +191,7 @@ public class MainActivity extends Activity {
 		}
 
 		public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+			System.out.println("tick");
 			return true;
 		}
 
@@ -189,16 +202,21 @@ public class MainActivity extends Activity {
 											  long id, boolean checked){
 
 			HashMap<String,String> obj = (HashMap<String,String>)gridView.getItemAtPosition(position);
-			System.out.println("obj: "+ obj.get("flag"));
+			System.out.println("obj: "+ obj.get("txt"));
 
 
 			int selectCount = gridView.getCheckedItemCount();
-			if(checked){
-				System.out.println("in mChecked");
-				images.add(obj.get("flag"));
+			if(checked ){
+				if(!(images.contains(obj.get("txt")))){
+					System.out.println("in mChecked");
+					images.add(obj.get("txt"));
+				}
+				else{
+					Toast.makeText(getBaseContext(), "Already selected ", Toast.LENGTH_LONG).show();
+				}
 			}
 			else if(!checked){
-				images.remove(obj.get("flag"));
+				images.remove(obj.get("txt"));
 			}
 
 			switch (selectCount) {
@@ -232,6 +250,8 @@ public class MainActivity extends Activity {
 
 					intent.putExtra("ib", imageBack);
 					intent.putExtra("imageobjs", images);
+					intent.putExtra("usern",user);
+					intent.putExtra("checkuser", checkuser);
 
 					startActivity(intent);
 				}
