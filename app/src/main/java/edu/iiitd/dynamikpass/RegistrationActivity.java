@@ -242,5 +242,6 @@ public class RegistrationActivity extends Activity {
 		Log.d("CDA", "onBackPressed Called");
 		RegistrationPanel.thread.setRunning(false);
 		(this).finish();
+
 	}
 }

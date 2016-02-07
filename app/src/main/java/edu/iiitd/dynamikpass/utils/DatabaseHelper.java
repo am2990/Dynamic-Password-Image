@@ -245,6 +245,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         img_id = db.insert(TABLE_DROID, null, values);
 
         Log.d(TAG, "image saved"+ img_id);
+        Log.d(TAG, "image saved" + img_id);
         return img_id;
     }
 
@@ -442,7 +443,9 @@ public class DatabaseHelper extends SQLiteOpenHelper{
             System.out.println("img_id: "+ img_id);
 
         }
+        db.close();
         return img_id;
+
     }
 
     //getting all images of a corresponding color
