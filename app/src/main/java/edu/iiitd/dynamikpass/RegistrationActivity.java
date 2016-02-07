@@ -32,7 +32,6 @@ public class RegistrationActivity extends Activity {
 
 	static ArrayList<String> images = new ArrayList<String>();
 
-	static int imageBack;
 
 	public ActionMode mActionMode;
 	public static View mDecorView;
@@ -46,16 +45,12 @@ public class RegistrationActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		mContext = this;
 		i = getIntent();
-
-
-
 		checkuser = i.getStringExtra("checkuser");
 //		user = (User) i.getParcelableExtra("usern");
 		user = (User) i.getSerializableExtra("usern");
-
-
-		i = getIntent();
-		imageBack = i.getIntExtra("ib",0);
+//		i = getIntent();
+//		int imageBack = i.getIntExtra("ib",0);
+		int imageBack = user.getImageback();
 		System.out.println("ib: : "+ Integer.toString(imageBack));
 		images = i.getStringArrayListExtra("imageobjs");
 		System.out.println("images size: "+images.size());

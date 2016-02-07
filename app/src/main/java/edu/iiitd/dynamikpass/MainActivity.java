@@ -39,7 +39,7 @@ public class MainActivity extends Activity {
 	int imageBack;
 	private boolean mChecked;
 	Intent iuser,icheckuser;
-	String str_usern,checkuser;
+	String checkuser;
 	User user;
 	ArrayList<String> images;
 	private static final int MENU_SELECTIMG = 0;

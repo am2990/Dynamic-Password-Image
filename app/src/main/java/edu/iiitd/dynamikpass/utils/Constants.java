@@ -13,4 +13,7 @@ public final class Constants {
     public static final String BLUE = "BLUE";
     public static final String GREEN = "GREEN";
     public static final String YELLOW = "YELLOW";
+
+    public static final String ISUSER = "checkuser";
+    public static final String USER = "usern";
 }
