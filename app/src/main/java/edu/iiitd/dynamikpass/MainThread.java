@@ -109,8 +109,6 @@ public class MainThread extends Thread {
 		}
 		RegistrationActivity.user.setImgPassword(RegistrationPanel.imglist);
 		Intent intent = new Intent(mContext, TableLayoutExampleActivity.class);
-		System.out.println("r p: " + RegistrationActivity.imageBack);
-		intent.putExtra("ib", RegistrationActivity.imageBack);
 		intent.putExtra("checkuser", RegistrationActivity.checkuser);
 		intent.putExtra("usern", RegistrationActivity.user);
 		Bundle bundleObject = new Bundle();

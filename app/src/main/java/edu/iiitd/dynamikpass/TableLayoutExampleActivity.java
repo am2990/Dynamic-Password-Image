@@ -6,6 +6,7 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import edu.iiitd.dynamikpass.model.User;
+import edu.iiitd.dynamikpass.utils.Constants;
 import edu.iiitd.dynamikpass.utils.DatabaseHelper;
 import android.app.Activity;
 import android.content.Intent;
@@ -37,7 +38,7 @@ public class TableLayoutExampleActivity extends Activity implements OnItemSelect
 	private String item1, item2, item3;
 	String g1, g2, g3;
 	Button submit;
-	int imageBack;
+
 	Intent i;
 	User user;
 	Intent iuser, icheckuser;
@@ -57,7 +58,6 @@ public class TableLayoutExampleActivity extends Activity implements OnItemSelect
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main_1);
 		i = getIntent();
-		imageBack = i.getIntExtra("ib", 0);
 
 		gestures = new ArrayList<>();
 		iuser = getIntent();
@@ -72,7 +72,7 @@ public class TableLayoutExampleActivity extends Activity implements OnItemSelect
 
 		// Get ArrayList Bundle
 		imagelist = (ArrayList<Image>) bundleObject.getSerializable("imglist");
-		checkuser = icheckuser.getStringExtra("checkuser");
+		checkuser = icheckuser.getStringExtra(Constants.ISUSER);
 //		user = iuser.getParcelableExtra("usern");
 		user = (User) iuser.getSerializableExtra("usern");
 
@@ -216,5 +216,15 @@ public class TableLayoutExampleActivity extends Activity implements OnItemSelect
 		);
 		AppIndex.AppIndexApi.end(client, viewAction);
 		client.disconnect();
+	}
+
+	@Override
+	public void onBackPressed()
+	{
+		Intent i = new Intent(this, MainActivity.class);
+		i.putExtra(Constants.USER,user);
+		i.putExtra(Constants.ISUSER, checkuser);
+		startActivity(i);
+		super.onBackPressed();  // optional depending on your needs
 	}
 }
