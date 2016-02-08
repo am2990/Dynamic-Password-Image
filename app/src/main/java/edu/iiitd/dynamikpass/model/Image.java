@@ -50,7 +50,7 @@ public class Image implements Serializable{
 	transient private Bitmap bitmap;
 	transient private boolean touched, longPressed;	// if droid is touched/picked uptransient private boolean touched, longPressed;	// if droid is touched/picked up
 	transient private static Resources res;
-	transient public static int rad;
+	 public static int rad;
 
 
 	public Image(){
@@ -181,7 +181,7 @@ public class Image implements Serializable{
 		int w = bitmap.getWidth();
 
 
-		int rad = ((int) (Math.sqrt(((h/2)*(h/2))+((w/2)*(w/2))))+10);
+		rad = ((int) (Math.sqrt(((h/2)*(h/2))+((w/2)*(w/2))))+10);
 
 		System.out.println("get xcoord: "+x);
 		System.out.println("get ycoord: "+y);

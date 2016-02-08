@@ -35,11 +35,6 @@ public class MainThread extends Thread {
 
 	// Surface holder that can access the physical surface
 	private SurfaceHolder surfaceHolder;
-	Image droidr;
-	Image droidg;
-	Image droidy;
-	int bitmap_id1,bitmap_id2,bitmap_id3;
-	//Context context = getActivity();
 
 	//SharedPreferences sharedpreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
 	// The actual view that handles inputs

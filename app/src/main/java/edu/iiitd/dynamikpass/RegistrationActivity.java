@@ -46,10 +46,9 @@ public class RegistrationActivity extends Activity {
 		mContext = this;
 		i = getIntent();
 		checkuser = i.getStringExtra("checkuser");
-//		user = (User) i.getParcelableExtra("usern");
+//
 		user = (User) i.getSerializableExtra("usern");
-//		i = getIntent();
-//		int imageBack = i.getIntExtra("ib",0);
+//
 		int imageBack = user.getImageback();
 		System.out.println("ib: : "+ Integer.toString(imageBack));
 		images = i.getStringArrayListExtra("imageobjs");
@@ -145,23 +144,23 @@ public class RegistrationActivity extends Activity {
 			switch (item.getItemId()) {
 
 				case R.id.blue:
-					Toast.makeText(getBaseContext(), "Selected Blue ", Toast.LENGTH_LONG).show();
+
 					RegistrationPanel.SelectBlue();
 					mode.finish();
 					return true;
 				case R.id.red:
-					Toast.makeText(getBaseContext(), "Selected Red ", Toast.LENGTH_LONG).show();
+
 					RegistrationPanel.SelectRed();
 					mode.finish();
 					return true;
 				case R.id.green:
-					Toast.makeText(getBaseContext(), "Selected Green ", Toast.LENGTH_LONG).show();
+
 					RegistrationPanel.SelectGreen();
 					mode.finish();
 					return true;
 
 				case R.id.yellow:
-					Toast.makeText(getBaseContext(), "Selected Yellow ", Toast.LENGTH_LONG).show();
+
 					RegistrationPanel.SelectYellow();
 					mode.finish();
 					return true;
@@ -237,5 +236,6 @@ public class RegistrationActivity extends Activity {
 		Log.d("CDA", "onBackPressed Called");
 		RegistrationPanel.thread.setRunning(false);
 		(this).finish();
+
 	}
 }

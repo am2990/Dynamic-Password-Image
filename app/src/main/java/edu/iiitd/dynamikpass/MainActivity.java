@@ -38,11 +38,10 @@ public class MainActivity extends Activity {
 	Object obj;
 	int imageBack;
 	private boolean mChecked;
-	ArrayList<String> images = new ArrayList();
 	Intent iuser,icheckuser;
 	String checkuser;
 	User user;
-
+	ArrayList<String> images;
 	private static final int MENU_SELECTIMG = 0;
 
 	String[] objects = new String[] {
@@ -74,7 +73,8 @@ public class MainActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-
+		images = new ArrayList();
+		//images.removeAll(images);
 		Intent ii = getIntent();
 		imageBack = ii.getIntExtra("ib",0);
 		System.out.println("image: "+ imageBack);
@@ -193,6 +193,7 @@ public class MainActivity extends Activity {
 		}
 
 		public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+			images = new ArrayList();
 			return true;
 		}
 
@@ -208,23 +209,26 @@ public class MainActivity extends Activity {
 											  long id, boolean checked){
 
 			HashMap<String,String> obj = (HashMap<String,String>)gridView.getItemAtPosition(position);
+			//images.removeAll(images);
+
 			System.out.println("obj: "+ obj.get("txt"));
 
 
 			int selectCount = gridView.getCheckedItemCount();
-			if(checked ){
-				if(!(images.contains(obj.get("txt")))){
-					System.out.println("in mChecked");
-					images.add(obj.get("txt"));
+			if(checked ) {
+				if(!(images.contains(obj.get("txt")))) {
+					if (!(images.contains(obj.get("txt")))) {
+						System.out.println("in mChecked");
+						images.add(obj.get("txt"));
+					} else {
+						Toast.makeText(getBaseContext(), "Already selected ", Toast.LENGTH_LONG).show();
+					}
 				}
-				else{
-					Toast.makeText(getBaseContext(), "Already selected ", Toast.LENGTH_LONG).show();
-				}
+
 			}
-			else if(!checked){
+			else if (!checked) {
 				images.remove(obj.get("txt"));
 			}
-
 			switch (selectCount) {
 				case 1:
 					mode.setSubtitle("One item selected");
@@ -249,23 +253,26 @@ public class MainActivity extends Activity {
 
 		switch (item.getItemId()) {
 			case MENU_SELECTIMG:
+				try {
+					if (images.size() > 0) {
+						Intent intent = new Intent(getApplicationContext(), RegistrationActivity.class);
 
-				//try{
-				if(images.size()>0) {
-					Intent intent = new Intent(getApplicationContext(), RegistrationActivity.class);
+						intent.putExtra("ib", imageBack);
+						intent.putExtra("imageobjs", images);
+						intent.putExtra("usern", user);
+						intent.putExtra("checkuser", checkuser);
 
-					intent.putExtra("ib", imageBack);
-					intent.putExtra("imageobjs", images);
-					intent.putExtra("usern",user);
-					intent.putExtra("checkuser", checkuser);
+						startActivity(intent);
 
-					startActivity(intent);
+					} else {
+						Toast.makeText(getBaseContext(), "Select an image ", Toast.LENGTH_LONG).show();
+					}
+
 				}
-				else{
+				catch(Exception e){
 					Toast.makeText(getBaseContext(), "Select an image ", Toast.LENGTH_LONG).show();
 				}
-
-
+				images = new ArrayList();
 				return true;
 
 		}
