@@ -73,7 +73,7 @@ public class MainActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-
+		images = new ArrayList();
 		//images.removeAll(images);
 		Intent ii = getIntent();
 		imageBack = ii.getIntExtra("ib",0);
@@ -223,11 +223,13 @@ public class MainActivity extends Activity {
 					} else {
 						Toast.makeText(getBaseContext(), "Already selected ", Toast.LENGTH_LONG).show();
 					}
-				} else if (!checked) {
-					images.remove(obj.get("txt"));
 				}
 
-			}			switch (selectCount) {
+			}
+			else if (!checked) {
+				images.remove(obj.get("txt"));
+			}
+			switch (selectCount) {
 				case 1:
 					mode.setSubtitle("One item selected");
 					break;
@@ -251,23 +253,26 @@ public class MainActivity extends Activity {
 
 		switch (item.getItemId()) {
 			case MENU_SELECTIMG:
+				try {
+					if (images.size() > 0) {
+						Intent intent = new Intent(getApplicationContext(), RegistrationActivity.class);
 
-				//try{
-				if(images.size()>0) {
-					Intent intent = new Intent(getApplicationContext(), RegistrationActivity.class);
+						intent.putExtra("ib", imageBack);
+						intent.putExtra("imageobjs", images);
+						intent.putExtra("usern", user);
+						intent.putExtra("checkuser", checkuser);
 
-					intent.putExtra("ib", imageBack);
-					intent.putExtra("imageobjs", images);
-					intent.putExtra("usern",user);
-					intent.putExtra("checkuser", checkuser);
+						startActivity(intent);
 
-					startActivity(intent);
+					} else {
+						Toast.makeText(getBaseContext(), "Select an image ", Toast.LENGTH_LONG).show();
+					}
+
 				}
-				else{
+				catch(Exception e){
 					Toast.makeText(getBaseContext(), "Select an image ", Toast.LENGTH_LONG).show();
 				}
-
-
+				images = new ArrayList();
 				return true;
 
 		}

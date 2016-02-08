@@ -28,6 +28,7 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
+import android.widget.Toast;
 
 /**
  * @author impaler
@@ -47,7 +48,7 @@ public class RegistrationPanel extends SurfaceView implements
 	ActionMode mActionMode;
 	private SurfaceView surfaceView;
 	private Bitmap mBackgroundImage;
-	private Context mContext;
+	private static Context mContext;
 	static Image sr;
 	static Image sg;
 	static Image sy;
@@ -107,8 +108,8 @@ public class RegistrationPanel extends SurfaceView implements
 		Image checkpos,checkposother;
 		Iterator iter = imglist.iterator();
 		((Activity)mContext).getWindowManager().getDefaultDisplay().getMetrics(dm);
-		int width = dm.widthPixels;
-		int height =dm.heightPixels;
+		int width = dm.widthPixels-50;
+		int height =dm.heightPixels-50;
 		for(Image img: imglist){
 
 			//int randomNumx = ran.nextInt((height)-img.getBitmap().getHeight()) + 1;
@@ -120,8 +121,8 @@ public class RegistrationPanel extends SurfaceView implements
 			// till the flag is true
 			// generate random x and y
 			while(overlapp) {
-				randomNumx = (randomNumx + 20) % height ;
-				randomNumy = (randomNumy + 20) % width;
+				randomNumx = (randomNumx-40) % width ;
+				randomNumy = (randomNumy-40) % height;
 				System.out.println("height: " + height + "randomNumx" + randomNumx);
 				System.out.println("width: " + width + "randomNumy" + randomNumy);
 				//int randomNumx = ran.nextInt((400 - 25) + 1) + 25;
@@ -184,12 +185,12 @@ public class RegistrationPanel extends SurfaceView implements
 						img.handleActionDown((int) event.getX(), (int) event.getY());
 					}
 					// check if in the lower part of the screen we exit
-					if (event.getY() > getHeight() - 50) {
+					/*if (event.getY() > getHeight() - 50) {
 						thread.setRunning(false);
 						((Activity) getContext()).finish();
 					} else {
 						Log.d(TAG, "Coords: x=" + event.getX() + ",y=" + event.getY());
-					}
+					}*/
 				}
 				if (event.getAction() == MotionEvent.ACTION_MOVE) {
 					// the gestures
@@ -345,7 +346,8 @@ public class RegistrationPanel extends SurfaceView implements
 			if(img.isLongTouched()){
 
 				img.setColor("RED");
-
+				Toast.makeText(mContext,"Selected Red",
+						Toast.LENGTH_SHORT).show();
 				img.setLongPressed(false);
 				sr = img;
 				return sr;
@@ -361,6 +363,8 @@ public class RegistrationPanel extends SurfaceView implements
 		for(Image img: imglist){
 			if(img.isLongTouched()){
 				img.setColor("BLUE");
+				Toast.makeText(mContext,"Selected Blue",
+						Toast.LENGTH_SHORT).show();
 				img.setLongPressed(false);
 				sb = img;
 
@@ -376,6 +380,8 @@ public class RegistrationPanel extends SurfaceView implements
 		for(Image img: imglist){
 			if(img.isLongTouched()){
 				img.setColor("GREEN");
+				Toast.makeText(mContext,"Selected Green",
+						Toast.LENGTH_SHORT).show();
 				img.setLongPressed(false);
 				sg = img;
 
@@ -390,6 +396,9 @@ public class RegistrationPanel extends SurfaceView implements
 		for(Image img: imglist){
 			if(img.isLongTouched()){
 				img.setColor("YELLOW");
+				//Toast.makeText(getBaseContext(), "Selected Yellow ", Toast.LENGTH_LONG).show();
+				Toast.makeText(mContext,"Selected Yellow",
+						Toast.LENGTH_SHORT).show();
 				img.setLongPressed(false);
 				sy = img;
 				//droid.setTouched(true);

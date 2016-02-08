@@ -198,7 +198,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
             Type strlistType = new TypeToken<ArrayList<String>>(){}.getType();
             ArrayList<String> gesture_arr_list = (ArrayList<String>) gson.fromJson(gesture_arr, strlistType);
             user.setGestarr(gesture_arr_list);
-
+            db.close();
             return user; //row exists
         }
         else
@@ -246,6 +246,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 
         Log.d(TAG, "image saved"+ img_id);
         Log.d(TAG, "image saved" + img_id);
+        db.close();
         return img_id;
     }
 
@@ -297,6 +298,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 
         }
         Log.d("DB HELPER", "droid_id"+ droid_id);
+        db.close();
         return droid_id;
     }
 
@@ -325,7 +327,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
                 droids.add(image);
             } while (c.moveToNext());
         }
-
+        db.close();
         return droids;
 
     }
@@ -367,6 +369,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 
         }
         System.out.println("map_id: "+map_id);
+        db.close();
         return map_id;
     }
 
@@ -399,7 +402,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
                 gestures.add(getgesture);
             } while (c.moveToNext());
         }
-
+        db.close();
         return gestures;
     }
 
@@ -467,7 +470,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
                 redimg = c.getInt(c.getColumnIndex(KEY_IMG_R));
             } while (c.moveToNext());
         }
-
+        db.close();
         return redimg;
 
 
@@ -488,7 +491,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
                 yellowimg = c.getInt(c.getColumnIndex(KEY_IMG_Y));
             } while (c.moveToNext());
         }
-
+        db.close();
         return yellowimg;
 
 
@@ -509,7 +512,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
                 greenimg = c.getInt(c.getColumnIndex(KEY_IMG_G));
             } while (c.moveToNext());
         }
-
+        db.close();
         return greenimg;
 
 
@@ -530,39 +533,12 @@ public class DatabaseHelper extends SQLiteOpenHelper{
                 blue_img = c.getInt(c.getColumnIndex(KEY_IMG_B));
             } while (c.moveToNext());
         }
-
+        db.close();
         return blue_img;
 
 
     }
-    /* public List<Image> getImageByName(String txt) {
-         List<Image> droids = new ArrayList<Image>();
 
-         String selectQuery = "SELECT  * FROM " + TABLE_IMGCOLOR + "WHERE" + KEY_IMG_TEXT + "=" + txt;
-
-         Log.e(LOG, selectQuery);
-
-         SQLiteDatabase db = this.getReadableDatabase();
-         Cursor c = db.rawQuery(selectQuery, null);
-
-         // looping through all rows and adding to list
-         if (c.moveToFirst()) {
-             do {
-                // Image image = new Image();
-                 c.getInt(c.getColumnIndex(KEY_IMG_B));
-                 c.getInt(c.getColumnIndex(KEY_IMG_G));
-                 c.getInt(c.getColumnIndex(KEY_IMG_R));
-
-                 c.getInt(c.getColumnIndex(KEY_IMG_Y));
-
-               // droids.add(image);
-             } while (c.moveToNext());
-         }
-
-         return droids;
-
-     }*/
-    // closing database
     public void closeDb() {
         SQLiteDatabase db = this.getReadableDatabase();
         if (db != null && db.isOpen())
