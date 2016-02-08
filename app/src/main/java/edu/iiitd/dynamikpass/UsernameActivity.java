@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import edu.iiitd.dynamikpass.model.Image;
 import edu.iiitd.dynamikpass.model.User;
+import edu.iiitd.dynamikpass.utils.Constants;
 import edu.iiitd.dynamikpass.utils.DatabaseHelper;
 
 public class UsernameActivity extends Activity {
@@ -71,6 +72,13 @@ public class UsernameActivity extends Activity {
                 }
             }
         });
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        System.runFinalizersOnExit(true);
+        super.onBackPressed();  // optional depending on your needs
     }
 
 }
