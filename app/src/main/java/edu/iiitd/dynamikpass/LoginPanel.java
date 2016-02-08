@@ -15,6 +15,7 @@ import java.util.Map;
 import java.util.Random;
 
 import edu.iiitd.dynamikpass.model.Image;
+import edu.iiitd.dynamikpass.utils.Constants;
 import edu.iiitd.dynamikpass.utils.DatabaseHelper;
 import edu.iiitd.dynamikpass.utils.Pair;
 
@@ -317,7 +318,10 @@ public class LoginPanel extends SurfaceView implements OnGestureListener,
 		// at this point the surface is created and
 		// we can safely start the game loop
 		thread.setRunning(true);
-		thread.start();
+		Log.d(TAG,"state"+ thread.getState().toString());
+		if(thread.getState() == Thread.State.NEW || thread.getState() == Thread.State.TERMINATED) {
+			thread.start();
+		}
 	}
 
 	@Override
@@ -325,15 +329,15 @@ public class LoginPanel extends SurfaceView implements OnGestureListener,
 		Log.d(TAG, "Surface is being destroyed");
 		// tell the thread to shut down and wait for it to finish
 		// this is a clean shutdown
-		boolean retry = true;
-		while (retry) {
-			try {
-				thread.join();
-				retry = false;
-			} catch (InterruptedException e) {
-				// try again shutting down the thread
-			}
-		}
+//		boolean retry = true;
+//		while (retry) {
+//			try {
+//				thread.join();
+//				retry = false;
+//			} catch (InterruptedException e) {
+//				// try again shutting down the thread
+//			}
+//		}
 		Log.d(TAG, "Thread was shut down cleanly");
 	}
 
@@ -490,7 +494,21 @@ public class LoginPanel extends SurfaceView implements OnGestureListener,
 			else {
 				Toast.makeText(mContext,"Wrong Password",
 						Toast.LENGTH_SHORT).show();
-				System.out.println("recreating");
+
+
+				try {
+					thread.sleep(100);
+					thread.setRunning(false);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				Toast.makeText(mContext,"Try Again !!!",
+						Toast.LENGTH_SHORT).show();
+
+				Intent intent = new Intent(mContext, LoginActivity.class);
+				intent.putExtra(Constants.USER, LoginActivity.user );
+				mContext.startActivity(intent);
+
 				//DatabaseHelper db = new DatabaseHelper(mContext);
 				//mContext.db.close();
 				/*Intent startintent = ((Activity) mContext).getIntent();
@@ -510,7 +528,15 @@ public class LoginPanel extends SurfaceView implements OnGestureListener,
 			Toast.makeText(mContext,"Wrong Password",
 					Toast.LENGTH_SHORT).show();
 
+			thread.setRunning(false);
 			System.out.println("recreating");
+			Toast.makeText(mContext,"Try Again !!!",
+					Toast.LENGTH_SHORT).show();
+
+			Intent intent = new Intent(mContext, LoginActivity.class);
+			intent.putExtra(Constants.USER, LoginActivity.user);
+			mContext.startActivity(intent);
+
 
 			/*Intent startintent = ((Activity) mContext).getIntent();
 
@@ -580,7 +606,7 @@ public class LoginPanel extends SurfaceView implements OnGestureListener,
 					}
 				}
 				catch(Exception e1){
-					System.out.println("Runtime exception");
+					Log.e(TAG, e1.toString());
 				}
 
 			}

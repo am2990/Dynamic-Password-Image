@@ -77,7 +77,8 @@ public class UsernameActivity extends Activity {
     @Override
     public void onBackPressed()
     {
-        System.runFinalizersOnExit(true);
+        finish();
+        System.exit(0);
         super.onBackPressed();  // optional depending on your needs
     }
 

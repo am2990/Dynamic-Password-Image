@@ -42,6 +42,7 @@ public class LoginThread extends Thread {
 		super();
 		this.surfaceHolder = surfaceHolder;
 		this.gamePanel = gamePanel;
+		this.running = true;
 	}
 
 	@Override

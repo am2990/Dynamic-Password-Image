@@ -74,10 +74,16 @@ public class LoginActivity extends Activity {
 		Log.d(TAG, "Stopping...");
 		super.onStop();
 	}
+
 	@Override
 	public void onBackPressed() {
-	    moveTaskToBack(true);
+		System.out.println("back press");
+		Log.d("CDA", "onBackPressed Called");
+		LoginPanel.thread.setRunning(false);
+//		(this).finish();
+//	    moveTaskToBack(true);
+		super.onBackPressed();
 	}
-	
+
     
 }
