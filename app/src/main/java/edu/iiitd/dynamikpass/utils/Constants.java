@@ -7,8 +7,6 @@ import android.content.res.Resources;
  */
 public final class Constants {
 
-    public static final Resources resources = null;
-
     public static final String RED = "RED";
     public static final String BLUE = "BLUE";
     public static final String GREEN = "GREEN";

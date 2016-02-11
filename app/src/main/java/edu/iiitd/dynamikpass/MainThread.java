@@ -19,6 +19,7 @@ import android.os.Parcelable;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import edu.iiitd.dynamikpass.model.Image;
+import edu.iiitd.dynamikpass.utils.Constants;
 import edu.iiitd.dynamikpass.utils.DatabaseHelper;
 
 
@@ -98,18 +99,19 @@ public class MainThread extends Thread {
 	public void doSubmit() {
 
 
-		DatabaseHelper db = new DatabaseHelper(mContext);
-		db.clearTableDroid();
-		for(Image img: RegistrationPanel.imglist){
-
-
-			db.saveOrUpdateImage(img);
-			RegistrationPanel.FindCell();
-		}
-		RegistrationActivity.user.setImgPassword(RegistrationPanel.FindCell());
+//		DatabaseHelper db = new DatabaseHelper(mContext);
+//		db.clearTableDroid();
+//		for(Image img: RegistrationPanel.imglist){
+//
+//
+//			db.saveOrUpdateImage(img);
+//			RegistrationPanel.findCell();
+//		}
+//		RegistrationActivity.user.setImgPassword(RegistrationPanel.findCell());
+		RegistrationActivity.user.setImgPassword(RegistrationPanel.findCell());
 		Intent intent = new Intent(mContext, TableLayoutExampleActivity.class);
 		intent.putExtra("checkuser", RegistrationActivity.checkuser);
-		intent.putExtra("usern", RegistrationActivity.user);
+		intent.putExtra(Constants.USER, RegistrationActivity.user);
 		Bundle bundleObject = new Bundle();
 		bundleObject.putSerializable("imglist", RegistrationPanel.imglist);
 		intent.putExtras(bundleObject);

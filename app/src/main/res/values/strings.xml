@@ -12,11 +12,14 @@
     <string name="menu_confirm">Confirm</string>
 
 
-    <string name="str_red">Red</string>
+
     <string name="username">Enter username</string>
+
+    <string name="str_red">Red</string>
     <string name="str_green">Green</string>
     <string name="str_yellow">Yellow</string>
     <string name="str_blue">Blue</string>
+
     <string name="submit">Submit</string>
     <string-array name="planets_array">
         <item>Single Tap</item>

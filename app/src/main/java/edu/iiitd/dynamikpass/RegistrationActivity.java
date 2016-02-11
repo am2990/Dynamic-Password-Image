@@ -23,6 +23,7 @@ import android.view.WindowManager;
 import android.widget.Toast;
 
 import edu.iiitd.dynamikpass.model.User;
+import edu.iiitd.dynamikpass.utils.Constants;
 
 public class RegistrationActivity extends Activity {
 	/** Called when the activity is first created. */
@@ -139,36 +140,10 @@ public class RegistrationActivity extends Activity {
 		@Override
 
 		public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-			System.out.println("get Item: " + item.getItemId());
-			//if((RegistrationPanel.image.isLongTouched() == true)||(RegistrationPanel.tri_b.isLongTouched() == true)){
-			switch (item.getItemId()) {
-
-				case R.id.blue:
-
-					RegistrationPanel.SelectBlue();
-					mode.finish();
-					return true;
-				case R.id.red:
-
-					RegistrationPanel.SelectRed();
-					mode.finish();
-					return true;
-				case R.id.green:
-
-					RegistrationPanel.SelectGreen();
-					mode.finish();
-					return true;
-
-				case R.id.yellow:
-
-					RegistrationPanel.SelectYellow();
-					mode.finish();
-					return true;
-
-				default:
-					return false;
-			}
-
+			System.out.println("get Item: " + item.toString());
+			RegistrationPanel.SelectColor(item.toString());
+			mode.finish();
+			return true;
 		}
 
 		@Override
@@ -206,7 +181,7 @@ public class RegistrationActivity extends Activity {
 			switch (item.getItemId()) {
 
 				case R.id.submit:
-					Toast.makeText(getBaseContext(), "Submit Selected ", Toast.LENGTH_LONG).show();
+					Toast.makeText(getBaseContext(), "Submit Selected ", Toast.LENGTH_SHORT).show();
 					MainThread.setRunning(false);
 					System.out.println("do submit");
 					RegistrationPanel.thread.doSubmit();

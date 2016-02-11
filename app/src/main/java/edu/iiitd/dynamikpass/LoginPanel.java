@@ -6,10 +6,7 @@
 package edu.iiitd.dynamikpass;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -19,7 +16,6 @@ import edu.iiitd.dynamikpass.utils.Constants;
 import edu.iiitd.dynamikpass.utils.DatabaseHelper;
 import edu.iiitd.dynamikpass.utils.Pair;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
@@ -28,11 +24,9 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Point;
 import android.support.v4.view.GestureDetectorCompat;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.Display;
 import android.view.GestureDetector.OnDoubleTapListener;
 import android.view.GestureDetector.OnGestureListener;
 import android.view.GestureDetector.SimpleOnGestureListener;
@@ -40,7 +34,6 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
-import android.widget.Switch;
 import android.widget.Toast;
 
 /**
@@ -59,8 +52,9 @@ public class LoginPanel extends SurfaceView implements OnGestureListener,
 
 	String getgest=null;
 
-	ArrayList<Image> drawimg = new ArrayList<Image>();
 	HashMap<Image, Integer> ls = new HashMap<Image, Integer>();
+	HashMap<Integer, Boolean> cell_list = new HashMap<Integer, Boolean>();
+	ArrayList<Image> draw = new ArrayList<>();
 	List<String> gestures = null;
 
 	private Bitmap mBackgroundImage;
@@ -70,11 +64,8 @@ public class LoginPanel extends SurfaceView implements OnGestureListener,
 	ArrayList<Image> singletap = new ArrayList<Image>();
 	ArrayList<Image> doubletap = new ArrayList<Image>();
 	Map<Image, Integer> hm = new HashMap<Image, Integer>();
-	private int mCanvasHeight = 1;
 	int gestcounter = 0;
 	private Context mContext;
-ArrayList<Integer> forr = new ArrayList<>();
-	transient public static int rad;
 
 
 	/**
@@ -89,23 +80,23 @@ ArrayList<Integer> forr = new ArrayList<>();
 
 	public LoginPanel(Context context, int backgroundImage) {
 		super(context);
+		// initialize and populate values
 		mContext = context;
 		new BitmapFactory();
 		mBackgroundImage = BitmapFactory.decodeResource(getResources(), backgroundImage);
-
-		DatabaseHelper db = new DatabaseHelper(mContext);
-
 		gestures = LoginActivity.user.getGestarr();
 		ls = LoginActivity.user.getImgPassword();
-		for(int y : ls.values()){
-			System.out.println("valueset: "+ y);
+
+		// all cells are initially empty
+		for(int i = 1; i <= 9 ; i++) {
+			cell_list.put(i, false);
 		}
 
+
+		DatabaseHelper db = new DatabaseHelper(mContext);
 		for(Image i : ls.keySet()){
 
-			//int r = randomN();
-			System.out.println("keyset: "+ i);
-int r =3;
+
 			// creating a hashmap to store all colors of the image
 			HashMap<String,Pair<Bitmap, Integer>> bitmap1 = new HashMap<>();
 			bitmap1.put("BLUE",new Pair(BitmapFactory.decodeResource(getResources(), db.getBlueImage(i.getName())), db.getBlueImage(i.getName())));
@@ -116,35 +107,57 @@ int r =3;
 			// creating a new image
 			i = new Image(bitmap1,i.getBitmapId(),i.getName(), i.getX(),i.getY(),i.getColor(),getResources());
 			// giving random positions and color for correct recognition later
-
+			int r = randomN(3);
 			switch(r){
 				case 1:
 				{
 					Log.d(TAG, "case1:BOTH RIGHT");
 					getgest = gestures.get(0);
 					Log.d(TAG, "1 gestgest: " + getgest);
-					substitutegesture(i);
+					substituteGesture(i);
+					//image occupies it's original cell
+					for( Image img : ls.keySet()){
+						if(img.equals(i)) {
+							if( cell_list.get(ls.get(img)) == false) {
+								cell_list.put(ls.get(img), true);
+							}else{
+								i = ChangePosition(i, true);
+
+							}
+						}
+					}
+					draw.add(i);
 
 					break;
 				}
 				case 2:
 				{
 					Log.d(TAG, "case2:CHANGE COLOR");
-					ChangeColor(i);
+					//image occupies it's original cell
+					for( Image img : ls.keySet()){
+						if(img.equals(i)) {
+							if( cell_list.get(ls.get(img)) == false) {
+								cell_list.put(ls.get(img), true);
+							}else{
+								i = ChangePosition(i, true);
+							}
+						}
+					}
+					i = ChangeColor(i);
 					getgest = gestures.get(1);
 					Log.d(TAG, "2 gestgest: " + getgest);
-					substitutegesture(i);
-
+					substituteGesture(i);
+					draw.add(i);
 					break;
 				}
 				case 3:
 				{
 					Log.d(TAG, "case3:CHANGE POSITION");
-					ChangePosition(i);
+					i = ChangePosition(i , false);
 					getgest = gestures.get(2);
 					Log.d(TAG, "3 gestgest: " + getgest);
-					substitutegesture(i);
-
+					substituteGesture(i);
+					draw.add(i);
 					break;
 				}
 				default:
@@ -153,6 +166,7 @@ int r =3;
 			}
 
 		}
+		db.closeDb();
 
 
 
@@ -183,13 +197,12 @@ int r =3;
 
 	}
 
-	private void substitutegesture(Image i) {
+	private void substituteGesture(Image i) {
 		if(getgest.equalsIgnoreCase("Single Tap")){
 			singletap.add(i);
 		}
 		if(getgest.equalsIgnoreCase("Double Tap")){
 			doubletap.add(i);
-			System.out.println("doubletapadded");
 		}
 		if(getgest.equalsIgnoreCase("Fling")){
 			fling.add(i);
@@ -197,11 +210,12 @@ int r =3;
 
 	}
 
-	private void ChangePosition(Image img) {
-		Random ran = new Random();
+
+
+	private Image ChangePosition(Image img, boolean update) {
 		DisplayMetrics metrics = Resources.getSystem().getDisplayMetrics();
 		int screenWidth = metrics.widthPixels;
-		int screenHeight = (int) (metrics.heightPixels*0.9);
+		int screenHeight = metrics.heightPixels;
 
 		int h_zero = 0;
 		int h_one = screenHeight/3;
@@ -211,181 +225,93 @@ int r =3;
 		int w_one = screenWidth/3;
 		int w_two = (screenWidth*2)/3;
 		int w_three = screenWidth;
-		ArrayList<Integer> change_cell = new ArrayList<>();
-		change_cell.add(1);
-		change_cell.add(2);
-		change_cell.add(3);
-		change_cell.add(4);
-		change_cell.add(5);
-		change_cell.add(6);
-		change_cell.add(7);
-		change_cell.add(8);
-		change_cell.add(9);
 
-		int u = 0;
-		Log.d(TAG,"img"+ img);
 
-		Log.d(TAG,"CHECK CELL"+ ls.get(img));
-		for(Image i: ls.keySet()) {
-			if (img.equals(i)){
-				 u = ls.get(i);
-				System.out.println("uu: " + u);
+		//TODO add logic to update position
+		Integer[] arr = {1,2,3,4,5,6,7,8,9};
 
+		Integer img_cell = null;
+		for( Image i : ls.keySet()){
+			if(i.equals(img)) {
+				img_cell = ls.get(i);
 			}
-
 		}
-
-		for(int val: ls.values()){
-			int counter = 1;
-			change_cell.remove(val-counter);
-			counter++;
+		if(img_cell == null){
+			return img;
 		}
-		int r = ran.nextInt(change_cell.size()+1) + 1;
+		cell_list.put(img_cell, true);
 
+		Integer newCell = randomN(arr.length);
+		while(cell_list.get(newCell)){
+			newCell = randomN(arr.length);
+		}
+		cell_list.put(newCell, true);
 
-			/*do {
-				r = ran.nextInt(9) + 1;
-				System.out.println("chanegposr:" + r);
-				//forr.add(r);
-				break;
-			} while (!(forr.contains(r)));*/
-
-
-		// r = 5;
-		System.out.println("changecell "+ change_cell.size() + r);
-
-		switch(change_cell.get(r-1)){
+		switch(newCell){
 
 			case 7: {
 				img.setY((h_three + h_two) / 2);
 				img.setX((w_zero + w_one) / 2);
-				System.out.println("in switch");
-				change_cell.add(u);
 				break;
 			}
 			case 8: {
 				img.setY((h_three + h_two) / 2);
 				img.setX((w_one + w_two) / 2);
-				change_cell.add(u);
-				System.out.println("in switch");
 				break;
 			}
 			case 9: {
 				img.setY((h_three + h_two) / 2);
 				img.setX((w_three + w_two) / 2);
-				change_cell.add(u);
 				break;
 			}
 			case 4: {
 				img.setY((h_one + h_two) / 2);
 				img.setX((w_zero + w_one) / 2);
-				change_cell.add(u);
 				break;
 			}
 			case 5: {
 				img.setY((h_one + h_two) / 2);
 				img.setX((w_one + w_two) / 2);
-				change_cell.add(u);
 				break;
 			}
 			case 6: {
 				img.setY((h_one + h_two) / 2);
 				img.setX((w_three + w_two) / 2);
-				change_cell.add(u);
 				break;
 			}
 			case 1: {
 				img.setY((h_one + h_zero) / 2);
 				img.setX((w_zero + w_one) / 2);
-				change_cell.add(u);
 				break;
 			}
 			case 2: {
 				img.setY((h_one + h_zero) / 2);
 				img.setX((w_two + w_one) / 2);
-				change_cell.add(u);
 				break;
 			}
 			case 3: {
 				img.setY((h_one + h_zero) / 2);
 				img.setX((w_two + w_three) / 2);
-				change_cell.add(u);
-
 				break;
 			}
-
-
 		}
-
-		/*DisplayMetrics dm= new DisplayMetrics();
-		//ran.setSeed((long)i);
-
-		Image checkpos,checkposother;
-		Iterator iter = hm.keySet().iterator();
-		((Activity)mContext).getWindowManager().getDefaultDisplay().getMetrics(dm);
-		int width = dm.widthPixels-50;
-		int height =dm.heightPixels-50;
-
-
-			int randomNumx = ran.nextInt(width) + 1;
-			int randomNumy = ran.nextInt(height) + 1;
-			boolean overlapp = true;
-			Image pos = null;
-			// till the flag is true
-			// generate random x and y
-			while(overlapp) {
-				randomNumx = (randomNumx-40) % width ;
-				randomNumy = (randomNumy-40) % height;
-				System.out.println("height: " + height + "randomNumx" + randomNumx);
-				System.out.println("width: " + width + "randomNumy" + randomNumy);
-				//int randomNumx = ran.nextInt((400 - 25) + 1) + 25;
-				//int randomNumy = ran.nextInt((400 - 25) + 1) + 25;
-
-
-				//check if the x and y lie inside any other image
-			//	for(Image i: hm) {
-				while(iter.hasNext()){
-					Image i = (Image) iter.next();
-					pos = i.getRange(randomNumx, randomNumy);
-					if(pos != null) {
-						continue;
-					}
-				}
-				if(pos == null){
-					img.setX(randomNumx);
-					img.setY(randomNumy);
-					overlapp = false;
-				}
-				// if it lies inside any image set flag to true
-
-				// else set the image with the new x and y
-				// get upper limits from canvas
-				//int randomNumx = ran.nextInt((350 - 25) + 1) + 25;
-				//int randomNumy = ran.nextInt((350 - 25) + 1) + 25;
-
-			}*/
-
-
-
-
+		cell_list.put(img_cell, false);
+		return img;
 
 	}
 
-	private void ChangeColor(Image img) {
-
-		String[] colors = {"BLUE", "GREEN", "YELLOW", "RED"};
+	private Image ChangeColor(Image img) {
+		ArrayList<String> color_list = new ArrayList<>();
+		color_list.add(Constants.BLUE);color_list.add(Constants.RED);
+		color_list.add(Constants.GREEN);color_list.add(Constants.YELLOW);
 		String color = img.getColor();
-
-		String setColor = color;
-		do{
-			Random r = new Random();
-			setColor = colors[r.nextInt(colors.length)];
-		}while(color.equalsIgnoreCase(setColor));
-
-
-		Log.d(TAG, "Color" + setColor);
-		img.setColor(setColor);
-
+		if( color != null) {
+			color_list.remove(color);
+			String setColor = color_list.get(randomN(color_list.size())-1);
+			Log.d(TAG, "Color" + setColor);
+			img.setColor(setColor);
+		}
+		return img;
 	}
 
 	public void surfaceChanged(SurfaceHolder holder, int format, int width,
@@ -395,8 +321,6 @@ int r =3;
 		// synchronized to make sure these all change atomically
 		synchronized (getHolder()) {
 			mCanvasWidth = getWidth();
-
-			mCanvasHeight = getHeight();
 
 			// don't forget to resize the background image
 			mBackgroundImage = Bitmap.createScaledBitmap(
@@ -418,42 +342,22 @@ int r =3;
 	@Override
 	public void surfaceDestroyed(SurfaceHolder holder) {
 		Log.d(TAG, "Surface is being destroyed");
-		// tell the thread to shut down and wait for it to finish
-		// this is a clean shutdown
-//		boolean retry = true;
-//		while (retry) {
-//			try {
-//				thread.join();
-//				retry = false;
-//			} catch (InterruptedException e) {
-//				// try again shutting down the thread
-//			}
-//		}
-		Log.d(TAG, "Thread was shut down cleanly");
 	}
 
 
 
 
-
-
-
-	private int randomN() {
-
+	private int randomN(int N) {
 		Random rand = new Random();
-
-		int randomNum = rand.nextInt(3)+1;
-		System.out.println("random no" + randomNum);
+		int randomNum = rand.nextInt(N)+1;
 		return randomNum;
-
-
 	}
 
 	@Override
 	protected void onDraw(Canvas canvas) {
 		Paint paint = new Paint();
 		mBackgroundImage = Bitmap.createScaledBitmap(
- 				mBackgroundImage, getWidth(), getHeight(), true);
+				mBackgroundImage, getWidth(), getHeight(), true);
 		canvas.drawBitmap(mBackgroundImage, 0,0, null);
 
 		DisplayMetrics metrics = Resources.getSystem().getDisplayMetrics();
@@ -471,7 +375,7 @@ int r =3;
 		canvas.drawLine(0,(screenHeight/3)*2,screenWidth,(screenHeight/3)*2,paint);
 		canvas.drawLine(0,(screenHeight/3),screenWidth,(screenHeight/3),paint);
 
-		for(Image i: ls.keySet()){
+		for(Image i: draw){
 			i.draw(canvas);
 
 		}
@@ -515,16 +419,11 @@ int r =3;
 							if (droidz != null) {
 								fling.remove(droidz);
 							}
-
-
-
 						}
 					}
 					catch(Exception e1){
 						System.out.println("Runtime exception");
 					}
-
-
 				}
 
 			}
@@ -635,7 +534,7 @@ int r =3;
 					Toast.LENGTH_SHORT).show();
 
 			thread.setRunning(false);
-			System.out.println("recreating");
+			Log.d(TAG, "Recreating");
 			Toast.makeText(mContext,"Try Again !!!",
 					Toast.LENGTH_SHORT).show();
 
@@ -643,14 +542,6 @@ int r =3;
 			intent.putExtra(Constants.USER, LoginActivity.user);
 			mContext.startActivity(intent);
 
-
-			/*Intent startintent = ((Activity) mContext).getIntent();
-
-
-			thread.setRunning(false);
-			((Activity) mContext).finish();
-			mContext.startActivity(startintent);*/
-			////this.recreate;
 		}
 	}
 
@@ -689,9 +580,9 @@ int r =3;
 	public boolean onDoubleTap(MotionEvent e) {
 		Log.d("hello", "on double Tap confirmed");
 		gestcounter++;
-	for(Image dt: doubletap){
-		System.out.println("dt: "+ dt);
-	}
+		for(Image dt: doubletap){
+			System.out.println("dt: "+ dt);
+		}
 
 		for(Image p : ls.keySet()){
 			Log.d(TAG, p.getColor());
@@ -706,9 +597,6 @@ int r =3;
 						if (droidz != null) {
 							doubletap.remove(droidz);
 						}
-
-
-
 					}
 				}
 				catch(Exception e1){

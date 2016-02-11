@@ -53,10 +53,7 @@ public class RegistrationPanel extends SurfaceView implements
 	private SurfaceView surfaceView;
 	private Bitmap mBackgroundImage;
 	private static Context mContext;
-	static Image sr;
-	static Image sg;
-	static Image sy;
-	static Image sb;
+
 
 	private int callBackCode = 0;
 
@@ -108,9 +105,7 @@ public class RegistrationPanel extends SurfaceView implements
 		Random ran = new Random();
 		DisplayMetrics dm= new DisplayMetrics();
 		//ran.setSeed((long)i);
-		Image image1 = imglist.get(0);
-		Image checkpos,checkposother;
-		Iterator iter = imglist.iterator();
+
 		((Activity)mContext).getWindowManager().getDefaultDisplay().getMetrics(dm);
 		int width = dm.widthPixels-50;
 		int height =dm.heightPixels-50;
@@ -145,20 +140,12 @@ public class RegistrationPanel extends SurfaceView implements
 					img.setY(randomNumy);
 					overlapp = false;
 				}
-				// if it lies inside any image set flag to true
 
-				// else set the image with the new x and y
-				// get upper limits from canvas
-				//int randomNumx = ran.nextInt((350 - 25) + 1) + 25;
-				//int randomNumy = ran.nextInt((350 - 25) + 1) + 25;
 
 			}
 
 
 		}
-
-
-		//}
 
 		System.out.println("image list: "+imglist.size());
 		for(Image ii: imglist){
@@ -280,7 +267,7 @@ public class RegistrationPanel extends SurfaceView implements
 
 		DisplayMetrics metrics = Resources.getSystem().getDisplayMetrics();
 		int screenWidth = metrics.widthPixels;
-		int screenHeight = (int) (metrics.heightPixels*0.9);
+		int screenHeight = metrics.heightPixels;
 
 		//  Set paint options
 		paint.setAntiAlias(true);
@@ -330,113 +317,45 @@ public class RegistrationPanel extends SurfaceView implements
 			ArrayList<Image> imagelist = new ArrayList<Image>();
 			for(Image img: imglist){
 				imagelist.add(img);
-
-
-				Image droidz = null;
-
-				Image droidz1 = img.getRange(arg0.getX(), arg0.getY());
-
-
-
+				Image i = img.getRange(arg0.getX(), arg0.getY());
 				System.out.println("on Long Press");
 				Log.d("hello","onLP: ");
 
 				if (mActionMode != null) {
 					Log.v(TAG, "mActionMode is not null");
-					//                return;
 				}
 
 
-				if((droidz1 != null)){
+				if((i != null)){
 					mActionMode = ((Activity)mContext).startActionMode(mActionModeCallback);
 					surfaceView.setSelected(true);
 					System.out.println("on Long Press");
 					return;
 				}
 			}
-
-
-
 		}
-
 	}
 
 
-
-	public static Image SelectRed() {
-
-
+	public static Image SelectColor(String color) {
 		for(Image img: imglist){
-
 			if(img.isLongTouched()){
-
-				img.setColor("RED");
-				Toast.makeText(mContext,"Selected Red",
+				img.setColor(color);
+				Toast.makeText(mContext,"Selected " + color,
 						Toast.LENGTH_SHORT).show();
 				img.setLongPressed(false);
-				sr = img;
-				return sr;
-
+				Image i = img;
+				return i;
 			}
 		}
-
-
 		return null;
 	}
-	public static Image SelectBlue() {
 
-		for(Image img: imglist){
-			if(img.isLongTouched()){
-				img.setColor("BLUE");
-				Toast.makeText(mContext,"Selected Blue",
-						Toast.LENGTH_SHORT).show();
-				img.setLongPressed(false);
-				sb = img;
 
-				return sb;
-			}
-		}
-
-		return sb;
-	}
-	public static Image SelectGreen() {
-		// TODO Auto-generated method stub
-
-		for(Image img: imglist){
-			if(img.isLongTouched()){
-				img.setColor("GREEN");
-				Toast.makeText(mContext,"Selected Green",
-						Toast.LENGTH_SHORT).show();
-				img.setLongPressed(false);
-				sg = img;
-
-				return sg;
-			}
-		}
-
-		return sg;
-	}
-	public static Image SelectYellow() {
-		// TODO Auto-generated method stub
-		for(Image img: imglist){
-			if(img.isLongTouched()){
-				img.setColor("YELLOW");
-				//Toast.makeText(getBaseContext(), "Selected Yellow ", Toast.LENGTH_LONG).show();
-				Toast.makeText(mContext,"Selected Yellow",
-						Toast.LENGTH_SHORT).show();
-				img.setLongPressed(false);
-				sy = img;
-				//droid.setTouched(true);
-				return sy;
-			}
-		}
-		return sy;
-	}
-
-	public static HashMap<Image,Integer> FindCell(){
+	public static HashMap<Image,Integer> findCell(){
 		DisplayMetrics metrics = Resources.getSystem().getDisplayMetrics();
 		int screenWidth = metrics.widthPixels;
-		int screenHeight = (int) (metrics.heightPixels*0.9);
+		int screenHeight = (int) (metrics.heightPixels * 0.99);
 		HashMap<Image,Integer> cell = new HashMap<>();
 		int h_zero = 0;
 		int h_one = screenHeight/3;

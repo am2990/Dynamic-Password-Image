@@ -138,34 +138,12 @@ public class Image implements Serializable{
 
 	public void setColor(String col){
 
-		switch(col){
-
-			case "YELLOW":
-				setBitmap( color_to_bitmap.get("YELLOW").getLeft());
-				this.col = "YELLOW";
-				this.bitmap_id = color_to_bitmap.get("YELLOW").getRight();
-				break;
-
-			case "RED":
-				setBitmap( color_to_bitmap.get("RED").getLeft());
-				this.col = "RED";
-				this.bitmap_id = color_to_bitmap.get("RED").getRight();
-				break;
-
-			case "GREEN":
-				setBitmap( color_to_bitmap.get("GREEN").getLeft());
-				this.col = "GREEN";
-				this.bitmap_id = color_to_bitmap.get("GREEN").getRight();
-				break;
-
-			case "BLUE":
-				setBitmap( color_to_bitmap.get("BLUE").getLeft());
-				this.col = "BLUE";
-				this.bitmap_id = color_to_bitmap.get("BLUE").getRight();
-				break;
-		}
-
+		col = col.toUpperCase();
+		setBitmap( color_to_bitmap.get(col).getLeft());
+		this.col = col;
+		this.bitmap_id = color_to_bitmap.get(col).getRight();
 	}
+
 	public void setTouched(boolean touched) {
 		this.touched = touched;
 	}
@@ -368,10 +346,4 @@ public class Image implements Serializable{
 		this.name = name;
 	}
 
-	public boolean equals(Image i){
-		if(this.bitmap_id == i.getBitmapId() && this.name == i.getName()){
-			return true;
-		}
-		return false;
-	}
 }

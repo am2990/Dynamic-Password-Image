@@ -11,6 +11,7 @@ import java.util.Iterator;
 
 import edu.iiitd.dynamikpass.model.Image;
 import edu.iiitd.dynamikpass.model.User;
+import edu.iiitd.dynamikpass.utils.Constants;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -46,7 +47,7 @@ public class LoginActivity extends Activity {
 
 //		user = i.getParcelableExtra("usern");
 
-		user = (User) i.getSerializableExtra("usern");
+		user = (User) i.getSerializableExtra(Constants.USER);
 		int imageBack = user.getImageback();
         System.out.println("ib lp: "+imageBack);
        

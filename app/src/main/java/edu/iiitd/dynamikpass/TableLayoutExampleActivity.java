@@ -74,7 +74,7 @@ public class TableLayoutExampleActivity extends Activity implements OnItemSelect
 		imagelist = (ArrayList<Image>) bundleObject.getSerializable("imglist");
 		checkuser = icheckuser.getStringExtra(Constants.ISUSER);
 //		user = iuser.getParcelableExtra("usern");
-		user = (User) iuser.getSerializableExtra("usern");
+		user = (User) iuser.getSerializableExtra(Constants.USER);
 
 
 		spinner1 = (Spinner) findViewById(R.id.spinner1);
@@ -154,26 +154,18 @@ public class TableLayoutExampleActivity extends Activity implements OnItemSelect
 
 	@Override
 	public void onClick(View arg0) {
-		// TODO Auto-generated method stub
-		//Gson gson = new Gson();
 
-		//String list = gson.toJson(imagelist);
 		Intent intent = null;
 		//System.out.println("list= " + list);
 		if (checkuser.equalsIgnoreCase("false")) {
 
 			user.setGestarr(gestures);
-//			user.setUsername(str_usern);
-//			user.setImageback(imageBack);
-			//user.setImgPassword(list);
-//			user.setGestarr(gestures.toString());
-			//System.out.println("selected tagcloudview 1: " + selected.toString());
-			//System.out.println("not selected tagcloudview 1: " + notSelected.toString());
+
 			intent = new Intent(getApplicationContext(), LoginActivity.class);
 		}else {
 			intent = new Intent(getApplicationContext(), UsernameActivity.class);
 		}
-		intent.putExtra("usern", user);
+		intent.putExtra(Constants.USER, user);
 		startActivity(intent);
 	}
 
