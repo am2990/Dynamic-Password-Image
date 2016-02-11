@@ -53,7 +53,7 @@ public class LoginPanel extends SurfaceView implements OnGestureListener,
 	String getgest=null;
 
 	HashMap<Image, Integer> ls = new HashMap<Image, Integer>();
-	HashMap<Integer, Boolean> cell_list = new HashMap<Integer, Boolean>();
+	HashMap<Integer, Image> cell_list = new HashMap<Integer, Image>();
 	ArrayList<Image> draw = new ArrayList<>();
 	List<String> gestures = null;
 
@@ -89,7 +89,7 @@ public class LoginPanel extends SurfaceView implements OnGestureListener,
 
 		// all cells are initially empty
 		for(int i = 1; i <= 9 ; i++) {
-			cell_list.put(i, false);
+			cell_list.put(i, null);
 		}
 
 
@@ -108,7 +108,8 @@ public class LoginPanel extends SurfaceView implements OnGestureListener,
 			i = new Image(bitmap1,i.getBitmapId(),i.getName(), i.getX(),i.getY(),i.getColor(),getResources());
 			// giving random positions and color for correct recognition later
 			int r = randomN(3);
-			switch(r){
+		//int r = 3;
+				switch(r){
 				case 1:
 				{
 					Log.d(TAG, "case1:BOTH RIGHT");
@@ -118,8 +119,8 @@ public class LoginPanel extends SurfaceView implements OnGestureListener,
 					//image occupies it's original cell
 					for( Image img : ls.keySet()){
 						if(img.equals(i)) {
-							if( cell_list.get(ls.get(img)) == false) {
-								cell_list.put(ls.get(img), true);
+							if( cell_list.get(ls.get(img)) == null) {
+								cell_list.put(ls.get(img), img);
 							}else{
 								i = ChangePosition(i, true);
 
@@ -136,8 +137,8 @@ public class LoginPanel extends SurfaceView implements OnGestureListener,
 					//image occupies it's original cell
 					for( Image img : ls.keySet()){
 						if(img.equals(i)) {
-							if( cell_list.get(ls.get(img)) == false) {
-								cell_list.put(ls.get(img), true);
+							if( cell_list.get(ls.get(img)) == null) {
+								cell_list.put(ls.get(img), img);
 							}else{
 								i = ChangePosition(i, true);
 							}
@@ -239,13 +240,13 @@ public class LoginPanel extends SurfaceView implements OnGestureListener,
 		if(img_cell == null){
 			return img;
 		}
-		cell_list.put(img_cell, true);
+		cell_list.put(img_cell, img);
 
 		Integer newCell = randomN(arr.length);
-		while(cell_list.get(newCell)){
+		while(cell_list.get(newCell) != null){
 			newCell = randomN(arr.length);
 		}
-		cell_list.put(newCell, true);
+		cell_list.put(newCell, img);
 
 		switch(newCell){
 
@@ -295,7 +296,7 @@ public class LoginPanel extends SurfaceView implements OnGestureListener,
 				break;
 			}
 		}
-		cell_list.put(img_cell, false);
+		cell_list.put(img_cell, null);
 		return img;
 
 	}

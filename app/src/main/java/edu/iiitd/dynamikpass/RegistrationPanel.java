@@ -7,8 +7,11 @@ package edu.iiitd.dynamikpass;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Random;
+import java.util.Set;
+
 import edu.iiitd.dynamikpass.model.Image;
 import edu.iiitd.dynamikpass.utils.DatabaseHelper;
 import edu.iiitd.dynamikpass.utils.Pair;
@@ -101,15 +104,98 @@ public class RegistrationPanel extends SurfaceView implements
 			imglist.add(image);
 
 		}
-
 		Random ran = new Random();
+		DisplayMetrics metrics= new DisplayMetrics();
 		DisplayMetrics dm= new DisplayMetrics();
 		//ran.setSeed((long)i);
 
 		((Activity)mContext).getWindowManager().getDefaultDisplay().getMetrics(dm);
 		int width = dm.widthPixels-50;
 		int height =dm.heightPixels-50;
-		for(Image img: imglist){
+		int screenWidth = dm.widthPixels;
+		int screenHeight = dm.heightPixels;
+		int h_zero = 0;
+		int h_one = screenHeight/3;
+		int h_two = (screenHeight*2)/3;
+		int h_three = screenHeight;
+		int w_zero = 0;
+		int w_one = screenWidth/3;
+		int w_two = (screenWidth*2)/3;
+		int w_three = screenWidth;
+
+
+
+		int pos=1;
+		for(Image img : imglist){
+
+
+
+
+				switch (pos) {
+
+					case 7: {
+						img.setY((h_three + h_two) / 2);
+						img.setX((w_zero + w_one) / 2);
+						pos++;
+						break;
+					}
+					case 8: {
+						img.setY((h_three + h_two) / 2);
+						img.setX((w_one + w_two) / 2);
+						pos++;
+						break;
+					}
+					case 9: {
+						img.setY((h_three + h_two) / 2);
+						img.setX((w_three + w_two) / 2);
+						pos++;
+						break;
+					}
+					case 4: {
+						img.setY((h_one + h_two) / 2);
+						img.setX((w_zero + w_one) / 2);
+						pos++;
+						break;
+					}
+					case 5: {
+						img.setY((h_one + h_two) / 2);
+						img.setX((w_one + w_two) / 2);
+						pos++;
+						break;
+					}
+					case 6: {
+						img.setY((h_one + h_two) / 2);
+						img.setX((w_three + w_two) / 2);
+						pos++;
+						break;
+					}
+					case 1: {
+						img.setY((h_one + h_zero) / 2);
+						img.setX((w_zero + w_one) / 2);
+						pos++;
+						break;
+					}
+					case 2: {
+						img.setY((h_one + h_zero) / 2);
+						img.setX((w_two + w_one) / 2);
+						pos++;
+						break;
+					}
+					case 3: {
+						img.setY((h_one + h_zero) / 2);
+						img.setX((w_two + w_three) / 2);
+						pos++;
+						break;
+					}
+
+				}
+
+
+		}
+
+
+
+		/*for(Image img: imglist){
 
 			//int randomNumx = ran.nextInt((height)-img.getBitmap().getHeight()) + 1;
 			//int randomNumy= ran.nextInt((width)-img.getBitmap().getWidth()) + 1;
@@ -119,7 +205,7 @@ public class RegistrationPanel extends SurfaceView implements
 			Image pos = null;
 			// till the flag is true
 			// generate random x and y
-			while(overlapp) {
+			/*while(overlapp) {
 				randomNumx = (randomNumx-40) % width ;
 				randomNumy = (randomNumy-40) % height;
 				System.out.println("height: " + height + "randomNumx" + randomNumx);
@@ -145,7 +231,7 @@ public class RegistrationPanel extends SurfaceView implements
 			}
 
 
-		}
+		}*/
 
 		System.out.println("image list: "+imglist.size());
 		for(Image ii: imglist){
@@ -307,7 +393,23 @@ public class RegistrationPanel extends SurfaceView implements
 		public boolean onSingleTapUp(MotionEvent m){
 			Log.d(DEBUG_TAG, "onTapup Event: ");
 //			showSystemUI();
-			mActionMode = ((Activity)mContext).startActionMode(mSubmitCallBack);
+			ArrayList<Integer> list = new ArrayList<>();
+
+			for(Image i : imglist){
+				int cell_num = findCell().get(i);
+				list.add(cell_num);
+
+			}
+			Set<Integer> set = new HashSet<Integer>(list);
+			if(!(set.size() < list.size())) {
+
+
+				mActionMode = ((Activity) mContext).startActionMode(mSubmitCallBack);
+			}
+			else{
+				Toast.makeText(mContext,"not allowed ",
+						Toast.LENGTH_SHORT).show();
+			}
 			return true;
 		}
 
