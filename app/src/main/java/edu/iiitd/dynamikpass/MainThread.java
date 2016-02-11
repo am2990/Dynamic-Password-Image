@@ -6,6 +6,7 @@
 package edu.iiitd.dynamikpass;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import android.annotation.SuppressLint;
@@ -100,9 +101,12 @@ public class MainThread extends Thread {
 		DatabaseHelper db = new DatabaseHelper(mContext);
 		db.clearTableDroid();
 		for(Image img: RegistrationPanel.imglist){
+
+
 			db.saveOrUpdateImage(img);
+			RegistrationPanel.FindCell();
 		}
-		RegistrationActivity.user.setImgPassword(RegistrationPanel.imglist);
+		RegistrationActivity.user.setImgPassword(RegistrationPanel.FindCell());
 		Intent intent = new Intent(mContext, TableLayoutExampleActivity.class);
 		intent.putExtra("checkuser", RegistrationActivity.checkuser);
 		intent.putExtra("usern", RegistrationActivity.user);

@@ -22,9 +22,11 @@ import edu.iiitd.dynamikpass.utils.Pair;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.support.v4.view.GestureDetectorCompat;
@@ -38,6 +40,7 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
+import android.widget.Switch;
 import android.widget.Toast;
 
 /**
@@ -57,7 +60,7 @@ public class LoginPanel extends SurfaceView implements OnGestureListener,
 	String getgest=null;
 
 	ArrayList<Image> drawimg = new ArrayList<Image>();
-	ArrayList<Image> ls = new ArrayList<Image>();
+	HashMap<Image, Integer> ls = new HashMap<Image, Integer>();
 	List<String> gestures = null;
 
 	private Bitmap mBackgroundImage;
@@ -70,7 +73,7 @@ public class LoginPanel extends SurfaceView implements OnGestureListener,
 	private int mCanvasHeight = 1;
 	int gestcounter = 0;
 	private Context mContext;
-
+ArrayList<Integer> forr = new ArrayList<>();
 	transient public static int rad;
 
 
@@ -95,10 +98,10 @@ public class LoginPanel extends SurfaceView implements OnGestureListener,
 		gestures = LoginActivity.user.getGestarr();
 		ls = LoginActivity.user.getImgPassword();
 
-		for(Image i :ls){
-			int r = randomN();
-			System.out.println("r: "+ r);
-//int r =3;
+		for(Image i : ls.keySet()){
+			//int r = randomN();
+			System.out.println("keyset: "+ i);
+int r =3;
 			// creating a hashmap to store all colors of the image
 			HashMap<String,Pair<Bitmap, Integer>> bitmap1 = new HashMap<>();
 			bitmap1.put("BLUE",new Pair(BitmapFactory.decodeResource(getResources(), db.getBlueImage(i.getName())), db.getBlueImage(i.getName())));
@@ -126,7 +129,7 @@ public class LoginPanel extends SurfaceView implements OnGestureListener,
 				}
 				case 3:
 				{
-					Log.d(TAG, "case2:CHANGE POSITION");
+					Log.d(TAG, "case3:CHANGE POSITION");
 					ChangePosition(i);
 					hm.put(i,3);
 					break;
@@ -219,9 +222,90 @@ public class LoginPanel extends SurfaceView implements OnGestureListener,
 	}
 
 	private void ChangePosition(Image img) {
-		Random ran = new Random();
+		DisplayMetrics metrics = Resources.getSystem().getDisplayMetrics();
+		int screenWidth = metrics.widthPixels;
+		int screenHeight = (int) (metrics.heightPixels*0.9);
 
-		DisplayMetrics dm= new DisplayMetrics();
+		int h_zero = 0;
+		int h_one = screenHeight/3;
+		int h_two = (screenHeight*2)/3;
+		int h_three = screenHeight;
+		int w_zero = 0;
+		int w_one = screenWidth/3;
+		int w_two = (screenWidth*2)/3;
+		int w_three = screenWidth;
+
+		int cellno;
+		System.out.println("getimg:" + ls.get(img));
+		int r;
+		Random ran = new Random();
+		//int r = ran.nextInt(9) + 1;
+		/*for(Image i : ls.keySet()){
+			System.out.println("key in change:"+ i);
+		}*/
+		do {
+			 r = ran.nextInt(9) + 1;
+			System.out.println("chanegposr:" + r);
+			//forr.add(r);
+			break;
+		}while(cellno != r && (!forr.contains(r)));
+		// r = 5;
+
+		switch(r){
+
+			case 1: {
+				img.setX((h_three + h_two) / 2);
+				img.setY((w_zero + w_one) / 2);
+				System.out.println("in switch");
+				forr.add(r);
+				break;
+			}
+			case 2: {
+				img.setX((h_three + h_two) / 2);
+				img.setY((w_one + w_two) / 2);
+				System.out.println("in switch");
+				break;
+			}
+			case 3: {
+				img.setX((h_three + h_two) / 2);
+				img.setY((w_three + w_two) / 2);
+				break;
+			}
+			case 4: {
+				img.setX((h_one + h_two) / 2);
+				img.setY((w_zero + w_one) / 2);
+				break;
+			}
+			case 5: {
+				img.setX((h_one + h_two) / 2);
+				img.setY((w_one + w_two) / 2);
+				break;
+			}
+			case 6: {
+				img.setX((h_one + h_two) / 2);
+				img.setY((w_three + w_two) / 2);
+				break;
+			}
+			case 7: {
+				img.setX((h_one + h_zero) / 2);
+				img.setY((w_zero + w_one) / 2);
+				break;
+			}
+			case 8: {
+				img.setX((h_one + h_zero) / 2);
+				img.setY((w_two + w_one) / 2);
+				break;
+			}
+			case 9: {
+				img.setX((h_one + h_zero) / 2);
+				img.setY((w_two + w_three) / 2);
+				break;
+			}
+
+
+		}
+
+		/*DisplayMetrics dm= new DisplayMetrics();
 		//ran.setSeed((long)i);
 
 		Image checkpos,checkposother;
@@ -229,52 +313,47 @@ public class LoginPanel extends SurfaceView implements OnGestureListener,
 		((Activity)mContext).getWindowManager().getDefaultDisplay().getMetrics(dm);
 		int width = dm.widthPixels-50;
 		int height =dm.heightPixels-50;
-		do{
 
 
-			int randomNumx = ran.nextInt(width-40) + 1;
-			int randomNumy= ran.nextInt(height-40) + 1;
-			randomNumx = (randomNumx) % width ;
-			randomNumy = (randomNumy) % height;
-			System.out.println("height: "+ height);
-			System.out.println("width: "+ width);
-			System.out.println("randomx: "+ randomNumx);
-			System.out.println("randomy: "+ randomNumy);
-			//int randomNumx = ran.nextInt((400 - 25) + 1) + 25;
-			//int randomNumy = ran.nextInt((400 - 25) + 1) +
-			checkpos = img.getRange(randomNumx,randomNumy);
-
-			// get upper limits from canvas
-			//int randomNumx = ran.nextInt((350 - 25) + 1) + 25;
-			//int randomNumy = ran.nextInt((350 - 25) + 1) + 25;
-
-			//
+			int randomNumx = ran.nextInt(width) + 1;
+			int randomNumy = ran.nextInt(height) + 1;
+			boolean overlapp = true;
+			Image pos = null;
+			// till the flag is true
+			// generate random x and y
+			while(overlapp) {
+				randomNumx = (randomNumx-40) % width ;
+				randomNumy = (randomNumy-40) % height;
+				System.out.println("height: " + height + "randomNumx" + randomNumx);
+				System.out.println("width: " + width + "randomNumy" + randomNumy);
+				//int randomNumx = ran.nextInt((400 - 25) + 1) + 25;
+				//int randomNumy = ran.nextInt((400 - 25) + 1) + 25;
 
 
-			img.setX(randomNumx);
-			img.setY(randomNumy);
+				//check if the x and y lie inside any other image
+			//	for(Image i: hm) {
+				while(iter.hasNext()){
+					Image i = (Image) iter.next();
+					pos = i.getRange(randomNumx, randomNumy);
+					if(pos != null) {
+						continue;
+					}
+				}
+				if(pos == null){
+					img.setX(randomNumx);
+					img.setY(randomNumy);
+					overlapp = false;
+				}
+				// if it lies inside any image set flag to true
 
-		}while(checkpos != null);
+				// else set the image with the new x and y
+				// get upper limits from canvas
+				//int randomNumx = ran.nextInt((350 - 25) + 1) + 25;
+				//int randomNumy = ran.nextInt((350 - 25) + 1) + 25;
 
-		while (iter.hasNext()) {
+			}*/
 
-			Image image = (Image) iter.next();
 
-			do{
-				checkposother = img.getRange(image.getX(),image.getY());
-				int randomNumx = ran.nextInt(width-40) + 1;
-				int randomNumy= ran.nextInt(height-40) + 1;
-				randomNumx = (randomNumx) % width;
-				randomNumy = (randomNumy) % height;
-
-				checkpos = img.getRange(randomNumx,randomNumy);
-
-				img.setX(randomNumx);
-				img.setY(randomNumy);
-
-			}while(checkposother != null);
-
-		}
 
 
 
@@ -360,10 +439,25 @@ public class LoginPanel extends SurfaceView implements OnGestureListener,
 
 	@Override
 	protected void onDraw(Canvas canvas) {
-
+		Paint paint = new Paint();
 		mBackgroundImage = Bitmap.createScaledBitmap(
  				mBackgroundImage, getWidth(), getHeight(), true);
 		canvas.drawBitmap(mBackgroundImage, 0,0, null);
+
+		DisplayMetrics metrics = Resources.getSystem().getDisplayMetrics();
+		int screenWidth = metrics.widthPixels;
+		int screenHeight = (int) (metrics.heightPixels*0.9);
+
+		//  Set paint options
+		paint.setAntiAlias(true);
+		paint.setStrokeWidth(3);
+		paint.setStyle(Paint.Style.STROKE);
+		paint.setColor(Color.argb(255, 255, 255, 255));
+
+		canvas.drawLine((screenWidth/3)*2,0,(screenWidth/3)*2,screenHeight,paint);
+		canvas.drawLine((screenWidth/3),0,(screenWidth/3),screenHeight,paint);
+		canvas.drawLine(0,(screenHeight/3)*2,screenWidth,(screenHeight/3)*2,paint);
+		canvas.drawLine(0,(screenHeight/3),screenWidth,(screenHeight/3),paint);
 
 		for(Image i: drawimg){
 			i.draw(canvas);
@@ -395,7 +489,7 @@ public class LoginPanel extends SurfaceView implements OnGestureListener,
 							   float velocityX, float velocityY) {
 			Log.d("hello", "on fling confirmed");
 			gestcounter++;
-			for(Image p : ls){
+			for(Image p : ls.keySet()){
 				Log.d(TAG, p.getColor());
 				if(fling.contains(p)){
 					try {
@@ -442,7 +536,7 @@ public class LoginPanel extends SurfaceView implements OnGestureListener,
 		gestcounter++;
 
 
-		for(Image p : ls){
+		for(Image p : ls.keySet()){
 			Log.d(TAG, p.getColor());
 			if(singletap.contains(p)){
 				try {        //DoubleDroid = doubletap;
@@ -587,7 +681,7 @@ public class LoginPanel extends SurfaceView implements OnGestureListener,
 		System.out.println("dt: "+ dt);
 	}
 
-		for(Image p : ls){
+		for(Image p : ls.keySet()){
 			Log.d(TAG, p.getColor());
 			if(doubletap.contains(p)){
 				try {

@@ -15,9 +15,13 @@ import edu.iiitd.dynamikpass.utils.Pair;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Path;
 import android.support.v4.view.GestureDetectorCompat;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -198,6 +202,7 @@ public class RegistrationPanel extends SurfaceView implements
 						if (img.isTouched()) {
 							img.setX((int) event.getX());
 							img.setY((int) event.getY());
+
 						}
 					}
 				}
@@ -205,7 +210,11 @@ public class RegistrationPanel extends SurfaceView implements
 					// touch was released
 					for (Image img : imglist) {
 						if (img.isTouched()) {
+
 							img.setTouched(false);
+							/*HashMap<Image, Integer> hm = FindCell();
+							int y = hm.get(img);
+							System.out.println("yy:" + y);*/
 						}
 					}
 				}
@@ -263,11 +272,27 @@ public class RegistrationPanel extends SurfaceView implements
 
 	@Override
 	protected void onDraw(Canvas canvas) {
-
+		Paint paint = new Paint();
 		mBackgroundImage = Bitmap.createScaledBitmap(
 				mBackgroundImage, getWidth(), getHeight(), true);
 
 		canvas.drawBitmap(mBackgroundImage, 0, 0, null);
+
+		DisplayMetrics metrics = Resources.getSystem().getDisplayMetrics();
+		int screenWidth = metrics.widthPixels;
+		int screenHeight = (int) (metrics.heightPixels*0.9);
+
+		//  Set paint options
+		paint.setAntiAlias(true);
+		paint.setStrokeWidth(3);
+		paint.setStyle(Paint.Style.STROKE);
+		paint.setColor(Color.argb(255, 255, 255, 255));
+
+		canvas.drawLine((screenWidth/3)*2,0,(screenWidth/3)*2,screenHeight,paint);
+		canvas.drawLine((screenWidth/3),0,(screenWidth/3),screenHeight,paint);
+		canvas.drawLine(0,(screenHeight/3)*2,screenWidth,(screenHeight/3)*2,paint);
+		canvas.drawLine(0,(screenHeight/3),screenWidth,(screenHeight/3),paint);
+
 
 		for(Image img : imglist){
 			img.draw(canvas);
@@ -408,5 +433,57 @@ public class RegistrationPanel extends SurfaceView implements
 		return sy;
 	}
 
+	public static HashMap<Image,Integer> FindCell(){
+		DisplayMetrics metrics = Resources.getSystem().getDisplayMetrics();
+		int screenWidth = metrics.widthPixels;
+		int screenHeight = (int) (metrics.heightPixels*0.9);
+		HashMap<Image,Integer> cell = new HashMap<>();
+		int h_zero = 0;
+		int h_one = screenHeight/3;
+		int h_two = (screenHeight*2)/3;
+		int h_three = screenHeight;
+		int w_zero = 0;
+		int w_one = screenWidth/3;
+		int w_two = (screenWidth*2)/3;
+		int w_three = screenWidth;
+		for(Image img : imglist){
+			System.out.println("x,y" + img.getX()+ img.getY());
+			if(img.getX()>w_zero && img.getX()<w_one){
+				if(img.getY()>h_zero && img.getY()<h_one){
+					cell.put(img,1);
+				}
+				else if(img.getY() > h_one && img.getY() < h_two){
+					cell.put(img,4);
+				}
+				else if(img.getY() > h_two && img.getY() < h_three){
+					cell.put(img,7);
+				}
+			}
+			else if(img.getX()>w_one && img.getX()<w_two){
+				if(img.getY()>h_zero && img.getY()<h_one){
+					cell.put(img,2);
+				}
+				else if(img.getY() > h_one && img.getY() < h_two){
+					cell.put(img,5);
+				}
+				else if(img.getY() > h_two && img.getY() < h_three){
+					cell.put(img,8);
+				}
+			}
+			else if(img.getX()>w_two && img.getX()<w_three){
+				if(img.getY()>h_zero && img.getY()<h_one){
+					cell.put(img,3);
+				}
+				else if(img.getY() > h_one && img.getY() < h_two){
+					cell.put(img,6);
+				}
+				else if(img.getY() > h_two && img.getY() < h_three){
+					cell.put(img,9);
+				}
+			}
+			System.out.println("cell: "+ cell.get(img));
+		}
+		return cell;
+	}
 }
 

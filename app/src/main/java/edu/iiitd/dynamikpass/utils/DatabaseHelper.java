@@ -4,6 +4,7 @@ package edu.iiitd.dynamikpass.utils;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -190,7 +191,8 @@ public class DatabaseHelper extends SQLiteOpenHelper{
             user.setUsername(user_name);
 
             Type listType = new TypeToken<ArrayList<Image>>(){}.getType();
-            ArrayList<Image> img_password_list = (ArrayList<Image>) gson.fromJson(img_password, listType);
+           // ArrayList<Image> img_password_list = (ArrayList<Image>) gson.fromJson(img_password, listType);
+            HashMap<Image, Integer> img_password_list = (HashMap<Image, Integer>)gson.fromJson(img_password, listType);
             user.setImgPassword(img_password_list);
 
             user.setImageback(background);

@@ -23,7 +23,11 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.Path;
+import android.graphics.Rect;
 import android.util.Log;
 import android.view.MotionEvent;
 
@@ -38,8 +42,9 @@ public class Image implements Serializable{
 	 */
 	private static final String TAG = Image.class.getSimpleName();
 	private static final long serialVersionUID = 8438662189730257314L;
-
-
+	Bitmap bitmapArray[][];
+	private static final int NUMBER_OF_VERTICAL_SQUARES = 5;
+	private static final int NUMBER_OF_HORIZONTAL_SQUARES = 5;
 	private int bitmap_id;  // the selected bitmap_id
 	private int x;			// the X coordinate
 	private int y;			// the Y coordinate
@@ -237,12 +242,60 @@ public class Image implements Serializable{
 
 
 	public void draw(Canvas canvas) {
-
-		canvas.drawBitmap(bitmap, x - (bitmap.getWidth() / 2), y - (bitmap.getHeight() / 2), null);
-
 		Paint paint = new Paint();
+		//Matrix m = new Matrix();
+		//float scale = .5f;
+		//m.setScale(scale, 1f);
+		canvas.drawBitmap(bitmap, x - (bitmap.getWidth() / 2), y - (bitmap.getHeight() / 2), null);
+//canvas.drawBitmapMesh(bitmap,x - (bitmap.getWidth() / 2), y - (bitmap.getHeight() / 2),0,0,);
+
+		Path path = new Path();
+		path.moveTo(18,10);
+		path.lineTo(1, 0);
+		path.lineTo(0, 20);
+
+		//paint.setColor(Color.RED);
+		paint.setStrokeWidth(2);
+		paint.setStyle(Paint.Style.STROKE);
+
+
+		canvas.drawPath(path, paint);
+
+
+
+			//canvas.drawBitmap(bitmap, m, null);
+
 		paint.setStyle(Paint.Style.STROKE);
 		canvas.drawCircle(getX(), getY(), rad, paint);
+
+		/*int canvasWidth = canvas.getWidth();
+		int canvasHeight = canvas.getHeight();
+
+		int squareWidth = canvasWidth / NUMBER_OF_HORIZONTAL_SQUARES;
+		int squareHeight = canvasHeight / NUMBER_OF_VERTICAL_SQUARES;
+		Rect destinationRect = new Rect();
+
+		int xOffset;
+		int yOffset;
+
+		// Set the destination rectangle size
+		destinationRect.set(0, 0, squareWidth, squareHeight);
+
+		for (int horizontalPosition = 0; horizontalPosition < NUMBER_OF_HORIZONTAL_SQUARES; horizontalPosition++){
+
+			xOffset = horizontalPosition * squareWidth;
+
+			for (int verticalPosition = 0; verticalPosition < NUMBER_OF_VERTICAL_SQUARES; verticalPosition++){
+
+				yOffset = verticalPosition * squareHeight;
+
+				// Set the destination rectangle offset for the canvas origin
+				destinationRect.offsetTo(xOffset, yOffset);
+
+				// Draw the bitmap into the destination rectangle on the canvas
+				canvas.drawBitmap(bitmapArray[horizontalPosition][verticalPosition], null, destinationRect, null);
+			}
+		}*/
 
 	}
 
