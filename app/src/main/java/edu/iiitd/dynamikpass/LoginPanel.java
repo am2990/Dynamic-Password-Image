@@ -97,8 +97,12 @@ ArrayList<Integer> forr = new ArrayList<>();
 
 		gestures = LoginActivity.user.getGestarr();
 		ls = LoginActivity.user.getImgPassword();
+		for(int y : ls.values()){
+			System.out.println("valueset: "+ y);
+		}
 
 		for(Image i : ls.keySet()){
+
 			//int r = randomN();
 			System.out.println("keyset: "+ i);
 int r =3;
@@ -117,21 +121,30 @@ int r =3;
 				case 1:
 				{
 					Log.d(TAG, "case1:BOTH RIGHT");
-					hm.put(i,1);
+					getgest = gestures.get(0);
+					Log.d(TAG, "1 gestgest: " + getgest);
+					substitutegesture(i);
+
 					break;
 				}
 				case 2:
 				{
 					Log.d(TAG, "case2:CHANGE COLOR");
 					ChangeColor(i);
-					hm.put(i,2);
+					getgest = gestures.get(1);
+					Log.d(TAG, "2 gestgest: " + getgest);
+					substitutegesture(i);
+
 					break;
 				}
 				case 3:
 				{
 					Log.d(TAG, "case3:CHANGE POSITION");
 					ChangePosition(i);
-					hm.put(i,3);
+					getgest = gestures.get(2);
+					Log.d(TAG, "3 gestgest: " + getgest);
+					substitutegesture(i);
+
 					break;
 				}
 				default:
@@ -140,45 +153,8 @@ int r =3;
 			}
 
 		}
-		//db.close();
-		Iterator iter = hm.keySet().iterator();
-		while (iter.hasNext()) {
 
-			Image image = (Image) iter.next();
-			drawimg.add(image);
 
-		}
-
-		//retrieve integer(gesture) corresponding to the image
-		for(Image i: drawimg){
-			int j = hm.get(i);
-			Log.d(TAG, "hm value"+ j);
-
-			switch(j){
-				case 1:{
-					getgest = gestures.get(0);
-					Log.d(TAG, "1 gestgest: " + getgest);
-					substitutegesture(i);
-					break;
-				}
-				case 2:{
-					getgest = gestures.get(1);
-					Log.d(TAG, "2 gestgest: " + getgest);
-					substitutegesture(i);
-					break;
-				}
-				case 3:{
-					getgest = gestures.get(2);
-					Log.d(TAG, "3 gestgest: " + getgest);
-					substitutegesture(i);
-					break;
-				}
-				case 4:{
-
-					break;
-				}
-			}
-		}
 
 		thread = new LoginThread(getHolder(), this, context);
 		getHolder().addCallback(this);
@@ -222,6 +198,7 @@ int r =3;
 	}
 
 	private void ChangePosition(Image img) {
+		Random ran = new Random();
 		DisplayMetrics metrics = Resources.getSystem().getDisplayMetrics();
 		int screenWidth = metrics.widthPixels;
 		int screenHeight = (int) (metrics.heightPixels*0.9);
@@ -234,71 +211,106 @@ int r =3;
 		int w_one = screenWidth/3;
 		int w_two = (screenWidth*2)/3;
 		int w_three = screenWidth;
+		ArrayList<Integer> change_cell = new ArrayList<>();
+		change_cell.add(1);
+		change_cell.add(2);
+		change_cell.add(3);
+		change_cell.add(4);
+		change_cell.add(5);
+		change_cell.add(6);
+		change_cell.add(7);
+		change_cell.add(8);
+		change_cell.add(9);
 
-		int cellno;
-		System.out.println("getimg:" + ls.get(img));
-		int r;
-		Random ran = new Random();
-		//int r = ran.nextInt(9) + 1;
-		/*for(Image i : ls.keySet()){
-			System.out.println("key in change:"+ i);
-		}*/
-		do {
-			 r = ran.nextInt(9) + 1;
-			System.out.println("chanegposr:" + r);
-			//forr.add(r);
-			break;
-		}while(cellno != r && (!forr.contains(r)));
+		int u = 0;
+		Log.d(TAG,"img"+ img);
+
+		Log.d(TAG,"CHECK CELL"+ ls.get(img));
+		for(Image i: ls.keySet()) {
+			if (img.equals(i)){
+				 u = ls.get(i);
+				System.out.println("uu: " + u);
+
+			}
+
+		}
+
+		for(int val: ls.values()){
+			int counter = 1;
+			change_cell.remove(val-counter);
+			counter++;
+		}
+		int r = ran.nextInt(change_cell.size()+1) + 1;
+
+
+			/*do {
+				r = ran.nextInt(9) + 1;
+				System.out.println("chanegposr:" + r);
+				//forr.add(r);
+				break;
+			} while (!(forr.contains(r)));*/
+
+
 		// r = 5;
+		System.out.println("changecell "+ change_cell.size() + r);
 
-		switch(r){
+		switch(change_cell.get(r-1)){
 
-			case 1: {
-				img.setX((h_three + h_two) / 2);
-				img.setY((w_zero + w_one) / 2);
-				System.out.println("in switch");
-				forr.add(r);
-				break;
-			}
-			case 2: {
-				img.setX((h_three + h_two) / 2);
-				img.setY((w_one + w_two) / 2);
-				System.out.println("in switch");
-				break;
-			}
-			case 3: {
-				img.setX((h_three + h_two) / 2);
-				img.setY((w_three + w_two) / 2);
-				break;
-			}
-			case 4: {
-				img.setX((h_one + h_two) / 2);
-				img.setY((w_zero + w_one) / 2);
-				break;
-			}
-			case 5: {
-				img.setX((h_one + h_two) / 2);
-				img.setY((w_one + w_two) / 2);
-				break;
-			}
-			case 6: {
-				img.setX((h_one + h_two) / 2);
-				img.setY((w_three + w_two) / 2);
-				break;
-			}
 			case 7: {
-				img.setX((h_one + h_zero) / 2);
-				img.setY((w_zero + w_one) / 2);
+				img.setY((h_three + h_two) / 2);
+				img.setX((w_zero + w_one) / 2);
+				System.out.println("in switch");
+				change_cell.add(u);
 				break;
 			}
 			case 8: {
-				img.setX((h_one + h_zero) / 2);
-				img.setY((w_two + w_one) / 2);
+				img.setY((h_three + h_two) / 2);
+				img.setX((w_one + w_two) / 2);
+				change_cell.add(u);
+				System.out.println("in switch");
 				break;
 			}
 			case 9: {
-				img.setX((h_one + h_zero) / 2);
-				img.setY((w_two + w_three) / 2);
+				img.setY((h_three + h_two) / 2);
+				img.setX((w_three + w_two) / 2);
+				change_cell.add(u);
+				break;
+			}
+			case 4: {
+				img.setY((h_one + h_two) / 2);
+				img.setX((w_zero + w_one) / 2);
+				change_cell.add(u);
+				break;
+			}
+			case 5: {
+				img.setY((h_one + h_two) / 2);
+				img.setX((w_one + w_two) / 2);
+				change_cell.add(u);
+				break;
+			}
+			case 6: {
+				img.setY((h_one + h_two) / 2);
+				img.setX((w_three + w_two) / 2);
+				change_cell.add(u);
+				break;
+			}
+			case 1: {
+				img.setY((h_one + h_zero) / 2);
+				img.setX((w_zero + w_one) / 2);
+				change_cell.add(u);
+				break;
+			}
+			case 2: {
+				img.setY((h_one + h_zero) / 2);
+				img.setX((w_two + w_one) / 2);
+				change_cell.add(u);
+				break;
+			}
+			case 3: {
+				img.setY((h_one + h_zero) / 2);
+				img.setX((w_two + w_three) / 2);
+				change_cell.add(u);
+
 				break;
 			}
 
@@ -445,8 +457,8 @@ int r =3;
 		canvas.drawBitmap(mBackgroundImage, 0,0, null);
 
 		DisplayMetrics metrics = Resources.getSystem().getDisplayMetrics();
-		int screenWidth = metrics.widthPixels;
-		int screenHeight = (int) (metrics.heightPixels*0.9);
+		int screenWidth = (metrics.widthPixels);
+		int screenHeight = ((int) (metrics.heightPixels*0.9))+80;
 
 		//  Set paint options
 		paint.setAntiAlias(true);
@@ -459,7 +471,7 @@ int r =3;
 		canvas.drawLine(0,(screenHeight/3)*2,screenWidth,(screenHeight/3)*2,paint);
 		canvas.drawLine(0,(screenHeight/3),screenWidth,(screenHeight/3),paint);
 
-		for(Image i: drawimg){
+		for(Image i: ls.keySet()){
 			i.draw(canvas);
 
 		}

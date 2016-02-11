@@ -249,17 +249,6 @@ public class Image implements Serializable{
 		canvas.drawBitmap(bitmap, x - (bitmap.getWidth() / 2), y - (bitmap.getHeight() / 2), null);
 //canvas.drawBitmapMesh(bitmap,x - (bitmap.getWidth() / 2), y - (bitmap.getHeight() / 2),0,0,);
 
-		Path path = new Path();
-		path.moveTo(18,10);
-		path.lineTo(1, 0);
-		path.lineTo(0, 20);
-
-		//paint.setColor(Color.RED);
-		paint.setStrokeWidth(2);
-		paint.setStyle(Paint.Style.STROKE);
-
-
-		canvas.drawPath(path, paint);
 
 
 
@@ -377,5 +366,12 @@ public class Image implements Serializable{
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public boolean equals(Image i){
+		if(this.bitmap_id == i.getBitmapId() && this.name == i.getName()){
+			return true;
+		}
+		return false;
 	}
 }
