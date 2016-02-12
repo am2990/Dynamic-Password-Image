@@ -479,6 +479,8 @@ public class RegistrationPanel extends SurfaceView implements
 				else if(img.getY() > h_two && img.getY() < h_three){
 					cell.put(img,7);
 				}
+
+
 			}
 			else if(img.getX()>w_one && img.getX()<w_two){
 				if(img.getY()>h_zero && img.getY()<h_one){
@@ -503,8 +505,9 @@ public class RegistrationPanel extends SurfaceView implements
 				}
 			}
 			System.out.println("cell: "+ cell.get(img));
+
 		}
-		return cell;
+	return cell;
 	}
 }
 

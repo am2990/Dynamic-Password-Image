@@ -95,8 +95,7 @@ public class LoginPanel extends SurfaceView implements OnGestureListener,
 
 		DatabaseHelper db = new DatabaseHelper(mContext);
 		for(Image i : ls.keySet()){
-
-
+			Log.d(TAG, "i:" + i);
 			// creating a hashmap to store all colors of the image
 			HashMap<String,Pair<Bitmap, Integer>> bitmap1 = new HashMap<>();
 			bitmap1.put("BLUE",new Pair(BitmapFactory.decodeResource(getResources(), db.getBlueImage(i.getName())), db.getBlueImage(i.getName())));
@@ -122,7 +121,8 @@ public class LoginPanel extends SurfaceView implements OnGestureListener,
 							if( cell_list.get(ls.get(img)) == null) {
 								cell_list.put(ls.get(img), img);
 							}else{
-								i = ChangePosition(i, true);
+								Image im = cell_list.get(ls.get(img));
+								ChangePosition(im, true);
 
 							}
 						}
@@ -140,7 +140,8 @@ public class LoginPanel extends SurfaceView implements OnGestureListener,
 							if( cell_list.get(ls.get(img)) == null) {
 								cell_list.put(ls.get(img), img);
 							}else{
-								i = ChangePosition(i, true);
+								Image im = cell_list.get(ls.get(img));
+								ChangePosition(im, true);
 							}
 						}
 					}
