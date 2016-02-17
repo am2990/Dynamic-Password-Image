@@ -107,7 +107,7 @@ public class LoginPanel extends SurfaceView implements OnGestureListener,
 			i = new Image(bitmap1,i.getBitmapId(),i.getName(), i.getX(),i.getY(),i.getColor(),getResources());
 			// giving random positions and color for correct recognition later
 			int r = randomN(3);
-		//int r = 3;
+//			int r = 3;
 				switch(r){
 				case 1:
 				{
@@ -231,7 +231,7 @@ public class LoginPanel extends SurfaceView implements OnGestureListener,
 
 		//TODO add logic to update position
 		Integer[] arr = {1,2,3,4,5,6,7,8,9};
-
+		boolean already_set = false;
 		Integer img_cell = null;
 		for( Image i : ls.keySet()){
 			if(i.equals(img)) {
@@ -241,7 +241,12 @@ public class LoginPanel extends SurfaceView implements OnGestureListener,
 		if(img_cell == null){
 			return img;
 		}
-		cell_list.put(img_cell, img);
+
+		if(cell_list.get(img_cell) == null) {
+			cell_list.put(img_cell, img);
+		}else{
+			already_set = true;
+		}
 
 		Integer newCell = randomN(arr.length);
 		while(cell_list.get(newCell) != null){
@@ -297,7 +302,9 @@ public class LoginPanel extends SurfaceView implements OnGestureListener,
 				break;
 			}
 		}
-		cell_list.put(img_cell, null);
+		if( !already_set ) {
+			cell_list.put(img_cell, null);
+		}
 		return img;
 
 	}

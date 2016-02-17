@@ -46,6 +46,7 @@ public class RegistrationActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		mContext = this;
 		i = getIntent();
+
 		checkuser = i.getStringExtra("checkuser");
 //
 		user = (User) i.getSerializableExtra("usern");

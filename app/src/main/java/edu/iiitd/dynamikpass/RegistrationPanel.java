@@ -51,7 +51,7 @@ public class RegistrationPanel extends SurfaceView implements
 	private GestureDetectorCompat mDetector;
 	static MainThread thread;
 	static Image image;
-	static ArrayList<Image> imglist = new ArrayList<Image>();
+	static ArrayList<Image> imglist = null;
 	ActionMode mActionMode;
 	private SurfaceView surfaceView;
 	private Bitmap mBackgroundImage;
@@ -76,6 +76,7 @@ public class RegistrationPanel extends SurfaceView implements
 		surfaceView = this;
 		this.mActionModeCallback = mActionModeCallback;
 		this.mSubmitCallBack = mSubmitCallBack;
+		imglist = new ArrayList<Image>();
 		// adding the callback (this) to the surface holder to intercept events
 		//System.out.println("chcekuser: "+ checkuser);
 		System.out.println("RP : "+images.get(0));
