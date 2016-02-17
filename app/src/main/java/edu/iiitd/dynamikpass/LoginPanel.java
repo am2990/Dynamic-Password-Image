@@ -343,7 +343,11 @@ public class LoginPanel extends SurfaceView implements OnGestureListener,
 		// we can safely start the game loop
 		thread.setRunning(true);
 		Log.d(TAG,"state"+ thread.getState().toString());
-		if(thread.getState() == Thread.State.NEW || thread.getState() == Thread.State.TERMINATED) {
+		if(thread.getState() == Thread.State.NEW) {
+			thread.start();
+		}
+		else if( thread.getState() == Thread.State.TERMINATED){
+			thread = new LoginThread(getHolder(), this, mContext);
 			thread.start();
 		}
 	}

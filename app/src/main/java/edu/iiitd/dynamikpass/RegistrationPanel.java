@@ -129,9 +129,6 @@ public class RegistrationPanel extends SurfaceView implements
 		int pos=1;
 		for(Image img : imglist){
 
-
-
-
 				switch (pos) {
 
 					case 7: {
@@ -320,8 +317,17 @@ public class RegistrationPanel extends SurfaceView implements
 	public void surfaceCreated(SurfaceHolder holder) {
 		// at this point the surface is created and
 		// we can safely start the registration loop
-		thread.setRunning(true);
-		thread.start();
+//		thread.setRunning(false);
+		Log.d(TAG, " Thread state " +thread.getState().toString());
+		if(thread.getState() == Thread.State.NEW) {
+			if( thread.isAlive() == false) {
+				thread.start();
+			}
+		}
+		else if( thread.getState() == Thread.State.TERMINATED){
+			thread = new MainThread(getHolder(), this, mContext);
+			thread.start();
+		}
 	}
 
 	@Override
@@ -330,14 +336,14 @@ public class RegistrationPanel extends SurfaceView implements
 		// tell the thread to shut down and wait for it to finish
 		// this is a clean shutdown
 		boolean retry = true;
-		while (retry) {
-			try {
-				thread.join();
-				retry = false;
-			} catch (InterruptedException e) {
-				// try again shutting down the thread
-			}
-		}
+//		while (retry) {
+//			try {
+//				thread.join();
+//				retry = false;
+//			} catch (InterruptedException e) {
+//				// try again shutting down the thread
+//			}
+//		}
 		Log.d(TAG, "Thread was shut down cleanly");
 	}
 

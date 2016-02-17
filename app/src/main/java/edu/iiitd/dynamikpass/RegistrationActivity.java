@@ -205,7 +205,6 @@ public class RegistrationActivity extends Activity {
 		}
 	};
 
-
 	@Override
 	public void onBackPressed() {
 		System.out.println("back press");
@@ -213,5 +212,13 @@ public class RegistrationActivity extends Activity {
 		RegistrationPanel.thread.setRunning(false);
 		(this).finish();
 
+	}
+
+	public void onResume(){
+		super.onResume();
+//		i = getIntent();
+//		i.putExtra(Constants.USER, user);
+//		i = new Intent(this, GalleryView.class);
+//		startActivity(i);
 	}
 }

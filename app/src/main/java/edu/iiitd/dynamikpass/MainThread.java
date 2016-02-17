@@ -70,7 +70,6 @@ public class MainThread extends Thread {
 		Canvas canvas;
 		Log.d(TAG, "Starting registration loop");
 		while (running.get()) {
-
 			if(!(running.get())){
 				Log.d(TAG, "Exiting the thread");
 				return;
@@ -86,7 +85,10 @@ public class MainThread extends Thread {
 					// draws the canvas on the panel
 					this.gamePanel.onDraw(canvas);
 				}
-			} finally {
+			}catch(NullPointerException e){
+				running.getAndSet(false);
+				return;
+			}finally {
 				// in case of an exception the surface is not left in 
 				// an inconsistent state
 				if (canvas != null) {
