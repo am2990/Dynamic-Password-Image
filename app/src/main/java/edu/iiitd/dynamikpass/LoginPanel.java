@@ -108,13 +108,12 @@ public class LoginPanel extends SurfaceView implements OnGestureListener,
 			// giving random positions and color for correct recognition later
 			int r = randomN(3);
 //			int r = 3;
-				switch(r){
+			switch(r){
 				case 1:
 				{
 					Log.d(TAG, "case1:BOTH RIGHT");
 					getgest = gestures.get(0);
 					Log.d(TAG, "1 gestgest: " + getgest);
-					substituteGesture(i);
 					//image occupies it's original cell
 					for( Image img : ls.keySet()){
 						if(img.equals(i)) {
@@ -128,6 +127,7 @@ public class LoginPanel extends SurfaceView implements OnGestureListener,
 						}
 					}
 					draw.add(i);
+					substituteGesture(i);
 
 					break;
 				}
@@ -456,37 +456,22 @@ public class LoginPanel extends SurfaceView implements OnGestureListener,
 
 	@Override
 	public boolean onSingleTapConfirmed(MotionEvent e) {
-		Log.d("hello", "on Single Tap confirmed");
+		Log.d(TAG, "on Single Tap confirmed");
 		gestcounter++;
 
-
-		for(Image p : ls.keySet()){
-			Log.d(TAG, p.getColor());
-			if(singletap.contains(p)){
-				try {        //DoubleDroid = doubletap;
-					Image droidz = null;
-					// f = listdroid.get(l);
-					for (Image f : singletap) {
-						droidz = f.getRange(e.getX(), e.getY());
-						System.out.println("droidz ST: " + droidz);
-
-						if (droidz != null) {
-							singletap.remove(droidz);
-						}
-
-
-
-					}
+		for(Image p : draw){
+			Image img = p.getRange(e.getX(), e.getY());
+			if(img != null && singletap.contains(p)) {
+				try {
+					singletap.remove(p);
+					Log.d(TAG, "ST Image " + p.getName());
 				}
 				catch(Exception e1){
 					System.out.println("Runtime exception");
 				}
-
 			}
-
 		}
 		correctpass(gestcounter);
-		Log.d(TAG,"onSTC: ");
 
 		return false;
 
