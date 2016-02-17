@@ -37,6 +37,7 @@ public class LoginActivity extends Activity {
 	public static Object ay;
 	Intent i;
 	static User user;
+
 	ArrayList<String> images = new ArrayList<String>();
 	
 	    @Override
@@ -84,6 +85,12 @@ public class LoginActivity extends Activity {
 //		(this).finish();
 //	    moveTaskToBack(true);
 		super.onBackPressed();
+		Intent intent = new Intent(getApplicationContext(), TableLayoutExampleActivity.class);
+		intent.putExtra(Constants.USER, user);
+		String checkuser = "false";
+		intent.putExtra(Constants.ISUSER, checkuser);
+		startActivity(intent);
+
 	}
 
     
