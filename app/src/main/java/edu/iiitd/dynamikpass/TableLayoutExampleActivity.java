@@ -4,6 +4,7 @@ package edu.iiitd.dynamikpass;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import edu.iiitd.dynamikpass.model.User;
 import edu.iiitd.dynamikpass.utils.Constants;
@@ -161,6 +162,9 @@ public class TableLayoutExampleActivity extends Activity implements OnItemSelect
 
 			user.setGestarr(gestures);
 
+			long timeSpent = Calendar.getInstance().getTimeInMillis() - startTime;
+			CSVeditor.shared().recordTimeStamp(timeSpent, 9);
+
 			intent = new Intent(getApplicationContext(), LoginActivity.class);
 		}else {
 			intent = new Intent(getApplicationContext(), UsernameActivity.class);
@@ -218,5 +222,12 @@ public class TableLayoutExampleActivity extends Activity implements OnItemSelect
 		i.putExtra(Constants.ISUSER, checkuser);
 		startActivity(i);
 		super.onBackPressed();  // optional depending on your needs
+	}
+
+	private long startTime;
+	@Override
+	protected void onResume() {
+		super.onResume();
+		startTime = Calendar.getInstance().getTimeInMillis();
 	}
 }

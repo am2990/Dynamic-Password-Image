@@ -29,6 +29,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import java.util.Calendar;
+
 public class GalleryView extends Activity {
 	Integer[] pics = { R.drawable.antartica1, R.drawable.antartica2,
 			R.drawable.antartica3, R.drawable.antartica4,
@@ -172,10 +174,21 @@ public class GalleryView extends Activity {
 				intent.putExtra("ib", selectedImage);
 				intent.putExtra("usern",user);
 				intent.putExtra("checkuser", checkuser);
+
+				long spentTime = Calendar.getInstance().getTimeInMillis() - startTime;
+				CSVeditor.shared().recordTimeStamp(spentTime, 6);
+
 				startActivity(intent);
 				return true;
 		}
 
 		return false;
+	}
+
+	private long startTime;
+	@Override
+	protected void onResume() {
+		super.onResume();
+		startTime = Calendar.getInstance().getTimeInMillis();
 	}
 }

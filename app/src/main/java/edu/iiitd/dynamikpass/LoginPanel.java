@@ -6,6 +6,7 @@
 package edu.iiitd.dynamikpass;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -78,8 +79,12 @@ public class LoginPanel extends SurfaceView implements OnGestureListener,
 	private GestureDetectorCompat mDetector;
 	private SurfaceView surfaceView;
 
+	private long startTime;
 	public LoginPanel(Context context, int backgroundImage) {
 		super(context);
+
+		startTime = Calendar.getInstance().getTimeInMillis();
+
 		// initialize and populate values
 		mContext = context;
 		new BitmapFactory();
@@ -486,6 +491,15 @@ public class LoginPanel extends SurfaceView implements OnGestureListener,
 						Toast.LENGTH_SHORT).show();
 				System.out.println("yes");
 
+				long timeSpent = Calendar.getInstance().getTimeInMillis() - startTime;
+				CSVeditor.shared().recordTimeStamp(timeSpent, 10);
+				CSVeditor.shared().setSuccessLogin(true);
+
+				long totalTimeSpent = Calendar.getInstance().getTimeInMillis() - UsernameActivity.startTime;
+				CSVeditor.shared().recordTimeStamp(totalTimeSpent, 11);
+
+				UsernameActivity.stopScreenSharing();
+
 				// adding user to db
 				DatabaseHelper db = new DatabaseHelper(mContext);
 				db.addUser(LoginActivity.user);
@@ -498,6 +512,12 @@ public class LoginPanel extends SurfaceView implements OnGestureListener,
 				Toast.makeText(mContext,"Wrong Password",
 						Toast.LENGTH_SHORT).show();
 
+				long timeSpent = Calendar.getInstance().getTimeInMillis() - startTime;
+				CSVeditor.shared().recordTimeStamp(timeSpent, 10);
+				CSVeditor.shared().setSuccessLogin(false);
+
+				long totalTimeSpent = Calendar.getInstance().getTimeInMillis() - UsernameActivity.startTime;
+				CSVeditor.shared().recordTimeStamp(totalTimeSpent, 11);
 
 				try {
 					thread.sleep(100);
@@ -507,6 +527,8 @@ public class LoginPanel extends SurfaceView implements OnGestureListener,
 				}
 				Toast.makeText(mContext,"Try Again !!!",
 						Toast.LENGTH_SHORT).show();
+
+				UsernameActivity.stopScreenSharing();
 
 				Intent intent = new Intent(mContext, LoginActivity.class);
 				intent.putExtra(Constants.USER, LoginActivity.user );

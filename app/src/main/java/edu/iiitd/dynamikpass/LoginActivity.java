@@ -1,12 +1,8 @@
 /* ** activity to Log in: goto Login Panel** */
 package edu.iiitd.dynamikpass;
 
-
-	
-
-
-
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Iterator;
 
 import edu.iiitd.dynamikpass.model.Image;
@@ -90,8 +86,6 @@ public class LoginActivity extends Activity {
 		String checkuser = "false";
 		intent.putExtra(Constants.ISUSER, checkuser);
 		startActivity(intent);
-
 	}
 
-    
 }

@@ -9,12 +9,12 @@ import edu.iiitd.dynamikpass.R;
 
 
 import android.app.Activity;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.MotionEvent;
@@ -69,6 +69,8 @@ public class PhotoSlideShowActivity extends Activity implements OnClickListener 
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.slide_show);
 		imageFrame = (ViewFlipper) findViewById(R.id.imageFrames);
+
+		Log.v("dks","PhotoSlideShowActivity Created");
 
 		// get sd card path for images
 
@@ -148,6 +150,12 @@ public class PhotoSlideShowActivity extends Activity implements OnClickListener 
 			}
 		});
 
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		Log.v("dks","PhotoSlideShowActivity Destroyed");
 	}
 
 	private void addFlipperImages(ViewFlipper flipper, File parent) {

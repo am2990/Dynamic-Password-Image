@@ -29,4 +29,5 @@ dependencies {
     compile 'com.android.support:support-v4:21.0.0'
     compile 'com.google.android.gms:play-services-appindexing:8.1.0'
     compile 'com.google.code.gson:gson:2.3.1'
+    compile group: 'org.apache.poi', name: 'poi', version: '3.12'
 }

@@ -3,6 +3,7 @@
 package edu.iiitd.dynamikpass;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
@@ -262,6 +263,9 @@ public class MainActivity extends Activity {
 						intent.putExtra("usern", user);
 						intent.putExtra("checkuser", checkuser);
 
+						long spentTime = Calendar.getInstance().getTimeInMillis() - startTime;
+						CSVeditor.shared().recordTimeStamp(spentTime, 7);
+
 						startActivity(intent);
 
 					} else {
@@ -278,5 +282,12 @@ public class MainActivity extends Activity {
 		}
 
 		return false;
+	}
+
+	private long startTime;
+	@Override
+	protected void onResume() {
+		super.onResume();
+		startTime = Calendar.getInstance().getTimeInMillis();
 	}
 }

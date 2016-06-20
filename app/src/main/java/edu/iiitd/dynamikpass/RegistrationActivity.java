@@ -3,6 +3,7 @@
 package edu.iiitd.dynamikpass;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -89,7 +90,6 @@ public class RegistrationActivity extends Activity {
 		hideSystemUI();
 	}
 
-
 	private void hideSystemUI() {
 		// Set the IMMERSIVE flag.
 		// Set the content to appear under the system bars so that the content
@@ -102,7 +102,6 @@ public class RegistrationActivity extends Activity {
 						| View.SYSTEM_UI_FLAG_FULLSCREEN // hide status bar
 						| View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
 		Log.d(TAG, "stuff hidden");
-
 	}
 
 
@@ -183,20 +182,19 @@ public class RegistrationActivity extends Activity {
 
 				case R.id.submit:
 					Toast.makeText(getBaseContext(), "Submit Selected ", Toast.LENGTH_SHORT).show();
+
+					long spentTime = Calendar.getInstance().getTimeInMillis() - startTime;
+					CSVeditor.shared().recordTimeStamp(spentTime, 8);
+
 					MainThread.setRunning(false);
 					System.out.println("do submit");
 					RegistrationPanel.thread.doSubmit();
 					return true;
 
 				default:
-
 					return false;
 			}
-
-
 		}
-
-
 		// Called when the user exits the action mode
 		@Override
 		public void onDestroyActionMode(ActionMode mode) {
@@ -214,8 +212,14 @@ public class RegistrationActivity extends Activity {
 
 	}
 
+	private long startTime;
 	public void onResume(){
 		super.onResume();
+
+		Log.v("dks","startTimeRegistration");
+
+		startTime = Calendar.getInstance().getTimeInMillis();
+
 //		i = getIntent();
 //		i.putExtra(Constants.USER, user);
 //		i = new Intent(this, GalleryView.class);
