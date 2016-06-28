@@ -166,6 +166,7 @@ public class TableLayoutExampleActivity extends Activity implements OnItemSelect
 			CSVeditor.shared().recordTimeStamp(timeSpent, 9);
 
 			intent = new Intent(getApplicationContext(), LoginActivity.class);
+			intent.putExtra("SIGN_UP", true);
 		}else {
 			intent = new Intent(getApplicationContext(), UsernameActivity.class);
 		}

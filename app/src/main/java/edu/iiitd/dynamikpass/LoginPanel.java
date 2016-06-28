@@ -493,7 +493,20 @@ public class LoginPanel extends SurfaceView implements OnGestureListener,
 
 				long timeSpent = Calendar.getInstance().getTimeInMillis() - startTime;
 				CSVeditor.shared().recordTimeStamp(timeSpent, 10);
-				CSVeditor.shared().setSuccessLogin(true);
+
+				Intent intent;
+
+				if(!LoginActivity.signUp) {
+					CSVeditor.shared().setSuccessLogin(true);
+
+					intent = new Intent(mContext, FeedbackActivity.class);
+					Log.v(TAG,"username: "+LoginActivity.user.getUsername());
+					intent.putExtra("USERNAME",LoginActivity.user.getUsername());
+				}
+				else {
+					intent = new Intent(mContext, UsernameActivity.class);
+				}
+
 
 				long totalTimeSpent = Calendar.getInstance().getTimeInMillis() - UsernameActivity.startTime;
 				CSVeditor.shared().recordTimeStamp(totalTimeSpent, 11);
@@ -505,7 +518,6 @@ public class LoginPanel extends SurfaceView implements OnGestureListener,
 				db.addUser(LoginActivity.user);
 				db.close();
 
-				Intent intent = new Intent(mContext, FeedbackActivity.class);
 				mContext.startActivity(intent);
 
 				thread.setRunning(false);

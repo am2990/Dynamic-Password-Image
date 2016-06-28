@@ -92,7 +92,12 @@
         <activity
             android:name=".InstructionsActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".FeedbackActivity"></activity>
+
+        <activity android:name=".FeedbackActivity"
+            android:screenOrientation="portrait"/>
+
+        <receiver android:name=".NotificationPublisher"/>
+
     </application>
 
 </manifest>
