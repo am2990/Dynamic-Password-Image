@@ -504,8 +504,10 @@ public class LoginPanel extends SurfaceView implements OnGestureListener,
 				DatabaseHelper db = new DatabaseHelper(mContext);
 				db.addUser(LoginActivity.user);
 				db.close();
-				Intent intent = new Intent(mContext, UsernameActivity.class);
+
+				Intent intent = new Intent(mContext, FeedbackActivity.class);
 				mContext.startActivity(intent);
+
 				thread.setRunning(false);
 			}
 			else {
