@@ -118,6 +118,16 @@ public class CSVeditor {
                 cell.setCellValue("time_on_login_activity");
                 cell = row.createCell(11);
                 cell.setCellValue("total_time_spent");
+                cell = row.createCell(12);
+                cell.setCellValue("rating");
+                cell = row.createCell(13);
+                cell.setCellValue("memory_burden");
+                cell = row.createCell(14);
+                cell.setCellValue("understand");
+                cell = row.createCell(15);
+                cell.setCellValue("remember");
+                cell = row.createCell(16);
+                cell.setCellValue("time_on_instructions_activity");
 
             } else {
                 Log.v("dks","sheet present");
@@ -155,6 +165,16 @@ public class CSVeditor {
         cell.setCellValue("-");
         cell = row.createCell(11);
         cell.setCellValue("-");
+        cell = row.createCell(12);
+        cell.setCellValue("-");
+        cell = row.createCell(13);
+        cell.setCellValue("-");
+        cell = row.createCell(14);
+        cell.setCellValue("-");
+        cell = row.createCell(15);
+        cell.setCellValue("-");
+        cell = row.createCell(16);
+        cell.setCellValue("-");
         writeToWorkbook();
     }
 
@@ -187,6 +207,16 @@ public class CSVeditor {
         cell.setCellValue("-");
         cell = currentRowHolder.createCell(11);
         cell.setCellValue("-");
+        cell = currentRowHolder.createCell(12);
+        cell.setCellValue("-");
+        cell = currentRowHolder.createCell(13);
+        cell.setCellValue("-");
+        cell = currentRowHolder.createCell(14);
+        cell.setCellValue("-");
+        cell = currentRowHolder.createCell(15);
+        cell.setCellValue("-");
+        cell = currentRowHolder.createCell(16);
+        cell.setCellValue("-");
         writeToWorkbook();
     }
 
@@ -202,6 +232,17 @@ public class CSVeditor {
         Cell cell = sheet.getRow(currentRow+1).getCell(4);
         cell.setCellValue(bool);
         writeToWorkbook();
+    }
+
+    public void insertFeedback(int rating, String memoryBurden, String understand, String remember) {
+        Cell cell = sheet.getRow(currentRow+1).getCell(12);
+        cell.setCellValue(rating);
+        cell = sheet.getRow(currentRow+1).getCell(13);
+        cell.setCellValue(memoryBurden);
+        cell = sheet.getRow(currentRow+1).getCell(14);
+        cell.setCellValue(understand);
+        cell = sheet.getRow(currentRow+1).getCell(15);
+        cell.setCellValue(remember);
     }
 
     public void writeToWorkbook() {
