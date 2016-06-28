@@ -55,7 +55,6 @@ public class LoginActivity extends Activity {
         // set our MainGamePanel as the View
         setContentView(new LoginPanel(this,imageBack));
         Log.d(TAG, "View added");
-        
   	
     }
 
