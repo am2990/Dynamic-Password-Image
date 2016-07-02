@@ -20,11 +20,11 @@ public class InstructionsActivity extends Activity {
         startTime = Calendar.getInstance().getTimeInMillis();
     }
 
+    public static long endTime=0;
     @Override
     protected void onPause() {
         super.onPause();
-        long endTime = Calendar.getInstance().getTimeInMillis() - startTime;
-        CSVeditor.shared().recordTimeStamp(endTime, 16);
+        endTime = Calendar.getInstance().getTimeInMillis() - startTime;
     }
 
     @Override

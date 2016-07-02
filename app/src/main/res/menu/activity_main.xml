@@ -2,7 +2,7 @@
 
     <item android:id="@+id/menu_instructions"
         android:title="@string/menu_instructions"
-        android:orderInCategory="100"
-        android:showAsAction="never" />
+        android:showAsAction="always"
+        android:icon="@drawable/ic_assignment_white_24px"/>
 
 </menu>

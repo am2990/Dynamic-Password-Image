@@ -59,6 +59,7 @@ public class FeedbackActivity extends Activity {
                         " understand: "+understand+" remember: "+remember);
 
                 CSVeditor.shared().insertFeedback(rating, memoryBurden, understand, remember);
+                CSVeditor.shared().recordTimeStamp(InstructionsActivity.endTime, 16);
 
                 scheduleNotification(getNotification("Its time to login using "+userName), 10000);
 
@@ -107,7 +108,7 @@ public class FeedbackActivity extends Activity {
                 PendingIntent.FLAG_ONE_SHOT);
 
         Notification.Builder builder = new Notification.Builder(this);
-        builder.setContentTitle("Numerical password login");
+        builder.setContentTitle("Image password login");
         builder.setContentIntent(pendingIntent);
         builder.setAutoCancel(true);
         builder.setDefaults(Notification.DEFAULT_ALL);
