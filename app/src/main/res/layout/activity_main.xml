@@ -1,7 +1,24 @@
-<GridView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" 
-    android:id="@+id/gridview"
-    android:numColumns="auto_fit"
- />
+    android:layout_height="match_parent">
+
+    <GridView
+        android:id="@+id/gridview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:numColumns="auto_fit"
+        android:layout_alignParentTop="true"
+        android:layout_above="@+id/btn_next">
+    </GridView>
+
+    <Button
+        android:id="@+id/btn_next"
+        android:layout_width="200dp"
+        android:layout_height="60dp"
+        android:text="@string/button_next"
+        android:background="@android:color/white"
+        android:textColor="@android:color/black"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"/>
+
+</RelativeLayout>
