@@ -71,5 +71,12 @@
         <item>Difficult</item>
     </string-array>
 
+    <!-- Titles -->
+    <string name="title_select_background">Select Background</string>
+
+    <!-- Buttons -->
+    <string name="button_set_background">Set as background</string>
+
+
 
 </resources>

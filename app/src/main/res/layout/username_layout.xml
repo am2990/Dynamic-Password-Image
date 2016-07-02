@@ -10,8 +10,10 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical|center_horizontal|center"
         android:hint="Enter username"
+        android:inputType="text"
         android:layout_marginTop="30dp"
         android:ems="10" />
+
     <Button
         android:id="@+id/bcontinue"
         android:layout_width="fill_parent"

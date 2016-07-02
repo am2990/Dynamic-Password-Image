@@ -77,6 +77,8 @@ public class UsernameActivity extends Activity {
 
         username = (EditText) findViewById(R.id.username);
         bcontinue = (Button) findViewById(R.id.bcontinue);
+        username.requestFocus();
+        
 
         res = getResources();
 
