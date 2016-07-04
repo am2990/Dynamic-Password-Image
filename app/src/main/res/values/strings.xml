@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <string name="app_name">Pass Image</string>
+
     <string name="hello">Hello World, GalleryView!</string>
-    <string name="app_name">ImagePass</string>
     <string name="button_text">Set as Background</string>
     <string name="menu_setBack">Set as Background</string>
     <string name="menu_selectimage">Select Images</string>
@@ -43,14 +45,15 @@
     <string name="title_activity_username">UsernameActivity</string>
 
     <string name="instuctions">1. Use any username for signup process in main page
-        \n2. Enter any formula that you can remember according to your ease or select from given examples
-        \n3. Put the given numbers in your formula and click check to first check the formula
-        and then press confirm to make it the password for the entered username
-        \n4. Use back to return to the main page
-        \n5. Now using the username you created login in the main page.
-        \n6. Now substitute the values to your equation and click submit
-        \n7. If correct then you will be directed to a welcome page otherwise you have 4 chances to get your answer write
-        \n8. If you cannot login then make another username and try again.</string>
+        \n2. Select background image if you want to from the given slideshow of images
+        \n3. Select images from the given list by long press and then click for more additions
+        \n4. Press next to continue
+        \n5. Drag your images to any grid you want, touch screen for submit button and click submit
+        \n6. Select gesture from the gesture list for the given position and color combination
+        \n7. Click submit to continue
+        \n8. Now confirm your password by clicking the images as set in your gestures
+        \n9. Login using your username in the signup process
+        \n10. Click images using your right gestures</string>
 
     <string name="spn_memory_burden">Memory Burden</string>
     <string-array name="arr_memory_burden">

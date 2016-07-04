@@ -1,4 +1,4 @@
-package edu.iiitd.dynamikpass;
+package edu.iiitd.dynamikpass.helper;
 
 import android.content.Context;
 import android.content.SharedPreferences;

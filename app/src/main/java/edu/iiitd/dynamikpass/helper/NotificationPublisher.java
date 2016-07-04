@@ -1,4 +1,4 @@
-package edu.iiitd.dynamikpass;
+package edu.iiitd.dynamikpass.helper;
 
 import android.app.Notification;
 import android.app.NotificationManager;

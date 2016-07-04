@@ -17,7 +17,8 @@ import android.widget.RatingBar;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import java.util.Calendar;
+import edu.iiitd.dynamikpass.helper.CSVeditor;
+import edu.iiitd.dynamikpass.helper.NotificationPublisher;
 
 public class FeedbackActivity extends Activity {
 
@@ -61,7 +62,7 @@ public class FeedbackActivity extends Activity {
                 CSVeditor.shared().insertFeedback(rating, memoryBurden, understand, remember);
                 CSVeditor.shared().recordTimeStamp(InstructionsActivity.endTime, 16);
 
-                scheduleNotification(getNotification("Its time to login using "+userName), 10000);
+                scheduleNotification(getNotification("Its time to login using "+userName), AlarmManager.INTERVAL_DAY);
 
                 submitPressed = true;
 
@@ -84,7 +85,7 @@ public class FeedbackActivity extends Activity {
         }
     }
 
-    private void scheduleNotification(Notification notification, int delay) {
+    private void scheduleNotification(Notification notification, long delay) {
 
         Intent notificationIntent = new Intent(this, NotificationPublisher.class);
         notificationIntent.putExtra(NotificationPublisher.NOTIFICATION_ID, 1);
@@ -113,7 +114,7 @@ public class FeedbackActivity extends Activity {
         builder.setAutoCancel(true);
         builder.setDefaults(Notification.DEFAULT_ALL);
         builder.setContentText(content);
-        builder.setSmallIcon(R.drawable.icon);
+        builder.setSmallIcon(R.mipmap.ic_launcher);
 
         return builder.build();
     }
