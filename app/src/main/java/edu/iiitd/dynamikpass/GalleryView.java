@@ -23,6 +23,7 @@ import android.widget.Button;
 import android.widget.Gallery;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import java.util.Calendar;
 
@@ -169,5 +170,10 @@ public class GalleryView extends Activity {
 	protected void onResume() {
 		super.onResume();
 		startTime = Calendar.getInstance().getTimeInMillis();
+	}
+
+	@Override
+	public void onBackPressed() {
+		Toast.makeText(GalleryView.this, "Please complete the signup process", Toast.LENGTH_SHORT).show();
 	}
 }
