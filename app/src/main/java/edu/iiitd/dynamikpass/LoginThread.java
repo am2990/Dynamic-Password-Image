@@ -61,7 +61,12 @@ public class LoginThread extends Thread {
 					// draws the canvas on the panel
 					this.gamePanel.onDraw(canvas);				
 				}
-			} finally {
+			}
+			catch(NullPointerException e){
+				running = false;
+				return;
+			}
+			finally {
 				// in case of an exception the surface is not left in 
 				// an inconsistent state
 				if (canvas != null) {

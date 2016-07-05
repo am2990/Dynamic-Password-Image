@@ -355,6 +355,7 @@ public class LoginPanel extends SurfaceView implements OnGestureListener,
 	@Override
 	public void surfaceDestroyed(SurfaceHolder holder) {
 		Log.d(TAG, "Surface is being destroyed");
+		thread.setRunning(false);
 	}
 
 
