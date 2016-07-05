@@ -28,3 +28,5 @@ proguard/
 .idea/
 libs/proguard-rules.pro
 libs/libs.iml
+CodeToTxt.py
+image_codev1.txt

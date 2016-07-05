@@ -38,10 +38,10 @@ public class MainActivity extends Activity {
 	ArrayList<String> images;
 
 	String[] objects = new String[] {
-			"Droid",
-			"Square",
-			"Smiley",
-			"Football",
+			//"Droid",
+			//"Square",
+			//"Smiley",
+			//"Football",
 			"Fish",
 			"Crab",
 			"Jelly-Fish",
@@ -51,10 +51,10 @@ public class MainActivity extends Activity {
 
 	// Array of integers points to images stored in /res/drawable-ldpi/
 	int[] android_resid = new int[]{
-			R.drawable.droid_1,
-			R.drawable.triangle_blue,
-			R.drawable.smiley_b,
-			R.drawable.football_b,
+			//R.drawable.droid_1,
+			//R.drawable.triangle_blue,
+			//R.drawable.smiley_b,
+			//R.drawable.football_b,
 			R.drawable.fishb,
 			R.drawable.crabb,
 			R.drawable.jellyb,
@@ -84,10 +84,10 @@ public class MainActivity extends Activity {
 
 
 		DatabaseHelper db = new DatabaseHelper(this);
-		db.createImage("Droid", R.drawable.droid_1, R.drawable.droid_4, R.drawable.droid_3, R.drawable.droid_2);
-		db.createImage("Square", R.drawable.triangle_blue,R.drawable.triangle_green,R.drawable.triangle_red, R.drawable.triangle_yellow);
-		db.createImage("Smiley", R.drawable.smiley_b, R.drawable.smiley_g, R.drawable.smiley_r, R.drawable.smiley_y);
-		db.createImage("Football", R.drawable.football_b, R.drawable.football_g, R.drawable.football_r, R.drawable.football_y);
+	//	db.createImage("Droid", R.drawable.droid_1, R.drawable.droid_4, R.drawable.droid_3, R.drawable.droid_2);
+	//	db.createImage("Square", R.drawable.triangle_blue,R.drawable.triangle_green,R.drawable.triangle_red, R.drawable.triangle_yellow);
+	//	db.createImage("Smiley", R.drawable.smiley_b, R.drawable.smiley_g, R.drawable.smiley_r, R.drawable.smiley_y);
+	//	db.createImage("Football", R.drawable.football_b, R.drawable.football_g, R.drawable.football_r, R.drawable.football_y);
 		db.createImage("Fish", R.drawable.fishb, R.drawable.fishg, R.drawable.fishr, R.drawable.fishy);
 		db.createImage("Crab", R.drawable.crabb, R.drawable.crabg, R.drawable.crabr, R.drawable.craby);
 		db.createImage("Jelly-Fish", R.drawable.jellyb, R.drawable.jellyg, R.drawable.jellyr, R.drawable.jellyy);
