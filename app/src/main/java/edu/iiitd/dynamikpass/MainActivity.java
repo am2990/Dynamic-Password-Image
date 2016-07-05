@@ -2,30 +2,16 @@
 
 package edu.iiitd.dynamikpass;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
-import edu.iiitd.dynamikpass.model.User;
-import edu.iiitd.dynamikpass.utils.DatabaseHelper;
-
-
-
-
-
-
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ResolveInfo;
 import android.os.Bundle;
 import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Checkable;
 import android.widget.FrameLayout;
 import android.widget.GridView;
@@ -33,22 +19,29 @@ import android.widget.ImageView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.List;
+
+import edu.iiitd.dynamikpass.helper.CSVeditor;
+import edu.iiitd.dynamikpass.model.User;
+import edu.iiitd.dynamikpass.utils.DatabaseHelper;
+
 public class MainActivity extends Activity {
 	GridView gridView;
-	Object obj;
 	int imageBack;
 	private boolean mChecked;
 	Intent iuser,icheckuser;
 	String checkuser;
 	User user;
 	ArrayList<String> images;
-	private static final int MENU_SELECTIMG = 0;
 
 	String[] objects = new String[] {
-			"Droid",
-			"Square",
-			"Smiley",
-			"Football",
+			//"Droid",
+			//"Square",
+			//"Smiley",
+			//"Football",
 			"Fish",
 			"Crab",
 			"Jelly-Fish",
@@ -58,10 +51,10 @@ public class MainActivity extends Activity {
 
 	// Array of integers points to images stored in /res/drawable-ldpi/
 	int[] android_resid = new int[]{
-			R.drawable.droid_1,
-			R.drawable.triangle_blue,
-			R.drawable.smiley_b,
-			R.drawable.football_b,
+			//R.drawable.droid_1,
+			//R.drawable.triangle_blue,
+			//R.drawable.smiley_b,
+			//R.drawable.football_b,
 			R.drawable.fishb,
 			R.drawable.crabb,
 			R.drawable.jellyb,
@@ -69,10 +62,15 @@ public class MainActivity extends Activity {
 			R.drawable.starb
 	};
 
+	private Button btnNext;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+
+		btnNext = (Button) findViewById(R.id.btn_next);
+
 		images = new ArrayList();
 		//images.removeAll(images);
 		Intent ii = getIntent();
@@ -86,10 +84,10 @@ public class MainActivity extends Activity {
 
 
 		DatabaseHelper db = new DatabaseHelper(this);
-		db.createImage("Droid", R.drawable.droid_1, R.drawable.droid_4, R.drawable.droid_3, R.drawable.droid_2);
-		db.createImage("Square", R.drawable.triangle_blue,R.drawable.triangle_green,R.drawable.triangle_red, R.drawable.triangle_yellow);
-		db.createImage("Smiley", R.drawable.smiley_b, R.drawable.smiley_g, R.drawable.smiley_r, R.drawable.smiley_y);
-		db.createImage("Football", R.drawable.football_b, R.drawable.football_g, R.drawable.football_r, R.drawable.football_y);
+	//	db.createImage("Droid", R.drawable.droid_1, R.drawable.droid_4, R.drawable.droid_3, R.drawable.droid_2);
+	//	db.createImage("Square", R.drawable.triangle_blue,R.drawable.triangle_green,R.drawable.triangle_red, R.drawable.triangle_yellow);
+	//	db.createImage("Smiley", R.drawable.smiley_b, R.drawable.smiley_g, R.drawable.smiley_r, R.drawable.smiley_y);
+	//	db.createImage("Football", R.drawable.football_b, R.drawable.football_g, R.drawable.football_r, R.drawable.football_y);
 		db.createImage("Fish", R.drawable.fishb, R.drawable.fishg, R.drawable.fishr, R.drawable.fishy);
 		db.createImage("Crab", R.drawable.crabb, R.drawable.crabg, R.drawable.crabr, R.drawable.craby);
 		db.createImage("Jelly-Fish", R.drawable.jellyb, R.drawable.jellyg, R.drawable.jellyr, R.drawable.jellyy);
@@ -122,6 +120,35 @@ public class MainActivity extends Activity {
 		gridView.setChoiceMode(GridView.CHOICE_MODE_MULTIPLE_MODAL);
 		gridView.setMultiChoiceModeListener(new MultiChoiceModeListener());
 
+		btnNext.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				try {
+					if (images.size() > 0) {
+						Intent intent = new Intent(getApplicationContext(), RegistrationActivity.class);
+
+						intent.putExtra("ib", imageBack);
+						intent.putExtra("imageobjs", images);
+						intent.putExtra("usern", user);
+						intent.putExtra("checkuser", checkuser);
+
+						long spentTime = Calendar.getInstance().getTimeInMillis() - startTime;
+						CSVeditor.shared().recordTimeStamp(spentTime, 7);
+
+						startActivity(intent);
+
+					} else {
+						Toast.makeText(getBaseContext(), "Select an image ", Toast.LENGTH_LONG).show();
+					}
+
+				}
+				catch(Exception e){
+					Toast.makeText(getBaseContext(), "Select an image ", Toast.LENGTH_LONG).show();
+				}
+				images = new ArrayList();
+			}
+		});
+
 
 	}
 
@@ -146,14 +173,6 @@ public class MainActivity extends Activity {
 
 
 		return l;
-	}
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		super.onCreateOptionsMenu(menu);
-
-		menu.add(0, MENU_SELECTIMG, 0, R.string.menu_selectimage);
-		getMenuInflater().inflate(R.menu.activity_main, menu);
-		return true;
 	}
 
 	public class CheckableLayout extends FrameLayout implements Checkable {
@@ -209,10 +228,6 @@ public class MainActivity extends Activity {
 											  long id, boolean checked){
 
 			HashMap<String,String> obj = (HashMap<String,String>)gridView.getItemAtPosition(position);
-			//images.removeAll(images);
-
-			System.out.println("obj: "+ obj.get("txt"));
-
 
 			int selectCount = gridView.getCheckedItemCount();
 			if(checked ) {
@@ -232,51 +247,20 @@ public class MainActivity extends Activity {
 			switch (selectCount) {
 				case 1:
 					mode.setSubtitle("One item selected");
+
 					break;
 				default:
 					mode.setSubtitle("" + selectCount + " items selected");
 					break;
 			}
-
-			for(int i = 0; i < images.size(); i++) {
-
-				System.out.println("list elem: "+images.get(i).toString());
-			}
 		}
 
 	}
 
-
-
+	private long startTime;
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-
-		switch (item.getItemId()) {
-			case MENU_SELECTIMG:
-				try {
-					if (images.size() > 0) {
-						Intent intent = new Intent(getApplicationContext(), RegistrationActivity.class);
-
-						intent.putExtra("ib", imageBack);
-						intent.putExtra("imageobjs", images);
-						intent.putExtra("usern", user);
-						intent.putExtra("checkuser", checkuser);
-
-						startActivity(intent);
-
-					} else {
-						Toast.makeText(getBaseContext(), "Select an image ", Toast.LENGTH_LONG).show();
-					}
-
-				}
-				catch(Exception e){
-					Toast.makeText(getBaseContext(), "Select an image ", Toast.LENGTH_LONG).show();
-				}
-				images = new ArrayList();
-				return true;
-
-		}
-
-		return false;
+	protected void onResume() {
+		super.onResume();
+		startTime = Calendar.getInstance().getTimeInMillis();
 	}
 }

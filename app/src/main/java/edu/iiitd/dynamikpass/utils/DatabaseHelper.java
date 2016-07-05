@@ -4,6 +4,7 @@ package edu.iiitd.dynamikpass.utils;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -26,7 +27,12 @@ import android.provider.ContactsContract.CommonDataKinds.Im;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonIOException;
 import com.google.gson.reflect.TypeToken;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 
 public class DatabaseHelper extends SQLiteOpenHelper{
@@ -61,6 +67,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
     private static final String KEY_IMGPASSWORD = "imgpassword";
     private static final String KEY_GESTURE_ARR = "gesturearr";
     private static final String KEY_IMGBACK = "imgback";
+    private static final String KEY_IMGPASSWORDPOS = "imgpass_pos";
     // Map Table - column names
     private static final String KEY_POSITION_M = "position_m";
     private static final String KEY_COLOR_M = "color_m";
@@ -87,8 +94,8 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 
     //User table create statement
     private static final String CREATE_TABLE_USER = "CREATE TABLE "
-            + TABLE_USER + "(" + KEY_ID + " INTEGER PRIMARY KEY," + KEY_USERNAME + " VARCHAR," + KEY_IMGPASSWORD + " TEXT," + KEY_IMGBACK + " INTEGER, "
-            + KEY_GESTURE_ARR + " VARCHAR " + " )";
+            + TABLE_USER + "(" + KEY_ID + " INTEGER PRIMARY KEY," + KEY_USERNAME + " VARCHAR," + KEY_IMGPASSWORD + " TEXT," + KEY_IMGPASSWORDPOS + " VARCHAR,"
+            + KEY_IMGBACK + " INTEGER, "+ KEY_GESTURE_ARR + " VARCHAR " + " )";
 
 
     // DROID table create statement
@@ -153,12 +160,23 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         SQLiteDatabase db = this.getWritableDatabase();
 
         Gson gson = new Gson();
+        GsonBuilder builder = new GsonBuilder();
 
         ContentValues values = new ContentValues();
         boolean exists = isUser(user.getUsername());
         if(exists == false) {
             values.put(KEY_USERNAME, user.getUsername());
-            values.put(KEY_IMGPASSWORD, gson.toJson(user.getImgPassword()));
+
+            ArrayList<Image> img_arr = new ArrayList<>();
+            ArrayList<Integer> img_pos_arr = new ArrayList<>();
+            HashMap<Image,Integer> ls = user.getImgPassword();
+            for( Image img : ls.keySet()){
+                img_arr.add(img);
+                img_pos_arr.add(ls.get(img));
+            }
+            values.put(KEY_IMGPASSWORD, gson.toJson(img_arr));
+            values.put(KEY_IMGPASSWORDPOS, gson.toJson(img_pos_arr));
+
             values.put(KEY_IMGBACK, user.getImageback());
             values.put(KEY_GESTURE_ARR, gson.toJson(user.getGestarr()));
             // Inserting Row
@@ -174,6 +192,11 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         System.out.println("username: "+ username);
         String selectString = "SELECT * FROM " + TABLE_USER + " WHERE " + KEY_USERNAME + " =?";
         Gson gson = new Gson();
+        String str = "\"[\\n  [\\n    {\\n      \\\"bitmap_id\\\": 2130837517,\\n      \\\"col\\\": \\\"BLUE\\\",\\n      \\\"name\\\": \\\"Crab\\\",\\n      \\\"x\\\": 360,\\n \n" +
+                "     \\\"y\\\": 197\\n    },\\n    2\\n  ],\\n  [\\n    {\\n      \\\"bitmap_id\\\": 2130837535,\\n      \\\"col\\\": \\\"BLUE\\\",\\n      \n" +
+                "\\\"name\\\": \\\"Jelly-Fish\\\",\\n      \\\"x\\\": 600,\\n      \\\"y\\\": 197\\n    },\\n    3\\n  ],\\n  [\\n    {\\n      \\\"bitmap_id\\\": \n" +
+                "2130837526,\\n      \\\"col\\\": \\\"BLUE\\\",\\n      \\\"name\\\": \\\"Fish\\\",\\n      \\\"x\\\": 120,\\n      \\\"y\\\": 197\\n    },\\n    1\\n  \n" +
+                "]\\n]\"\n";
 
         Cursor cursor = db.rawQuery(selectString, new String[]{username});
         if(cursor.getCount()>0) {
@@ -182,6 +205,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
             int _id = cursor.getInt((cursor.getColumnIndex(KEY_ID)));
             String user_name = cursor.getString((cursor.getColumnIndex(KEY_USERNAME)));
             String img_password = cursor.getString((cursor.getColumnIndex(KEY_IMGPASSWORD)));
+            String img_password_pos = cursor.getString((cursor.getColumnIndex(KEY_IMGPASSWORDPOS)));
             int background = cursor.getInt((cursor.getColumnIndex(KEY_IMGBACK)));
             String gesture_arr = cursor.getString((cursor.getColumnIndex(KEY_GESTURE_ARR)));
 
@@ -191,8 +215,14 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 
             Type listType = new TypeToken<ArrayList<Image>>(){}.getType();
             ArrayList<Image> img_password_list = (ArrayList<Image>) gson.fromJson(img_password, listType);
-            user.setImgPassword(img_password_list);
+            Type listType2 = new TypeToken<ArrayList<Integer>>(){}.getType();
+            ArrayList<Integer> img_password_pos_list = (ArrayList<Integer>) gson.fromJson(img_password_pos, listType2);
+            HashMap<Image, Integer> im_hm = new HashMap<>();
+            for( int i = 0 ; i < img_password_list.size(); i++){
+                im_hm.put(img_password_list.get(i), img_password_pos_list.get(i));
+            }
 
+            user.setImgPassword(im_hm);
             user.setImageback(background);
 
             Type strlistType = new TypeToken<ArrayList<String>>(){}.getType();

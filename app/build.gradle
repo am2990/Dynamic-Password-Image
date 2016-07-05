@@ -21,6 +21,13 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+            applicationVariants.all { variant ->
+                variant.outputs.each { output ->
+                    def newName = output.outputFile.name
+                    newName = newName.replace("app-", "ImgPass-")
+                    output.outputFile = new File(output.outputFile.parent, newName)
+                }
+            }
         }
     }
 }
@@ -29,4 +36,5 @@ dependencies {
     compile 'com.android.support:support-v4:21.0.0'
     compile 'com.google.android.gms:play-services-appindexing:8.1.0'
     compile 'com.google.code.gson:gson:2.3.1'
+    compile group: 'org.apache.poi', name: 'poi', version: '3.12'
 }

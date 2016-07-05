@@ -5,6 +5,7 @@ import android.os.Parcelable;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import edu.iiitd.dynamikpass.UsernameActivity;
 
@@ -17,14 +18,14 @@ public class User implements Serializable {
     private static final long serialVersionUID = 8438662189730257333L;
     Integer _id;
     String username;
-    ArrayList<Image> objects;
+    HashMap<Image, Integer> objects;
     int background;
     ArrayList<String> gesturearr;
 
     public User(){
         this.username = "default";
         this.background = -1;
-        this.objects = new ArrayList<>();
+        this.objects = new HashMap<>();
         this.gesturearr = new ArrayList<>();
 
     }
@@ -52,17 +53,17 @@ public class User implements Serializable {
     }
 
     //getting password
-    public ArrayList<Image> getImgPassword(){
+    public HashMap<Image, Integer> getImgPassword(){
         return this.objects;
     }
-    public void setImgPassword(ArrayList<Image> imgpassword){
+    public void setImgPassword(HashMap<Image, Integer> imgpassword){
         this.objects = imgpassword;
         buildImages();
     }
 
     private void buildImages() {
 
-        for(Image img: objects) {
+        for(Image img: objects.keySet()) {
             img.getBitmap(UsernameActivity.res);
         }
     }

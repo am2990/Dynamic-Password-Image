@@ -6,6 +6,7 @@
 package edu.iiitd.dynamikpass;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import android.annotation.SuppressLint;
@@ -18,6 +19,7 @@ import android.os.Parcelable;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import edu.iiitd.dynamikpass.model.Image;
+import edu.iiitd.dynamikpass.utils.Constants;
 import edu.iiitd.dynamikpass.utils.DatabaseHelper;
 
 
@@ -68,7 +70,6 @@ public class MainThread extends Thread {
 		Canvas canvas;
 		Log.d(TAG, "Starting registration loop");
 		while (running.get()) {
-
 			if(!(running.get())){
 				Log.d(TAG, "Exiting the thread");
 				return;
@@ -84,7 +85,10 @@ public class MainThread extends Thread {
 					// draws the canvas on the panel
 					this.gamePanel.onDraw(canvas);
 				}
-			} finally {
+			}catch(NullPointerException e){
+				running.getAndSet(false);
+				return;
+			}finally {
 				// in case of an exception the surface is not left in 
 				// an inconsistent state
 				if (canvas != null) {
@@ -97,15 +101,19 @@ public class MainThread extends Thread {
 	public void doSubmit() {
 
 
-		DatabaseHelper db = new DatabaseHelper(mContext);
-		db.clearTableDroid();
-		for(Image img: RegistrationPanel.imglist){
-			db.saveOrUpdateImage(img);
-		}
-		RegistrationActivity.user.setImgPassword(RegistrationPanel.imglist);
+//		DatabaseHelper db = new DatabaseHelper(mContext);
+//		db.clearTableDroid();
+//		for(Image img: RegistrationPanel.imglist){
+//
+//
+//			db.saveOrUpdateImage(img);
+//			RegistrationPanel.findCell();
+//		}
+//		RegistrationActivity.user.setImgPassword(RegistrationPanel.findCell());
+		RegistrationActivity.user.setImgPassword(RegistrationPanel.findCell());
 		Intent intent = new Intent(mContext, TableLayoutExampleActivity.class);
 		intent.putExtra("checkuser", RegistrationActivity.checkuser);
-		intent.putExtra("usern", RegistrationActivity.user);
+		intent.putExtra(Constants.USER, RegistrationActivity.user);
 		Bundle bundleObject = new Bundle();
 		bundleObject.putSerializable("imglist", RegistrationPanel.imglist);
 		intent.putExtras(bundleObject);

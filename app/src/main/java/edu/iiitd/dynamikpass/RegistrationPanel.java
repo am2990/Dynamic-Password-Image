@@ -7,17 +7,24 @@ package edu.iiitd.dynamikpass;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Random;
+import java.util.Set;
+
 import edu.iiitd.dynamikpass.model.Image;
 import edu.iiitd.dynamikpass.utils.DatabaseHelper;
 import edu.iiitd.dynamikpass.utils.Pair;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Path;
 import android.support.v4.view.GestureDetectorCompat;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -44,15 +51,12 @@ public class RegistrationPanel extends SurfaceView implements
 	private GestureDetectorCompat mDetector;
 	static MainThread thread;
 	static Image image;
-	static ArrayList<Image> imglist = new ArrayList<Image>();
+	static ArrayList<Image> imglist = null;
 	ActionMode mActionMode;
 	private SurfaceView surfaceView;
 	private Bitmap mBackgroundImage;
 	private static Context mContext;
-	static Image sr;
-	static Image sg;
-	static Image sy;
-	static Image sb;
+
 
 	private int callBackCode = 0;
 
@@ -72,6 +76,7 @@ public class RegistrationPanel extends SurfaceView implements
 		surfaceView = this;
 		this.mActionModeCallback = mActionModeCallback;
 		this.mSubmitCallBack = mSubmitCallBack;
+		imglist = new ArrayList<Image>();
 		// adding the callback (this) to the surface holder to intercept events
 		//System.out.println("chcekuser: "+ checkuser);
 		System.out.println("RP : "+images.get(0));
@@ -100,17 +105,95 @@ public class RegistrationPanel extends SurfaceView implements
 			imglist.add(image);
 
 		}
-
 		Random ran = new Random();
+		DisplayMetrics metrics= new DisplayMetrics();
 		DisplayMetrics dm= new DisplayMetrics();
 		//ran.setSeed((long)i);
-		Image image1 = imglist.get(0);
-		Image checkpos,checkposother;
-		Iterator iter = imglist.iterator();
+
 		((Activity)mContext).getWindowManager().getDefaultDisplay().getMetrics(dm);
 		int width = dm.widthPixels-50;
 		int height =dm.heightPixels-50;
-		for(Image img: imglist){
+		int screenWidth = dm.widthPixels;
+		int screenHeight = dm.heightPixels;
+		int h_zero = 0;
+		int h_one = screenHeight/3;
+		int h_two = (screenHeight*2)/3;
+		int h_three = screenHeight;
+		int w_zero = 0;
+		int w_one = screenWidth/3;
+		int w_two = (screenWidth*2)/3;
+		int w_three = screenWidth;
+
+
+
+		int pos=1;
+		for(Image img : imglist){
+
+				switch (pos) {
+
+					case 7: {
+						img.setY((h_three + h_two) / 2);
+						img.setX((w_zero + w_one) / 2);
+						pos++;
+						break;
+					}
+					case 8: {
+						img.setY((h_three + h_two) / 2);
+						img.setX((w_one + w_two) / 2);
+						pos++;
+						break;
+					}
+					case 9: {
+						img.setY((h_three + h_two) / 2);
+						img.setX((w_three + w_two) / 2);
+						pos++;
+						break;
+					}
+					case 4: {
+						img.setY((h_one + h_two) / 2);
+						img.setX((w_zero + w_one) / 2);
+						pos++;
+						break;
+					}
+					case 5: {
+						img.setY((h_one + h_two) / 2);
+						img.setX((w_one + w_two) / 2);
+						pos++;
+						break;
+					}
+					case 6: {
+						img.setY((h_one + h_two) / 2);
+						img.setX((w_three + w_two) / 2);
+						pos++;
+						break;
+					}
+					case 1: {
+						img.setY((h_one + h_zero) / 2);
+						img.setX((w_zero + w_one) / 2);
+						pos++;
+						break;
+					}
+					case 2: {
+						img.setY((h_one + h_zero) / 2);
+						img.setX((w_two + w_one) / 2);
+						pos++;
+						break;
+					}
+					case 3: {
+						img.setY((h_one + h_zero) / 2);
+						img.setX((w_two + w_three) / 2);
+						pos++;
+						break;
+					}
+
+				}
+
+
+		}
+
+
+
+		/*for(Image img: imglist){
 
 			//int randomNumx = ran.nextInt((height)-img.getBitmap().getHeight()) + 1;
 			//int randomNumy= ran.nextInt((width)-img.getBitmap().getWidth()) + 1;
@@ -120,7 +203,7 @@ public class RegistrationPanel extends SurfaceView implements
 			Image pos = null;
 			// till the flag is true
 			// generate random x and y
-			while(overlapp) {
+			/*while(overlapp) {
 				randomNumx = (randomNumx-40) % width ;
 				randomNumy = (randomNumy-40) % height;
 				System.out.println("height: " + height + "randomNumx" + randomNumx);
@@ -141,20 +224,12 @@ public class RegistrationPanel extends SurfaceView implements
 					img.setY(randomNumy);
 					overlapp = false;
 				}
-				// if it lies inside any image set flag to true
 
-				// else set the image with the new x and y
-				// get upper limits from canvas
-				//int randomNumx = ran.nextInt((350 - 25) + 1) + 25;
-				//int randomNumy = ran.nextInt((350 - 25) + 1) + 25;
 
 			}
 
 
-		}
-
-
-		//}
+		}*/
 
 		System.out.println("image list: "+imglist.size());
 		for(Image ii: imglist){
@@ -198,6 +273,7 @@ public class RegistrationPanel extends SurfaceView implements
 						if (img.isTouched()) {
 							img.setX((int) event.getX());
 							img.setY((int) event.getY());
+
 						}
 					}
 				}
@@ -205,7 +281,11 @@ public class RegistrationPanel extends SurfaceView implements
 					// touch was released
 					for (Image img : imglist) {
 						if (img.isTouched()) {
+
 							img.setTouched(false);
+							/*HashMap<Image, Integer> hm = FindCell();
+							int y = hm.get(img);
+							System.out.println("yy:" + y);*/
 						}
 					}
 				}
@@ -237,8 +317,17 @@ public class RegistrationPanel extends SurfaceView implements
 	public void surfaceCreated(SurfaceHolder holder) {
 		// at this point the surface is created and
 		// we can safely start the registration loop
-		thread.setRunning(true);
-		thread.start();
+//		thread.setRunning(false);
+		Log.d(TAG, " Thread state " +thread.getState().toString());
+		if(thread.getState() == Thread.State.NEW) {
+			if( thread.isAlive() == false) {
+				thread.start();
+			}
+		}
+		else if( thread.getState() == Thread.State.TERMINATED){
+			thread = new MainThread(getHolder(), this, mContext);
+			thread.start();
+		}
 	}
 
 	@Override
@@ -247,14 +336,14 @@ public class RegistrationPanel extends SurfaceView implements
 		// tell the thread to shut down and wait for it to finish
 		// this is a clean shutdown
 		boolean retry = true;
-		while (retry) {
-			try {
-				thread.join();
-				retry = false;
-			} catch (InterruptedException e) {
-				// try again shutting down the thread
-			}
-		}
+//		while (retry) {
+//			try {
+//				thread.join();
+//				retry = false;
+//			} catch (InterruptedException e) {
+//				// try again shutting down the thread
+//			}
+//		}
 		Log.d(TAG, "Thread was shut down cleanly");
 	}
 
@@ -263,11 +352,27 @@ public class RegistrationPanel extends SurfaceView implements
 
 	@Override
 	protected void onDraw(Canvas canvas) {
-
+		Paint paint = new Paint();
 		mBackgroundImage = Bitmap.createScaledBitmap(
 				mBackgroundImage, getWidth(), getHeight(), true);
 
 		canvas.drawBitmap(mBackgroundImage, 0, 0, null);
+
+		DisplayMetrics metrics = Resources.getSystem().getDisplayMetrics();
+		int screenWidth = metrics.widthPixels;
+		int screenHeight = metrics.heightPixels;
+
+		//  Set paint options
+		paint.setAntiAlias(true);
+		paint.setStrokeWidth(3);
+		paint.setStyle(Paint.Style.STROKE);
+		paint.setColor(Color.argb(255, 255, 255, 255));
+
+		canvas.drawLine((screenWidth/3)*2,0,(screenWidth/3)*2,screenHeight,paint);
+		canvas.drawLine((screenWidth/3),0,(screenWidth/3),screenHeight,paint);
+		canvas.drawLine(0,(screenHeight/3)*2,screenWidth,(screenHeight/3)*2,paint);
+		canvas.drawLine(0,(screenHeight/3),screenWidth,(screenHeight/3),paint);
+
 
 		for(Image img : imglist){
 			img.draw(canvas);
@@ -295,7 +400,23 @@ public class RegistrationPanel extends SurfaceView implements
 		public boolean onSingleTapUp(MotionEvent m){
 			Log.d(DEBUG_TAG, "onTapup Event: ");
 //			showSystemUI();
-			mActionMode = ((Activity)mContext).startActionMode(mSubmitCallBack);
+			ArrayList<Integer> list = new ArrayList<>();
+
+			for(Image i : imglist){
+				int cell_num = findCell().get(i);
+				list.add(cell_num);
+
+			}
+			Set<Integer> set = new HashSet<Integer>(list);
+			if(!(set.size() < list.size())) {
+
+
+				mActionMode = ((Activity) mContext).startActionMode(mSubmitCallBack);
+			}
+			else{
+				Toast.makeText(mContext,"not allowed ",
+						Toast.LENGTH_SHORT).show();
+			}
 			return true;
 		}
 
@@ -305,108 +426,95 @@ public class RegistrationPanel extends SurfaceView implements
 			ArrayList<Image> imagelist = new ArrayList<Image>();
 			for(Image img: imglist){
 				imagelist.add(img);
-
-
-				Image droidz = null;
-
-				Image droidz1 = img.getRange(arg0.getX(), arg0.getY());
-
-
-
+				Image i = img.getRange(arg0.getX(), arg0.getY());
 				System.out.println("on Long Press");
 				Log.d("hello","onLP: ");
 
 				if (mActionMode != null) {
 					Log.v(TAG, "mActionMode is not null");
-					//                return;
 				}
 
 
-				if((droidz1 != null)){
+				if((i != null)){
 					mActionMode = ((Activity)mContext).startActionMode(mActionModeCallback);
 					surfaceView.setSelected(true);
 					System.out.println("on Long Press");
 					return;
 				}
 			}
-
-
-
 		}
-
 	}
 
 
-
-	public static Image SelectRed() {
-
-
+	public static Image SelectColor(String color) {
 		for(Image img: imglist){
-
 			if(img.isLongTouched()){
-
-				img.setColor("RED");
-				Toast.makeText(mContext,"Selected Red",
+				img.setColor(color);
+				Toast.makeText(mContext,"Selected " + color,
 						Toast.LENGTH_SHORT).show();
 				img.setLongPressed(false);
-				sr = img;
-				return sr;
-
+				Image i = img;
+				return i;
 			}
 		}
-
-
 		return null;
 	}
-	public static Image SelectBlue() {
 
-		for(Image img: imglist){
-			if(img.isLongTouched()){
-				img.setColor("BLUE");
-				Toast.makeText(mContext,"Selected Blue",
-						Toast.LENGTH_SHORT).show();
-				img.setLongPressed(false);
-				sb = img;
 
-				return sb;
+	public static HashMap<Image,Integer> findCell(){
+		DisplayMetrics metrics = Resources.getSystem().getDisplayMetrics();
+		int screenWidth = metrics.widthPixels;
+		int screenHeight = (int) (metrics.heightPixels * 0.99);
+		HashMap<Image,Integer> cell = new HashMap<>();
+		int h_zero = 0;
+		int h_one = screenHeight/3;
+		int h_two = (screenHeight*2)/3;
+		int h_three = screenHeight;
+		int w_zero = 0;
+		int w_one = screenWidth/3;
+		int w_two = (screenWidth*2)/3;
+		int w_three = screenWidth;
+		for(Image img : imglist){
+			System.out.println("x,y" + img.getX()+ img.getY());
+			if(img.getX()>w_zero && img.getX()<w_one){
+				if(img.getY()>h_zero && img.getY()<h_one){
+					cell.put(img,1);
+				}
+				else if(img.getY() > h_one && img.getY() < h_two){
+					cell.put(img,4);
+				}
+				else if(img.getY() > h_two && img.getY() < h_three){
+					cell.put(img,7);
+				}
+
+
 			}
-		}
-
-		return sb;
-	}
-	public static Image SelectGreen() {
-		// TODO Auto-generated method stub
-
-		for(Image img: imglist){
-			if(img.isLongTouched()){
-				img.setColor("GREEN");
-				Toast.makeText(mContext,"Selected Green",
-						Toast.LENGTH_SHORT).show();
-				img.setLongPressed(false);
-				sg = img;
-
-				return sg;
+			else if(img.getX()>w_one && img.getX()<w_two){
+				if(img.getY()>h_zero && img.getY()<h_one){
+					cell.put(img,2);
+				}
+				else if(img.getY() > h_one && img.getY() < h_two){
+					cell.put(img,5);
+				}
+				else if(img.getY() > h_two && img.getY() < h_three){
+					cell.put(img,8);
+				}
 			}
-		}
-
-		return sg;
-	}
-	public static Image SelectYellow() {
-		// TODO Auto-generated method stub
-		for(Image img: imglist){
-			if(img.isLongTouched()){
-				img.setColor("YELLOW");
-				//Toast.makeText(getBaseContext(), "Selected Yellow ", Toast.LENGTH_LONG).show();
-				Toast.makeText(mContext,"Selected Yellow",
-						Toast.LENGTH_SHORT).show();
-				img.setLongPressed(false);
-				sy = img;
-				//droid.setTouched(true);
-				return sy;
+			else if(img.getX()>w_two && img.getX()<w_three){
+				if(img.getY()>h_zero && img.getY()<h_one){
+					cell.put(img,3);
+				}
+				else if(img.getY() > h_one && img.getY() < h_two){
+					cell.put(img,6);
+				}
+				else if(img.getY() > h_two && img.getY() < h_three){
+					cell.put(img,9);
+				}
 			}
-		}
-		return sy;
-	}
+			System.out.println("cell: "+ cell.get(img));
 
+		}
+	return cell;
+	}
 }
 

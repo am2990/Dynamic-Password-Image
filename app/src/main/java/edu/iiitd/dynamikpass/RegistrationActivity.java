@@ -3,8 +3,7 @@
 package edu.iiitd.dynamikpass;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Calendar;
 
 import android.app.Activity;
 import android.content.Context;
@@ -12,16 +11,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.ActionMode;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.SurfaceView;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Toast;
 
+import edu.iiitd.dynamikpass.helper.CSVeditor;
 import edu.iiitd.dynamikpass.model.User;
 
 public class RegistrationActivity extends Activity {
@@ -45,6 +41,7 @@ public class RegistrationActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		mContext = this;
 		i = getIntent();
+
 		checkuser = i.getStringExtra("checkuser");
 //
 		user = (User) i.getSerializableExtra("usern");
@@ -87,7 +84,6 @@ public class RegistrationActivity extends Activity {
 		hideSystemUI();
 	}
 
-
 	private void hideSystemUI() {
 		// Set the IMMERSIVE flag.
 		// Set the content to appear under the system bars so that the content
@@ -100,7 +96,6 @@ public class RegistrationActivity extends Activity {
 						| View.SYSTEM_UI_FLAG_FULLSCREEN // hide status bar
 						| View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
 		Log.d(TAG, "stuff hidden");
-
 	}
 
 
@@ -139,36 +134,10 @@ public class RegistrationActivity extends Activity {
 		@Override
 
 		public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-			System.out.println("get Item: " + item.getItemId());
-			//if((RegistrationPanel.image.isLongTouched() == true)||(RegistrationPanel.tri_b.isLongTouched() == true)){
-			switch (item.getItemId()) {
-
-				case R.id.blue:
-
-					RegistrationPanel.SelectBlue();
-					mode.finish();
-					return true;
-				case R.id.red:
-
-					RegistrationPanel.SelectRed();
-					mode.finish();
-					return true;
-				case R.id.green:
-
-					RegistrationPanel.SelectGreen();
-					mode.finish();
-					return true;
-
-				case R.id.yellow:
-
-					RegistrationPanel.SelectYellow();
-					mode.finish();
-					return true;
-
-				default:
-					return false;
-			}
-
+			System.out.println("get Item: " + item.toString());
+			RegistrationPanel.SelectColor(item.toString());
+			mode.finish();
+			return true;
 		}
 
 		@Override
@@ -206,21 +175,20 @@ public class RegistrationActivity extends Activity {
 			switch (item.getItemId()) {
 
 				case R.id.submit:
-					Toast.makeText(getBaseContext(), "Submit Selected ", Toast.LENGTH_LONG).show();
+					Toast.makeText(getBaseContext(), "Submit Selected ", Toast.LENGTH_SHORT).show();
+
+					long spentTime = Calendar.getInstance().getTimeInMillis() - startTime;
+					CSVeditor.shared().recordTimeStamp(spentTime, 8);
+
 					MainThread.setRunning(false);
 					System.out.println("do submit");
 					RegistrationPanel.thread.doSubmit();
 					return true;
 
 				default:
-
 					return false;
 			}
-
-
 		}
-
-
 		// Called when the user exits the action mode
 		@Override
 		public void onDestroyActionMode(ActionMode mode) {
@@ -229,7 +197,6 @@ public class RegistrationActivity extends Activity {
 		}
 	};
 
-
 	@Override
 	public void onBackPressed() {
 		System.out.println("back press");
@@ -237,5 +204,19 @@ public class RegistrationActivity extends Activity {
 		RegistrationPanel.thread.setRunning(false);
 		(this).finish();
 
+	}
+
+	private long startTime;
+	public void onResume(){
+		super.onResume();
+
+		Log.v("dks","startTimeRegistration");
+
+		startTime = Calendar.getInstance().getTimeInMillis();
+
+//		i = getIntent();
+//		i.putExtra(Constants.USER, user);
+//		i = new Intent(this, GalleryView.class);
+//		startActivity(i);
 	}
 }

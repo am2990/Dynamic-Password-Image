@@ -3,31 +3,28 @@
 package edu.iiitd.dynamikpass;
 
 
-import edu.iiitd.dynamikpass.R;
+import edu.iiitd.dynamikpass.helper.CSVeditor;
 import edu.iiitd.dynamikpass.model.User;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.TypedArray;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.Gravity;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
-import android.widget.Adapter;
 import android.widget.AdapterView;
-import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.Gallery;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Toast;
+
+import java.util.Calendar;
 
 public class GalleryView extends Activity {
 	Integer[] pics = { R.drawable.antartica1, R.drawable.antartica2,
@@ -35,10 +32,6 @@ public class GalleryView extends Activity {
 			R.drawable.antartica5, R.drawable.antartica6,
 			R.drawable.antartica7, R.drawable.antartica8,
 			R.drawable.antartica9, R.drawable.antartica10 ,
-			R.drawable.antartica3, R.drawable.antartica4,
-			R.drawable.antartica5, R.drawable.antartica6,
-			R.drawable.antartica7, R.drawable.antartica8,
-			R.drawable.antartica9, R.drawable.antartica10,
 			R.drawable.bkgsea, R.drawable.nemo3, R.drawable.nemo1};
 	LinearLayout imageView;
 
@@ -50,10 +43,19 @@ public class GalleryView extends Activity {
 	User user;
 	String str_usern,checkuser;
 	/** Called when the activity is first created. */
+
+	private Button btnSetBackground;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main_gal);
+
+		ActionBar toolbar = getActionBar();
+		assert toolbar != null;
+		toolbar.setTitle(getString(R.string.title_select_background));
+
+		btnSetBackground = (Button) findViewById(R.id.btn_set_background);
 
 		Intent i = getIntent();
 		icheckuser = getIntent();
@@ -77,10 +79,6 @@ public class GalleryView extends Activity {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 									long arg3) {
-				Toast.makeText(
-						getBaseContext(),
-						"You have selected picture " + (arg2 + 1)
-								+ " of Antartica", Toast.LENGTH_SHORT).show();
 				try {
 					imageView.removeAllViews();
 				} catch (Exception e) {
@@ -99,14 +97,27 @@ public class GalleryView extends Activity {
 
 		});
 
+		btnSetBackground.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				user.setImageback(selectedImage);
+				System.out.println("ib: "+selectedImage);
+				Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+				intent.putExtra("ib", selectedImage);
+				intent.putExtra("usern",user);
+				intent.putExtra("checkuser", checkuser);
+
+				long spentTime = Calendar.getInstance().getTimeInMillis() - startTime;
+				CSVeditor.shared().recordTimeStamp(spentTime, 6);
+
+				startActivity(intent);
+			}
+		});
+
 
 	}
 
 	public class ImageAdapter extends BaseAdapter {
-
-
-
-
 
 		public ImageAdapter(Context c) {
 			ctx = c;
@@ -148,34 +159,11 @@ public class GalleryView extends Activity {
 
 		}
 	}
+
+	private long startTime;
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		super.onCreateOptionsMenu(menu);
-
-		menu.add(0, MENU_SETBACK, 0, R.string.menu_setBack);
-
-
-
-		return true;
-	}
-
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-
-		switch (item.getItemId()) {
-			case MENU_SETBACK:
-
-				user.setImageback(selectedImage);
-				System.out.println("ib: "+selectedImage);
-				Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-				intent.putExtra("ib", selectedImage);
-				intent.putExtra("usern",user);
-				intent.putExtra("checkuser", checkuser);
-				startActivity(intent);
-				return true;
-		}
-
-		return false;
+	protected void onResume() {
+		super.onResume();
+		startTime = Calendar.getInstance().getTimeInMillis();
 	}
 }

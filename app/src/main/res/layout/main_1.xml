@@ -131,14 +131,11 @@
 
         
     </TableRow>
-    
-      
             <Button
                 android:id="@+id/submit"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
-                
                 android:onClick="onClick"
                 android:text="@string/submit" />
     </TableLayout>

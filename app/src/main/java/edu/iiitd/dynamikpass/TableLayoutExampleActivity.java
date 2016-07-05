@@ -2,9 +2,10 @@
 package edu.iiitd.dynamikpass;
 
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Calendar;
 
+import edu.iiitd.dynamikpass.helper.CSVeditor;
 import edu.iiitd.dynamikpass.model.User;
 import edu.iiitd.dynamikpass.utils.Constants;
 import edu.iiitd.dynamikpass.utils.DatabaseHelper;
@@ -13,8 +14,6 @@ import android.content.Intent;
 import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore.Images;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -22,12 +21,10 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.gson.Gson;
 
 public class TableLayoutExampleActivity extends Activity implements OnItemSelectedListener, OnClickListener {
 	/**
@@ -74,7 +71,7 @@ public class TableLayoutExampleActivity extends Activity implements OnItemSelect
 		imagelist = (ArrayList<Image>) bundleObject.getSerializable("imglist");
 		checkuser = icheckuser.getStringExtra(Constants.ISUSER);
 //		user = iuser.getParcelableExtra("usern");
-		user = (User) iuser.getSerializableExtra("usern");
+		user = (User) iuser.getSerializableExtra(Constants.USER);
 
 
 		spinner1 = (Spinner) findViewById(R.id.spinner1);
@@ -154,26 +151,22 @@ public class TableLayoutExampleActivity extends Activity implements OnItemSelect
 
 	@Override
 	public void onClick(View arg0) {
-		// TODO Auto-generated method stub
-		//Gson gson = new Gson();
 
-		//String list = gson.toJson(imagelist);
 		Intent intent = null;
 		//System.out.println("list= " + list);
 		if (checkuser.equalsIgnoreCase("false")) {
 
 			user.setGestarr(gestures);
-//			user.setUsername(str_usern);
-//			user.setImageback(imageBack);
-			//user.setImgPassword(list);
-//			user.setGestarr(gestures.toString());
-			//System.out.println("selected tagcloudview 1: " + selected.toString());
-			//System.out.println("not selected tagcloudview 1: " + notSelected.toString());
+
+			long timeSpent = Calendar.getInstance().getTimeInMillis() - startTime;
+			CSVeditor.shared().recordTimeStamp(timeSpent, 9);
+
 			intent = new Intent(getApplicationContext(), LoginActivity.class);
+			intent.putExtra("SIGN_UP", true);
 		}else {
 			intent = new Intent(getApplicationContext(), UsernameActivity.class);
 		}
-		intent.putExtra("usern", user);
+		intent.putExtra(Constants.USER, user);
 		startActivity(intent);
 	}
 
@@ -226,5 +219,12 @@ public class TableLayoutExampleActivity extends Activity implements OnItemSelect
 		i.putExtra(Constants.ISUSER, checkuser);
 		startActivity(i);
 		super.onBackPressed();  // optional depending on your needs
+	}
+
+	private long startTime;
+	@Override
+	protected void onResume() {
+		super.onResume();
+		startTime = Calendar.getInstance().getTimeInMillis();
 	}
 }
