@@ -94,6 +94,7 @@
             android:screenOrientation="portrait" />
 
         <activity android:name=".FeedbackActivity"
+            android:label="@string/title_feedback"
             android:screenOrientation="portrait"/>
 
         <receiver android:name=".helper.NotificationPublisher"/>

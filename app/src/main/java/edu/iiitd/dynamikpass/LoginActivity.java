@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -32,6 +33,7 @@ public class LoginActivity extends Activity {
 
 		i = getIntent();
 
+
 //		user = i.getParcelableExtra("usern");
 
 		user = (User) i.getSerializableExtra(Constants.USER);
@@ -50,8 +52,6 @@ public class LoginActivity extends Activity {
 
 	}
 
-
-
 	@Override
 	protected void onDestroy() {
 		Log.d(TAG, "Destroying...");
@@ -66,17 +66,19 @@ public class LoginActivity extends Activity {
 
 	@Override
 	public void onBackPressed() {
-		System.out.println("back press");
-		Log.d("CDA", "onBackPressed Called");
+
 		LoginPanel.thread.setRunning(false);
-//		(this).finish();
-//	    moveTaskToBack(true);
-		super.onBackPressed();
-		Intent intent = new Intent(getApplicationContext(), TableLayoutExampleActivity.class);
-		intent.putExtra(Constants.USER, user);
-		String checkuser = "false";
-		intent.putExtra(Constants.ISUSER, checkuser);
-		startActivity(intent);
+
+		if(signUp) {
+			Intent intent = new Intent(getApplicationContext(), TableLayoutExampleActivity.class);
+			intent.putExtra(Constants.USER, user);
+			String checkuser = "false";
+			intent.putExtra(Constants.ISUSER, checkuser);
+			startActivity(intent);
+		}
+		else {
+			Toast.makeText(LoginActivity.this, "Please finish the signin process", Toast.LENGTH_SHORT).show();
+		}
 	}
 
 }
