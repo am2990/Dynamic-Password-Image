@@ -66,7 +66,11 @@ public class UsernameActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.username_layout);
 
-        Log.v("dks","usenameActivity");
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getRealMetrics(displayMetrics);
+
+        Log.v("dks","Density Dpi: "+displayMetrics.densityDpi);
+        Log.v("dks","Scaled Density: "+displayMetrics.scaledDensity);
 
         CSVeditor.shared().init(getApplicationContext());
 
@@ -77,7 +81,6 @@ public class UsernameActivity extends Activity {
         username = (EditText) findViewById(R.id.username);
         bcontinue = (Button) findViewById(R.id.bcontinue);
         username.requestFocus();
-        
 
         res = getResources();
 
@@ -178,7 +181,6 @@ public class UsernameActivity extends Activity {
     public void onBackPressed()
     {
         finish();
-        System.exit(0);
         super.onBackPressed();  // optional depending on your needs
     }
 

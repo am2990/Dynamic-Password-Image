@@ -46,11 +46,9 @@ import android.widget.Toast;
 public class LoginPanel extends SurfaceView implements OnGestureListener,
 		OnDoubleTapListener, SurfaceHolder.Callback {
 
-
 	private static final String TAG = LoginPanel.class.getSimpleName();
 
 	static LoginThread thread;
-
 
 	String getgest=null;
 
@@ -60,7 +58,6 @@ public class LoginPanel extends SurfaceView implements OnGestureListener,
 	List<String> gestures = null;
 
 	private Bitmap mBackgroundImage;
-
 
 	ArrayList<Image> fling = new ArrayList<Image>();
 	ArrayList<Image> singletap = new ArrayList<Image>();
@@ -97,7 +94,6 @@ public class LoginPanel extends SurfaceView implements OnGestureListener,
 		for(int i = 1; i <= 9 ; i++) {
 			cell_list.put(i, null);
 		}
-
 
 		DatabaseHelper db = new DatabaseHelper(mContext);
 		for(Image i : ls.keySet()){
@@ -176,8 +172,6 @@ public class LoginPanel extends SurfaceView implements OnGestureListener,
 		}
 		db.closeDb();
 
-
-
 		thread = new LoginThread(getHolder(), this, context);
 		getHolder().addCallback(this);
 		surfaceView = this;
@@ -187,9 +181,7 @@ public class LoginPanel extends SurfaceView implements OnGestureListener,
 		mDetector.setIsLongpressEnabled(true);
 		mDetector.setOnDoubleTapListener(this);
 
-
 		//mDetector.setOnDoubleTapListener(listener)
-
 
 		surfaceView.setOnTouchListener(new OnTouchListener() {
 			@Override
@@ -201,7 +193,6 @@ public class LoginPanel extends SurfaceView implements OnGestureListener,
 
 		});
 		setFocusable(true);
-
 
 	}
 
@@ -215,10 +206,7 @@ public class LoginPanel extends SurfaceView implements OnGestureListener,
 		if(getgest.equalsIgnoreCase("Fling")){
 			fling.add(i);
 		}
-
 	}
-
-
 
 	private Image ChangePosition(Image img, boolean update) {
 		DisplayMetrics metrics = Resources.getSystem().getDisplayMetrics();
@@ -363,9 +351,6 @@ public class LoginPanel extends SurfaceView implements OnGestureListener,
 		Log.d(TAG, "Surface is being destroyed");
 		thread.setRunning(false);
 	}
-
-
-
 
 	private int randomN(int N) {
 		Random rand = new Random();

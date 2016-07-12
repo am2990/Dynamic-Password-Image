@@ -42,7 +42,7 @@ public class MainThread extends Thread {
 	// The actual view that handles inputs
 	// and draws to the surface
 	private RegistrationPanel gamePanel;
-	static MainThread thread;
+//	static MainThread thread;
 	// Context context=MainGamePanel.getContext();
 
 	private Context mContext;

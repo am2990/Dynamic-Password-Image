@@ -335,19 +335,8 @@ public class RegistrationPanel extends SurfaceView implements
 		Log.d(TAG, "Surface is being destroyed");
 		// tell the thread to shut down and wait for it to finish
 		// this is a clean shutdown
-		boolean retry = true;
-//		while (retry) {
-//			try {
-//				thread.join();
-//				retry = false;
-//			} catch (InterruptedException e) {
-//				// try again shutting down the thread
-//			}
-//		}
 		Log.d(TAG, "Thread was shut down cleanly");
 	}
-
-
 
 
 	@Override
@@ -379,14 +368,6 @@ public class RegistrationPanel extends SurfaceView implements
 		}
 
 	}
-
-	private void showSystemUI() {
-		RegistrationActivity.mDecorView.setSystemUiVisibility(
-				View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-						| View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-						| View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
-	}
-
 
 	class MyGestureListener extends SimpleOnGestureListener {
 		private static final String DEBUG_TAG = "Gestures";

@@ -71,6 +71,7 @@ public class FeedbackActivity extends Activity {
         if(submitPressed) {
             finish();
             Intent intent = new Intent(FeedbackActivity.this, UsernameActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
         }
         else {
