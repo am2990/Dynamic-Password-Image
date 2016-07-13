@@ -103,4 +103,9 @@
 
     <string name="btn_submit">Submit</string>
 
+    <!-- Dialog box -->
+    <string name="dialog_title">Sorry! This phone is not supported.</string>
+    <string name="dialog_message">Currently we do not support high density screen phones, meanwhile use the other two applications</string>
+    <string name="dialog_ok">OK</string>
+
 </resources>

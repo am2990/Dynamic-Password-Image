@@ -1,7 +1,9 @@
 package edu.iiitd.dynamikpass;
 
 import android.annotation.TargetApi;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.hardware.display.DisplayManager;
@@ -72,6 +74,24 @@ public class UsernameActivity extends Activity {
         Log.v("dks","Density Dpi: "+displayMetrics.densityDpi);
         Log.v("dks","Scaled Density: "+displayMetrics.scaledDensity);
 
+        if(displayMetrics.densityDpi > 480) {
+            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+            dialogBuilder.setTitle(R.string.dialog_title);
+            dialogBuilder.setMessage(R.string.dialog_message);
+            dialogBuilder.setNegativeButton(R.string.dialog_ok, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    finish();
+                }
+            });
+            dialogBuilder.show();
+        }
+        else {
+            onCreateStart();
+        }
+    }
+
+    public void onCreateStart() {
         CSVeditor.shared().init(getApplicationContext());
 
         init();
