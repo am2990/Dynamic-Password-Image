@@ -2,9 +2,6 @@
 
 package edu.iiitd.dynamikpass;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -16,6 +13,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.Calendar;
 
 import edu.iiitd.dynamikpass.helper.CSVeditor;
 import edu.iiitd.dynamikpass.model.User;
@@ -58,8 +58,6 @@ public class RegistrationActivity extends Activity {
 		final RegistrationPanel rp = new RegistrationPanel(mContext, mActionModeCallback, mSubmitCallback, imageBack, images);
 		setContentView(rp);
 
-		Log.d(TAG, "View added");
-
 		mDecorView = getWindow().getDecorView();
 		mDecorView.setOnSystemUiVisibilityChangeListener
 				(new View.OnSystemUiVisibilityChangeListener() {
@@ -95,20 +93,6 @@ public class RegistrationActivity extends Activity {
 						| View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide nav bar
 						| View.SYSTEM_UI_FLAG_FULLSCREEN // hide status bar
 						| View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
-		Log.d(TAG, "stuff hidden");
-	}
-
-
-	@Override
-	protected void onDestroy() {
-		Log.d(TAG, "Destroying...");
-		super.onDestroy();
-	}
-
-	@Override
-	protected void onStop() {
-		Log.d(TAG, "Stopping...");
-		super.onStop();
 	}
 
 	private ActionMode.Callback mActionModeCallback = new ActionMode.Callback() {
@@ -199,8 +183,6 @@ public class RegistrationActivity extends Activity {
 
 	@Override
 	public void onBackPressed() {
-		System.out.println("back press");
-		Log.d("CDA", "onBackPressed Called");
 		RegistrationPanel.thread.setRunning(false);
 		(this).finish();
 
@@ -209,8 +191,6 @@ public class RegistrationActivity extends Activity {
 	private long startTime;
 	public void onResume(){
 		super.onResume();
-
-		Log.v("dks","startTimeRegistration");
 
 		startTime = Calendar.getInstance().getTimeInMillis();
 

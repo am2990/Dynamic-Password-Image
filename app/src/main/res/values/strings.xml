@@ -2,6 +2,7 @@
 <resources>
 
     <string name="app_name">Pass Image</string>
+    <string name="title_main_activity">Select Images</string>
 
     <string name="hello">Hello World, GalleryView!</string>
     <string name="button_text">Set as Background</string>

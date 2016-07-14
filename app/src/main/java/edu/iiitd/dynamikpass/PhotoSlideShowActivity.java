@@ -70,8 +70,6 @@ public class PhotoSlideShowActivity extends Activity implements OnClickListener 
 		setContentView(R.layout.slide_show);
 		imageFrame = (ViewFlipper) findViewById(R.id.imageFrames);
 
-		Log.v("dks","PhotoSlideShowActivity Created");
-
 		// get sd card path for images
 
 		File parentFolder = new File(Environment.getExternalStorageDirectory()
@@ -83,50 +81,8 @@ public class PhotoSlideShowActivity extends Activity implements OnClickListener 
 		gestureListener = new View.OnTouchListener() {
 			public boolean onTouch(View v, MotionEvent event) {
 				if (event.getAction() >= MotionEvent.ACTION_POINTER_2_DOWN) {
-					try {
-//						ImageView img = new ImageView(
-//								PhotoSlideShowActivity.this);
-//						img.setDrawingCacheEnabled(true);
-//						img.setImageBitmap(BitmapFactory.decodeResource(
-//								getResources(), R.drawable.antartica1));
-//						img.measure(MeasureSpec.makeMeasureSpec(0,
-//								MeasureSpec.UNSPECIFIED), MeasureSpec
-//								.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED));
-//						img.layout(0, 0, img.getMeasuredWidth(),
-//								img.getMeasuredHeight());
-
-//						TouchImageView touch = new TouchImageView(
-//								PhotoSlideShowActivity.this);
-						// BitmapDrawable d=(BitmapDrawable)img.getBackground();
-//						img.buildDrawingCache(true);
-//
-//						Bitmap bitmap = Bitmap.createBitmap(img
-//								.getDrawingCache());
-//						Bitmap bitmap=null;
-//						touch.setDrawingCacheEnabled(true);
-//						touch.setImageBitmap(BitmapFactory.decodeResource(
-//								getResources(), R.drawable.antartica1));
-//						touch.measure(MeasureSpec.makeMeasureSpec(0,
-//								MeasureSpec.UNSPECIFIED), MeasureSpec
-//								.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED));
-//						touch.layout(0, 0, touch.getMeasuredWidth(),
-//								touch.getMeasuredHeight());
-////						touch.setImageBitmap(bitmap);                                                            // imageFrame.getCurrentView().getBackground());
-//						touch.buildDrawingCache(true);
-//						
-//						bitmap = Bitmap.createBitmap(touch.getDrawingCache());
-//						((ImageView) imageFrame.getCurrentView())
-//								.setImageBitmap(bitmap);
-//								imageFrame.set
-//						imageFrame.addView(touch);
-					} catch (Exception e) {
-						e.getMessage();
-					}
 					return true;
-				} else if (gestureDetector.onTouchEvent(event))
-					return true;
-				else
-					return false;
+				} else return gestureDetector.onTouchEvent(event);
 			}
 		};
 		handler = new Handler();
@@ -155,15 +111,14 @@ public class PhotoSlideShowActivity extends Activity implements OnClickListener 
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		Log.v("dks","PhotoSlideShowActivity Destroyed");
 	}
 
 	private void addFlipperImages(ViewFlipper flipper, File parent) {
 		int imageCount = parent.listFiles().length;
 		
 		RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
-				RelativeLayout.LayoutParams.FILL_PARENT,
-				RelativeLayout.LayoutParams.FILL_PARENT);
+				RelativeLayout.LayoutParams.MATCH_PARENT,
+				RelativeLayout.LayoutParams.MATCH_PARENT);
 		for (int count = 0; count < imageCount - 1; count++) {
 			ImageView imageView = new ImageView(this);
 			String file = parent.listFiles()[count].getAbsolutePath();

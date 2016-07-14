@@ -62,7 +62,6 @@ public class FeedbackActivity extends Activity {
                 onBackPressed();
             }
         });
-
     }
 
     @Override

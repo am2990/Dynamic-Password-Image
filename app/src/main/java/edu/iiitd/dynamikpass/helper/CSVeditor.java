@@ -22,6 +22,8 @@ import java.util.Date;
  */
 public class CSVeditor {
 
+    private static final String TAG = CSVeditor.class.getSimpleName();
+
     private static String FILE_PATH;
 
     private static CSVeditor sharedInstance;
@@ -40,15 +42,15 @@ public class CSVeditor {
 
     public void init(Context context) {
 
-        Log.v("dks","inside init CSVeditor");
+        Log.v(TAG,"inside init CSVeditor");
 
         File file = Environment.getExternalStorageDirectory();
         File dir = new File(file.getAbsolutePath()+"/UserStudyFramework/");
         boolean fileMade = dir.mkdir();
         if(fileMade) {
-            Log.v("dks","dir created");
+            Log.v(TAG,"dir created");
         } else {
-            Log.v("dks","dir already present");
+            Log.v(TAG,"dir already present");
         }
 
         String fileName = "ImagePassword.xls";
@@ -57,17 +59,17 @@ public class CSVeditor {
         FileInputStream fileInputStream = null;
 
         if(!newFile.exists()) {
-            Log.v("dks","file not found");
+            Log.v(TAG,"file not found");
             try {
                 boolean createdFile = newFile.createNewFile();
                 if(createdFile) {
-                    Log.v("dks","file created");
+                    Log.v(TAG,"file created");
 
                     if(workbook == null)
                         workbook = new HSSFWorkbook();
 
                 } else {
-                    Log.v("dks","file not created");
+                    Log.v(TAG,"file not created");
                 }
 
             } catch (IOException e) {
@@ -90,7 +92,7 @@ public class CSVeditor {
         if(workbook != null) {
             sheet = workbook.getSheet("ImgSheet");
             if(sheet == null) {
-                Log.v("dks", "sheet not present");
+                Log.v(TAG, "sheet not present");
                 sheet = workbook.createSheet("ImgSheet");
 
                 Row row = sheet.createRow(0);
@@ -134,7 +136,7 @@ public class CSVeditor {
                 cell.setCellValue("time_on_instructions_activity");
 
             } else {
-                Log.v("dks","sheet present");
+                Log.v(TAG,"sheet present");
             }
 
             writeToWorkbook();
@@ -142,7 +144,7 @@ public class CSVeditor {
     }
 
     public void insertNewUser(String userName, String videoName, long timeSpent) {
-        Log.v("dks","inserting new user "+userName);
+        Log.v(TAG,"inserting new user "+userName);
         currentRow = sheet.getLastRowNum();
         Row row = sheet.createRow(currentRow+1);
         Cell cell = row.createCell(0);
@@ -188,7 +190,7 @@ public class CSVeditor {
 
 
     public void insertSignInLog(String userName, String videoName, long timeSpent) {
-        Log.v("dks","inserting signin log");
+        Log.v(TAG,"inserting signin log");
         currentRow = sheet.getLastRowNum();
         Row currentRowHolder = sheet.createRow(currentRow+1);
         Cell cell = currentRowHolder.createCell(0);
@@ -262,7 +264,7 @@ public class CSVeditor {
     }
 
     public void writeToWorkbook() {
-        Log.v("dks","writing to workbook");
+        Log.v(TAG,"writing to workbook");
         File file = new File(FILE_PATH);
 
         FileOutputStream fileOutputStream;

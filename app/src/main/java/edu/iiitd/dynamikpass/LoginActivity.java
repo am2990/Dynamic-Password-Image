@@ -23,7 +23,7 @@ public class LoginActivity extends Activity {
 	Intent i;
 	static User user;
 
-	ArrayList<String> images = new ArrayList<String>();
+	ArrayList<String> images = new ArrayList<>();
 
 	static boolean signUp;
 
@@ -33,12 +33,9 @@ public class LoginActivity extends Activity {
 
 		i = getIntent();
 
-
-//		user = i.getParcelableExtra("usern");
-
 		user = (User) i.getSerializableExtra(Constants.USER);
 		signUp = i.getBooleanExtra("SIGN_UP", false);
-		Log.v("dks","signUp: "+signUp);
+		Log.v(TAG,"signUp: "+signUp);
 		int imageBack = user.getImageback();
 		System.out.println("ib lp: "+imageBack);
 

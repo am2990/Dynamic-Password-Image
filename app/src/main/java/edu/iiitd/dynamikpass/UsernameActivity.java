@@ -71,8 +71,8 @@ public class UsernameActivity extends Activity {
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getRealMetrics(displayMetrics);
 
-        Log.v("dks","Density Dpi: "+displayMetrics.densityDpi);
-        Log.v("dks","Scaled Density: "+displayMetrics.scaledDensity);
+        Log.v(TAG,"Density Dpi: "+displayMetrics.densityDpi);
+        Log.v(TAG,"Scaled Density: "+displayMetrics.scaledDensity);
 
         if(displayMetrics.densityDpi > 480) {
             AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
@@ -161,8 +161,6 @@ public class UsernameActivity extends Activity {
                         intent.setClass(UsernameActivity.this, LoginActivity.class);
                         intent.putExtra("usern", user);
                         intent.putExtra("checkuser", checkuser);
-                        //intent.putStringArrayListExtra("selected", selected);
-                        //intent.putStringArrayListExtra("notSelected", notSelected);
 
                         long timeSpent = Calendar.getInstance().getTimeInMillis() - startTime;
                         CSVeditor.shared().insertSignInLog(u, u+ "_"+timeStamp+ "_img_sign_in.mp4" , timeSpent);
@@ -214,19 +212,13 @@ public class UsernameActivity extends Activity {
 
         if(mediaProjection == null) {
             startActivityForResult(mediaProjectionManager.createScreenCaptureIntent(), REQUEST_CODE);
-            return;
         }
     }
 
     private class MediaProjectionCallback extends MediaProjection.Callback {
         @Override
         public void onStop() {
-            if(false) {
-                //toggleButton.setChecked(false);
-                mediaRecorder.stop();
-                mediaRecorder.reset();
-                Log.v(TAG,"Recording Stopped");
-            }
+            Log.v(TAG,"Recording Stopped");
         }
     }
 
@@ -254,12 +246,6 @@ public class UsernameActivity extends Activity {
     }
 
     private VirtualDisplay createVirtualDisplay() {
-        if(mediaProjection == null) {
-            Log.v(TAG,"null");
-        }
-        else
-            Log.v(TAG,"not null");
-
         return mediaProjection.createVirtualDisplay("UsernameActivity",
                 DISPLAY_WIDTH, DISPLAY_HEIGHT, screenDensity,
                 DisplayManager.VIRTUAL_DISPLAY_FLAG_AUTO_MIRROR,
