@@ -72,7 +72,7 @@ public class UsernameActivity extends Activity {
         getWindowManager().getDefaultDisplay().getRealMetrics(displayMetrics);
 
         Log.v(TAG,"Density Dpi: "+displayMetrics.densityDpi);
-        Log.v(TAG,"Scaled Density: "+displayMetrics.scaledDensity);
+        Log.v(TAG,"Scale Density: "+displayMetrics.scaledDensity);
 
         if(displayMetrics.densityDpi > 480) {
             AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
